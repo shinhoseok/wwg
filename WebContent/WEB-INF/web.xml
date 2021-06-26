@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"> -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>egov.komipowwg</display-name>
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter>
+    <filter-name>HTMLTagFilter</filter-name>
+    <filter-class>egovframework.rte.ptl.mvc.filter.HTMLTagFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
+<!-- WEEDS WAS-T Option start -->
+<!-- <filter> -->
+<!-- <filter-name>WALoader</filter-name> -->
+<!-- <filter-class>kr.co.weeds.wt.wal.servlet.LogRedirector</filter-class> -->
+<!-- <init-param> -->
+<!-- <param-name>APP-SERVER-NAME-CODE</param-name> -->
+<!-- <param-value>web</param-value> -->
+<!-- </init-param> -->
+<!-- </filter> -->
+
+<!-- <filter-mapping> -->
+<!-- <filter-name>WALoader</filter-name> -->
+<!-- <url-pattern>/*</url-pattern> -->
+<!-- </filter-mapping> -->
+<!-- WEEDS WAS-T Option end -->
+
+  <filter-mapping>
+    <filter-name>HTMLTagFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath*:egovframework/spring/context-*.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+				classpath*:egovframework/spring/dispatcher-servlet.xml
+	  </param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+
+	<!-- tomcat jsp 64k이상 컴파일오류 제거  -->
+	<servlet>
+		<servlet-name>jsp</servlet-name>
+		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+		<init-param>
+			<param-name>mappedfile</param-name>
+			<param-value>
+				false
+			</param-value>
+		</init-param>
+	</servlet> 
+	
+	<!-- jeus jsp 64k이상 컴파일오류 제거  -->
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>jsp</servlet-name> -->
+<!-- 		<servlet-class>jeus.servlet.servlets.JspServlet</servlet-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>genStrAsCharArray</param-name> -->
+<!-- 			<param-value> -->
+<!-- 				true -->
+<!-- 			</param-value> -->
+<!-- 		</init-param> -->
+<!-- 	</servlet> -->
+	
+	<!-- weblogic jsp 64k이상 컴파일오류 제거  진행중 
+	<servlet>
+	   <servlet-name>jsp</servlet-name>
+	   <servlet-class>weblogic.server.ServletServlet</servlet-class>
+	   <init-param>
+			<param-name>noTryBlocks</param-name>
+			<param-value>
+				true
+			</param-value>
+		</init-param>
+ 	</servlet> 
+	
+	<servlet-mapping>
+		<servlet-name>jsp</servlet-name>
+		<url-pattern>*.jsp</url-pattern>
+	</servlet-mapping>		
+	-->  
+
+  <servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+  </login-config>
+<error-page>
+		<error-code>400</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>401</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>402</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>405</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>406</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>407</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>408</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>409</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>410</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>501</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>502</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>503</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>504</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>505</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>520</error-code>
+		<location>/common/error.jsp</location>
+	</error-page>
+  
+  <!-- ==================== Default Session Configuration ================= -->
+  <!-- You can set the default session timeout (in minutes) for all newly   -->
+  <!-- created sessions by modifying the value below.                       -->
+
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+    <resource-ref>
+    	<description>DB komipowwg</description>
+    	<res-ref-name>jdbc/WWG</res-ref-name>
+    	<res-type>javax.sql.DataSource</res-type>
+    	<res-auth>Container</res-auth>
+    </resource-ref>
+  
+	<security-constraint>
+	    <web-resource-collection>
+	        <web-resource-name>Protected Context</web-resource-name>
+	        <url-pattern>/*</url-pattern>
+	        <http-method>PUT</http-method>
+	        <http-method>DELETE</http-method>
+	        <http-method>HEAD</http-method>
+	        <http-method>TRACE</http-method>
+	        <http-method>OPTIONS</http-method>
+	    </web-resource-collection>
+	    <auth-constraint />
+	</security-constraint>
+	  
+</web-app>

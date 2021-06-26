@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="COMMON">
+	<!--  resultMap="selectBOARDCLOB" -->
+    <resultMap class="java.util.HashMap" id="selectBOARDCLOB">
+    	<result column="DATA_SEQNO" property="DATA_SEQNO" />
+    	<result column="MENU_CD" property="MENU_CD" />
+    	<result column="MENU_NM" property="MENU_NM" />
+    	<result column="DATA_IPNS" property="DATA_IPNS" />
+    	<result column="DATA_TITLE" property="DATA_TITLE" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="DATA_DESC" property="DATA_DESC" />
+    	<result column="INQ_CNT" property="INQ_CNT" />
+    	<result column="DATA_ORIGIN_NO" property="DATA_ORIGIN_NO" />
+    	<result column="DATA_DEPTH" property="DATA_DEPTH" />
+    	<result column="DATA_SORT_NO" property="DATA_SORT_NO" />
+    	<result column="OPEN_YN" property="OPEN_YN" />
+    	<result column="OPEN_YN_NM" property="OPEN_YN_NM" />
+    	<result column="DATA_SPA_ST_DT" property="DATA_SPA_ST_DT" />
+    	<result column="DATA_SPA_END_DT" property="DATA_SPA_END_DT" />
+    	<result column="PHOTO_IMAGE_ALT" property="PHOTO_IMAGE_ALT" />
+    	<result column="DATA_SPA_COL0" property="DATA_SPA_COL0" />
+    	<result column="DATA_SPA_COL1" property="DATA_SPA_COL1" />
+    	<result column="DATA_SPA_COL2" property="DATA_SPA_COL2" />
+    	<result column="DATA_SPA_COL3" property="DATA_SPA_COL3" />
+    	<result column="DATA_SPA_COL4" property="DATA_SPA_COL4" />
+    	<result column="DATA_SPA_COL5" property="DATA_SPA_COL5" />
+    	<result column="DATA_SPA_COL6" property="DATA_SPA_COL6" />
+    	<result column="DATA_SPA_COL7" property="DATA_SPA_COL7" />
+    	<result column="DATA_SPA_COL8" property="DATA_SPA_COL8" />
+    	<result column="DATA_SPA_COL9" property="DATA_SPA_COL9" />    	    	    	
+		<result column="REG_ID_NM" property="REG_ID_NM" />
+		<result column="REG_DT" property="REG_DT" />
+		<result column="REG_ID" property="REG_ID" /> 
+		<result column="RPY_CNT" property="RPY_CNT" />   	  
+    	<result column="FILE_NMS" property="FILE_NMS" />
+    	<result column="FILE_SEQ" property="FILE_SEQ" />
+    	<result column="FILE_GROUP_NM" property="FILE_GROUP_NM" />
+    	<result column="FILE_GROUP_SEQ" property="FILE_GROUP_SEQ" />
+    	<result column="NUM_OF_ROWS" property="NUM_OF_ROWS" />
+    	<result column="DUPL_INFO" property="DUPL_INFO" />
+    	<result column="AUTH_TYPE" property="AUTH_TYPE" />
+    	
+    </resultMap>
+    
+    <!--  resultMap="selectCONTENSTCLOB" -->
+    <resultMap class="java.util.HashMap" id="selectCONTENSTCLOB">
+    	<result column="IDX" property="IDX" />
+    	<result column="M_CODE" property="M_CODE" />
+    	<result column="REG_DT" property="REG_DT" />
+    	<result column="REG_ID" property="REG_ID" />
+        <result javaType="java.lang.String" jdbcType="CLOB" column="M_CONTENTS" property="M_CONTENTS" />
+        <result column="C_CSS" property="C_CSS" />
+        <result column="C_JSCRIPT" property="C_JSCRIPT" />
+    </resultMap>  
+   
+    <resultMap class="java.util.HashMap" id="selectPopCLOB">
+    	<result column="IDX" property="IDX" />
+    	<result column="BN_TITLE" property="BN_TITLE" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="BN_CONTENTS" property="BN_CONTENTS" />
+    	<result column="BN_ORDER_NO" property="BN_ORDER_NO" />
+    	<result column="BN_LINK" property="BN_LINK" />
+    	<result column="USE_ST_DT" property="USE_ST_DT" />
+    	<result column="USE_END_DT" property="USE_END_DT" />
+    	<result column="REG_DT" property="REG_DT" />
+    	<result column="REG_ID" property="REG_ID" />
+		<result column="REG_ID_NM" property="REG_ID_NM" />
+	   	<result column="FILE_NMS" property="FILE_NMS" />
+    	<result column="FILE_SEQ" property="FILE_SEQ" />
+    	<result column="NUM_OF_ROWS" property="NUM_OF_ROWS" />
+    </resultMap>
+	
+    <resultMap class="java.util.HashMap" id="selectRsmCLOB">
+    	<result column="ROW_SEQNO" property="ROW_SEQNO" />
+    	<result column="CNTC_SEQ" property="CNTC_SEQ" />
+    	<result column="CNTC_SYS_NM" property="CNTC_SYS_NM" />
+    	<result column="CNTC_CL" property="CNTC_CL" />
+    	<result column="CNTC_CNT" property="CNTC_CNT" />
+    	<result column="CNTC_CYCLE" property="CNTC_CYCLE" />
+    	<result column="CNTC_MTHD" property="CNTC_MTHD" />
+    	<result column="CNTC_MTHD_NM" property="CNTC_MTHD_NM" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="CNTC_SYS_DC" property="CNTC_SYS_DC" />
+    	<result column="USE_YN" property="USE_YN" />
+    	<result column="CNTC_LAST" property="CNTC_LAST" />
+		<result column="REG_DT" property="REG_DT" />
+    	<result column="REG_ID" property="REG_ID" />
+    	<result column="DEL_YN" property="DEL_YN" />
+    	
+<!-- 		<result column="APRV_STAT_CD" property="APRV_STAT_CD" />
+    	<result column="APRV_JOB_STAT_NM" property="APRV_JOB_STAT_NM" />
+    	<result column="REAL_STAT_SEQNO" property="REAL_STAT_SEQNO" />  -->   	
+    </resultMap>	
+	
+</sqlMap>

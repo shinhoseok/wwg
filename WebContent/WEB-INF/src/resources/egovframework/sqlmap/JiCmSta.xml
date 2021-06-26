@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmSta">
+	
+	<select id="JiCmSta.selectVisitGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectVisitGraph : 홈페이지 방문 Graph 조회 */
+	
+		<!-- SELECT LINE1,MON FROM (
+			SELECT  NVL(LINE1,0) AS LINE1,
+			        MON || '월' AS MON
+			FROM   (SELECT COUNT(MENU_CD) AS LINE1 ,
+			               TO_CHAR(REG_DT,'YYYY-MM') REG_MON
+			        FROM JIT8100      
+			        WHERE 1=1
+			        AND  MENU_CD='main'
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ >= ]]> #p_start_ymd#
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ <= ]]> #p_end_ymd#
+			        GROUP BY TO_CHAR(REG_DT,'YYYY-MM')
+			       ) MAIN,
+			       (
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-10),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-09),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-08),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-07),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-06),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-05),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-04),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-03),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-02),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-01),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-00),'YYYY-MM') MON FROM DUAL
+			        ) TMP
+			WHERE TMP.MON = MAIN.REG_MON (+)
+	        
+	        UNION ALL
+	        
+	        SELECT  sum(LINE1) AS LINE1,
+			       '총합' AS MON
+			FROM   (SELECT COUNT(MENU_CD) AS LINE1 ,
+			               TO_CHAR(REG_DT,'YYYY-MM') REG_MON
+			        FROM JIT8100      
+			        WHERE 1=1
+			        AND  MENU_CD='main'
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ >= ]]> #p_start_ymd#
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ <= ]]> #p_end_ymd#
+			        GROUP BY TO_CHAR(REG_DT,'YYYY-MM')
+			       ) MAIN,
+			       (
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-10),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-09),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-08),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-07),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-06),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-05),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-04),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-03),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-02),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-01),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-00),'YYYY-MM') MON FROM DUAL
+			        ) TMP
+			WHERE TMP.MON = MAIN.REG_MON (+)
+	        )X
+			ORDER BY MON; -->
+			
+			SELECT  NVL(LINE1,0) AS LINE1,
+			        MON || '월' AS MON
+			FROM   (SELECT COUNT(MENU_CD) AS LINE1 ,
+			               TO_CHAR(REG_DT,'YYYY-MM') REG_MON
+			        FROM JIT8100      
+			        WHERE 1=1
+			        AND  MENU_CD='main'
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ >= ]]> #p_start_ymd#
+			        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ <= ]]> #p_end_ymd#
+			        GROUP BY TO_CHAR(REG_DT,'YYYY-MM')
+			       ) MAIN,
+			       (
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-10),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-09),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-08),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-07),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-06),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-05),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-04),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-03),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-02),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-01),'YYYY-MM') MON FROM DUAL
+			        UNION ALL
+			        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-00),'YYYY-MM') MON FROM DUAL
+			        ) TMP
+			WHERE TMP.MON = MAIN.REG_MON (+)
+		ORDER BY TMP.MON
+	</select>
+	
+	<select id="JiCmSta.selectExcelList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectExcelList : 홈페이지 방문 일별 엑셀 다운로드 */
+		SELECT  NVL(LINE1,0) AS LINE1,
+		        REG_MON AS MON
+		FROM   (SELECT COUNT(MENU_CD) AS LINE1 ,
+		               TO_CHAR(REG_DT,'YYYY-MM-DD') REG_MON
+		        FROM JIT8100      
+		        WHERE 1=1
+		        AND  MENU_CD='main'
+		        AND TO_CHAR(REG_DT,'YYYY-MM-DD') <![CDATA[ >= ]]> #start_ymd#
+		        AND TO_CHAR(REG_DT,'YYYY-MM-DD') <![CDATA[ <= ]]> #end_ymd#
+		        GROUP BY TO_CHAR(REG_DT,'YYYY-MM-DD')
+		        
+		        UNION ALL
+		        
+                SELECT COUNT(MENU_CD) AS LINE1,
+                    '합계' AS REG_MON
+                FROM JIT8100
+                WHERE 1=1
+		        AND  MENU_CD='main'
+		        AND TO_CHAR(REG_DT,'YYYY-MM-DD') <![CDATA[ >= ]]> #start_ymd#
+		        AND TO_CHAR(REG_DT,'YYYY-MM-DD') <![CDATA[ <= ]]> #end_ymd#
+		       ) MAIN
+                ORDER BY REG_MON
+		<!-- SELECT 
+				DECODE(T.MON,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금',7,'토',0,'총합') AS MON
+				,T.MON AS AAAAAA
+				,SUM(T.LINE1) AS LINE1
+
+			  FROM (SELECT 
+                    COUNT(1) AS LINE1,
+			  			TO_NUMBER(TO_CHAR(REG_DT,'D')) AS MON 
+			  		FROM JIT8100
+                    WHERE 1=1
+                    AND  MENU_CD='main'
+			        AND TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+                    GROUP BY TO_NUMBER(TO_CHAR(REG_DT,'D'))
+                    
+                    UNION ALL
+
+			    	SELECT  
+			        	1 + LEVEL - 1 AS MON
+			        	, 0 AS LINE1 
+			        FROM DUAL  
+			        CONNECT BY 1 + LEVEL - 1  <![CDATA[ <= ]]> 7
+                    
+                    UNION ALL
+                    
+                    SELECT 
+			         	COUNT(1) AS LINE1,
+                        0 AS MON  
+                    FROM JIT8100
+			          WHERE 1=1
+                    AND  MENU_CD='main'
+			        AND TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+                    )T
+            GROUP BY T.MON 
+		      ORDER BY T.MON  -->
+	</select>
+	
+	<select id="JiCmSta.selectVisitGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+        SELECT  SUM(LINE1) AS CNT FROM   (
+        	SELECT COUNT(MENU_CD) AS LINE1 ,
+					TO_CHAR(REG_DT,'YYYY-MM') REG_MON
+	        FROM JIT8100      
+	        WHERE 1=1
+	        AND  MENU_CD='main'
+	        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ >= ]]> #p_start_ymd#
+	        AND TO_CHAR(REG_DT,'YYYY-MM') <![CDATA[ <= ]]> #p_end_ymd#
+	        GROUP BY TO_CHAR(REG_DT,'YYYY-MM')
+	       ) MAIN,
+       	(
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-10),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-09),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-08),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-07),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-06),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-05),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-04),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-03),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-02),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-01),'YYYY-MM') MON FROM DUAL
+	        UNION ALL
+	        SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-00),'YYYY-MM') MON FROM DUAL
+        ) TMP
+		WHERE TMP.MON = MAIN.REG_MON (+)
+	</select>
+	
+	<select id="JiCmSta.selectInfrGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectInfrGraph : 분석보고서 Graph 조회 */
+	
+		SELECT	DATA_TITLE
+		  	   	,INQ_CNT
+		  FROM 	JIT9150
+	     WHERE 	1=1
+	       AND  MENU_CD = '000157'
+		<isNotEmpty property="searchText" prepend="AND">
+				DATA_TITLE LIKE '%' || #searchText# || '%'
+		</isNotEmpty>
+		ORDER BY DATA_SEQNO
+	</select>
+	
+	<select id="JiCmSta.selectTenListGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* "JiCmSta.selectTenListGraph" : 10대통계 -> 주요전력통계  Graph 조회 */
+		
+		<![CDATA[
+		SELECT (SELECT COUNT(O.MENU_CD)
+		          FROM JIT8100 O
+		         WHERE T.MENU_CD = O.MENU_CD
+		         AND MENU_ORI_PSTATE = 'L'
+		           AND TO_CHAR(REG_DT,'YYYY-MM-DD') >= #start_ymd# 
+		           AND TO_CHAR(REG_DT,'YYYY-MM-DD') <= #end_ymd# ) AS LINE1,
+		       MENU_NM,
+		       ORDER_NO
+		  FROM JIT9160 T
+		 WHERE ( (M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)         
+		      OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)        
+		      OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)        
+		      OR (M_SDATE IS NULL AND M_EDATE IS NULL) )          
+		  AND MENU_CD IN ('000166','000167','000168','000169','000170','000171','000172','000472') 
+		]]>
+	</select>
+	
+	<select id="JiCmSta.selectTenListGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* "JiCmSta.selectTenListGraph" : 10대통계 -> 주요전력통계  누적건수 */
+		
+		<![CDATA[
+		SELECT SUM(LINE1) AS CNT FROM (
+			SELECT (SELECT COUNT(O.MENU_CD)
+			          FROM JIT8100 O
+			         WHERE T.MENU_CD = O.MENU_CD
+			         AND MENU_ORI_PSTATE = 'L'
+			           AND TO_CHAR(REG_DT,'YYYY-MM-DD') >= #start_ymd# 
+			           AND TO_CHAR(REG_DT,'YYYY-MM-DD') <= #end_ymd# ) AS LINE1,
+			       MENU_NM,
+			       ORDER_NO
+			  FROM JIT9160 T
+			 WHERE ( (M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)         
+			      OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)        
+			      OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)        
+			      OR (M_SDATE IS NULL AND M_EDATE IS NULL) )          
+			  AND MENU_CD IN ('000166','000167','000168','000169','000170','000171','000172','000472') 
+		)X
+		]]>
+	</select>
+	
+	<select id="JiCmSta.selectDownloadGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDownloadGraph : 다운로드 Graph 조회 */
+		<![CDATA[
+        SELECT MENU_CD,REPLACE(MENU_NM,'&amp;amp;','&') MENU_NM,EXCEL_DOWN_CNT,'0' TURN
+        FROM(
+            SELECT A.MENU_CD, A.MENU_NM, NVL(B.MENU_CNT,0) EXCEL_DOWN_CNT
+            FROM 
+                (
+                SELECT MENU_CD,MENU_NM FROM JIT9160 
+                WHERE MENU_CD IN ('000013','000353','000191','000525','000522')
+                ) A
+                ,(
+                SELECT MENU_CD, COUNT(MENU_CD) MENU_CNT
+                FROM JIT8100
+                WHERE MENU_CD IN ('000013','000353','000191','000525','000522')
+                AND ACES_LOG_DESC='excel'
+                AND TO_CHAR(REG_DT,'YYYY-MM-DD')  BETWEEN #start_ymd# AND #end_ymd#
+                GROUP BY MENU_CD
+                ) B
+            WHERE A.MENU_CD=B.MENU_CD(+) 
+            
+             UNION ALL
+             
+			SELECT MENU_CD, 
+           	 	(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=AA.MENU_CD) MENU_NM,
+           		COUNT(*) DOWN_CNT
+			FROM JIT9151  AA WHERE  MENU_CD IN(
+            			SELECT MENU_CD FROM JIT9160 
+            			WHERE LINK_TY='000008'
+            			)
+			GROUP BY   MENU_CD 
+  
+        )
+        ]]>
+	</select>
+		
+	<select id="JiCmSta.selectDownloadGraph_20190215" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDownloadGraph : 다운로드 Graph 조회 */
+		
+		<!-- SELECT DWN.MENU_CD	MENU_CD
+		      , MEN.MENU_NM  MENU_NM
+		      , DWN.EXCEL_DOWN_CNT  EXCEL_DOWN_CNT
+		FROM   JIT1341 DWN
+		      , JIT9160  MEN
+		WHERE DWN.MENU_CD = MEN.MENU_CD
+		AND   DWN.MENU_CD IN ('000316','000317','000318','000319','000320','000321','000322','000323')	 -->
+		SELECT MENU_CD
+				,MENU_NM
+				,EXCEL_DOWN_CNT
+                ,TURN
+		FROM(
+			SELECT DWN.MENU_CD	MENU_CD
+			      , MEN.MENU_NM  MENU_NM
+			      , DWN.EXCEL_DOWN_CNT  EXCEL_DOWN_CNT
+                  , DWN.TURN TURN
+					FROM   JIT1341 DWN
+					      , JIT9160  MEN
+					WHERE DWN.MENU_CD = MEN.MENU_CD
+					AND   DWN.MENU_CD IN ('000316','000317','000318','000319','000320','000321','000322','000166','000167','000168','000169','000170','000171','000172','000472')	
+			        
+			        UNION ALL
+			        SELECT MENU_CD,'계약종별 전력사용량_월별' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000166-1' 
+			        UNION ALL
+			        SELECT MENU_CD,'산업분류별 전력사용량_월별' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000167-1' 
+			        UNION ALL
+			        SELECT MENU_CD,'산업분류별 전기사용고객 증감 _월별' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000168-1'
+			        UNION ALL
+			        SELECT MENU_CD,'요금청구방식 변동추이_월별' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000169-1'
+			        UNION ALL
+			        SELECT MENU_CD,'가구 평균 전력 사용량_월별' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000171-1'
+			        UNION ALL
+			        SELECT MENU_CD,'신재생 에너지 현황_원천' AS MENU_NM, EXCEL_DOWN_CNT, TURN FROM JIT1341 WHERE MENU_CD = '000172-1'
+			        UNION ALL
+			        SELECT MENU_DATA_KEY_DATAS AS MENU_CD,MENU_DATA_TITLE AS MENU_NM,FILE_CNT AS EXCEL_DOWN_CNT, MENU_DATA_KEY_DATAS as TURN FROM JIT9151 WHERE MENU_CD = '000101'
+        	)X
+			ORDER BY TURN
+	</select>
+	
+	<select id="JiCmSta.selectDownloadGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDownloadGraphCount	 : 다운로드 누적건수  */
+		<![CDATA[
+		SELECT SUM(EXCEL_DOWN_CNT) AS CNT FROM (
+		
+	        SELECT MENU_CD,REPLACE(MENU_NM,'&amp;amp;','&') MENU_NM,EXCEL_DOWN_CNT,'0' TURN
+	        FROM(
+	            SELECT A.MENU_CD, A.MENU_NM, NVL(B.MENU_CNT,0) EXCEL_DOWN_CNT
+	            FROM 
+	                (
+	                SELECT MENU_CD,MENU_NM FROM JIT9160 
+	                WHERE MENU_CD IN ('000013','000353','000191','000525','000522')
+	                ) A
+	                ,(
+	                SELECT MENU_CD, COUNT(MENU_CD) MENU_CNT
+	                FROM JIT8100
+	                WHERE MENU_CD IN ('000013','000353','000191','000525','000522')
+	                AND ACES_LOG_DESC='excel'
+	                AND TO_CHAR(REG_DT,'YYYY-MM-DD')  BETWEEN #start_ymd# AND #end_ymd#
+	                GROUP BY MENU_CD
+	                ) B
+	            WHERE A.MENU_CD=B.MENU_CD(+) 
+	            
+	             UNION ALL
+	             
+				SELECT MENU_CD, 
+	           	 	(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=AA.MENU_CD) MENU_NM,
+	           		COUNT(*) DOWN_CNT
+				FROM JIT9151  AA WHERE  MENU_CD IN(
+	            			SELECT MENU_CD FROM JIT9160 
+	            			WHERE LINK_TY='000008'
+	            			)
+				GROUP BY   MENU_CD 
+	  
+	        ) 
+        )
+        ]]>
+
+	</select>
+	
+	
+	<select id="JiCmSta.selectReqDevGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectReqDevGraph : 데이터 요청분류별 Graph 조회 */
+		
+		<!-- SELECT STD.STDINFO_DTL_CD
+		     , STD.STDINFO_DTL_NM
+		     , NVL(REQ.CNT,0) CNT
+		FROM (  SELECT IFRM_PURPS_CD
+					   , COUNT(*) CNT
+		        FROM  JIT2101
+		        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+		        GROUP BY IFRM_PURPS_CD
+		     ) REQ
+		     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+		          FROM JIT9101
+		         WHERE STDINFO_DTL_UPPO_CD = 'M00023'
+		           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00023'
+		      ) STD
+		WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_PURPS_CD(+) -->
+		
+		SELECT STDINFO_DTL_CD
+		    ,STDINFO_DTL_NM
+		    ,CNT
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+					     , STD.STDINFO_DTL_NM
+					     , NVL(REQ.CNT,0) CNT
+					FROM (  SELECT IFRM_PURPS_CD
+								   , COUNT(*) CNT
+					        FROM  JIT2101
+					        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+					        GROUP BY IFRM_PURPS_CD
+					     ) REQ
+					     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+					          FROM JIT9101
+					         WHERE STDINFO_DTL_UPPO_CD = 'M00023'
+					           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00023'
+					      ) STD
+					WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_PURPS_CD(+)
+			)X
+	</select>
+	
+	<select id="JiCmSta.selectReqDevGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiCmSta.selectReqDevGraphCount : 데이터 요청분류별 누적건수 조회 */
+		SELECT 
+		    SUM(CNT) AS CNT
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+					     , STD.STDINFO_DTL_NM
+					     , NVL(REQ.CNT,0) CNT
+					FROM (  SELECT IFRM_PURPS_CD
+								   , COUNT(*) CNT
+					        FROM  JIT2101
+					        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+					        GROUP BY IFRM_PURPS_CD
+					     ) REQ
+					     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+					          FROM JIT9101
+					         WHERE STDINFO_DTL_UPPO_CD = 'M00023'
+					           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00023'
+					      ) STD
+					WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_PURPS_CD(+)
+			)X        
+	</select>
+	
+	
+	<select id="selectReqDevGraphExcelList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectReqDevGraphExcelList : 데이터 요청분류별 일별 엑셀 다운로드 */
+	
+		SELECT STDINFO_DTL_CD
+		    ,STDINFO_DTL_NM
+		    ,CNT
+            ,REG_MON
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+					     , STD.STDINFO_DTL_NM
+					     , NVL(REQ.CNT,0) CNT
+                         , NVL(REG_MON,'없음') REG_MON
+					FROM (  SELECT IFRM_PURPS_CD
+								   , COUNT(*) CNT
+                                   ,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_MON
+					        FROM  JIT2101
+					        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+					        GROUP BY IFRM_PURPS_CD, TO_CHAR(REG_DT,'YYYY-MM-DD')
+					     ) REQ
+					     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+					          FROM JIT9101
+					         WHERE STDINFO_DTL_UPPO_CD = 'M00023'
+					           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00023'
+					      ) STD
+					WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_PURPS_CD(+)
+			)X
+			
+			UNION ALL
+			
+	        SELECT  '총합' as STDINFO_DTL_CD, 
+		        	'총합' as STDINFO_DTL_NM,
+				    SUM(CNT) AS CNT,
+		            '총합' as REG_MON
+			FROM (
+				SELECT STD.STDINFO_DTL_CD
+						     , STD.STDINFO_DTL_NM
+						     , NVL(REQ.CNT,0) CNT
+						FROM (  SELECT IFRM_PURPS_CD
+									   , COUNT(*) CNT
+						        FROM  JIT2101
+						        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+						        GROUP BY IFRM_PURPS_CD
+						     ) REQ
+						     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+						          FROM JIT9101
+						         WHERE STDINFO_DTL_UPPO_CD = 'M00023'
+						           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00023'
+						      ) STD
+						WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_PURPS_CD(+)
+				)X   
+			ORDER BY REG_MON
+	</select>
+	
+	<select id="selectPrivateLogList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectPrivateLogList : 개인정보 접근이력 다운로드 */
+	
+                SELECT 
+                    TA.ACES_LOG_SEQNO,
+                    TA.MENU_CD,
+                    <![CDATA[NVL((SELECT REPLACE(MENU_NM,'&amp;amp;','&') FROM JIT9160 WHERE MENU_CD=TA.MENU_CD),'') MENU_NM,]]>
+                    TA.MENU_PSTATE,
+                    TA.MENU_ORI_PSTATE,
+                    TA.ACES_LOG_DESC,
+                    TA.STDINFO_CD,
+                    TO_CHAR(TA.REG_DT,'YYYY-MM-DD HH24:MI:SS') REG_DT,
+                    TA.REG_ID,
+                    NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=TA.REG_ID),'') REG_ID_NM,
+                    TA.REG_ORG_ID,
+                    TA.DATA_TITLE,
+					TA.DATA_SEQ,
+					 (select bbb.ac_ip from JIT9501 bbb where bbb.use_id = TA.reg_id) as AC_IP,
+					TA.REG_NM
+                FROM JIT8100 TA
+                WHERE TA.MENU_CD IN ('000013','000353','000191','000525','000522')
+                AND (INSTR(MENU_ORI_PSTATE,'X') = 0 
+                OR MENU_ORI_PSTATE = 'X2'
+                AND INSTR(MENU_ORI_PSTATE,'CF') = 0
+                       OR ACES_LOG_DESC='excel'
+                       )
+                <isNotEmpty property="target_menu">
+                AND TA.MENU_CD=#target_menu#
+                </isNotEmpty>
+                AND TO_CHAR(TA.REG_DT,'YYYY-MM-DD')  BETWEEN #start_ymd# AND #end_ymd#
+                ORDER BY TA.ACES_LOG_SEQNO DESC
+    
+	</select>	
+	
+	<select id="selectPrivateDownLogList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectPrivateDownLogList : 개인정보 다운로드 이력 다운로드 */
+	
+                SELECT 
+                    TA.ACES_LOG_SEQNO,
+                    TA.MENU_CD,
+                    <![CDATA[NVL((SELECT REPLACE(MENU_NM,'&amp;amp;','&') FROM JIT9160 WHERE MENU_CD=TA.MENU_CD),'') MENU_NM,]]>
+                    TA.MENU_PSTATE,
+                    TA.MENU_ORI_PSTATE,
+                    TA.ACES_LOG_DESC,
+                    TA.STDINFO_CD,
+                    TO_CHAR(TA.REG_DT,'YYYY-MM-DD HH24:MI:SS') REG_DT,
+                    TA.REG_ID,
+                    NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=TA.REG_ID),'') REG_ID_NM,
+                    TA.REG_ORG_ID
+                FROM JIT8100 TA
+                WHERE TA.MENU_CD IN ('000013','000353','000191','000525','000522')
+                AND ACES_LOG_DESC='excel'
+                <isNotEmpty property="target_menu">
+                AND TA.MENU_CD=#target_menu#
+                </isNotEmpty>
+                AND TO_CHAR(TA.REG_DT,'YYYY-MM-DD')  BETWEEN #start_ymd# AND #end_ymd#
+                ORDER BY TA.ACES_LOG_SEQNO DESC
+    
+	</select>		
+	
+	<select id="JiCmSta.selectDataTypeGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataTypeGraph : 데이터 유형별 Graph 조회 */
+		
+		SELECT STD.STDINFO_DTL_CD
+		     , STD.STDINFO_DTL_NM
+		     , NVL(REQ.CNT,0) CNT
+		FROM (  
+				SELECT TAA.IFRM_TY_CD
+						, COUNT(*) AS CNT
+				  FROM (
+
+							SELECT REGEXP_SUBSTR(TA.IFRM_TY_CD, '[^|]+', 1, LEVEL) AS IFRM_TY_CD
+							  FROM (
+										SELECT REPLACE(LISTAGG(IFRM_TY_CD,',')WITHIN GROUP (ORDER BY IFRM_TY_CD), ',', '|') AS IFRM_TY_CD
+										  FROM JIT2101 
+                                         WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+									) TA
+							CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_TY_CD, '[^|]+', '')) + 1
+				) TAA
+				GROUP BY TAA.IFRM_TY_CD
+		     ) REQ
+		     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+		         WHERE STDINFO_DTL_UPPO_CD = 'M00016'
+		           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00016'
+		      ) STD
+		WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_TY_CD(+)	 
+	</select>
+	
+	<select id="JiCmSta.selectDataTypeGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataTypeGraphCount : 데이터 유형별 누적건수 조회 */
+		SELECT 
+		    SUM(CNT) AS CNT
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+					     , STD.STDINFO_DTL_NM
+					     , NVL(REQ.CNT,0) CNT
+					FROM (  
+							SELECT TAA.IFRM_TY_CD
+									, COUNT(*) AS CNT
+							  FROM (
+			
+										SELECT REGEXP_SUBSTR(TA.IFRM_TY_CD, '[^|]+', 1, LEVEL) AS IFRM_TY_CD
+										  FROM (
+													SELECT REPLACE(LISTAGG(IFRM_TY_CD,',')WITHIN GROUP (ORDER BY IFRM_TY_CD), ',', '|') AS IFRM_TY_CD
+													  FROM JIT2101 
+			                                         WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+												) TA
+										CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_TY_CD, '[^|]+', '')) + 1
+							) TAA
+							GROUP BY TAA.IFRM_TY_CD
+					     ) REQ
+					     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+					         WHERE STDINFO_DTL_UPPO_CD = 'M00016'
+					           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00016'
+					      ) STD
+			WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_TY_CD(+)
+        )X
+	</select>
+	
+	<select id="JiCmSta.selectDataTypeGraphExcelList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataTypeGraphExcelList : 데이터 유형별 일별 엑셀 다운로드 */
+	
+		SELECT STDINFO_DTL_CD
+		        ,STDINFO_DTL_NM
+		        ,CNT
+		        ,REG_MON
+		FROM (   
+		    SELECT STD.STDINFO_DTL_CD
+				     , STD.STDINFO_DTL_NM
+				     , NVL(REQ.CNT,0) CNT
+		             , NVL(REQ.REG_MON,'없음') REG_MON
+				FROM (  
+		                SELECT IFRM_TY_CD
+		                        , COUNT(*) CNT
+		                        ,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_MON
+		                  FROM JIT2101 
+		                 WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+		                 GROUP BY IFRM_TY_CD, TO_CHAR(REG_DT,'YYYY-MM-DD')
+		            ) REQ
+				     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+				         WHERE STDINFO_DTL_UPPO_CD = 'M00016'
+				           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00016'
+				      ) STD
+				WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_TY_CD(+)
+		)X
+		
+		UNION ALL
+		
+        SELECT  '총합' as STDINFO_DTL_CD, 
+	        	'총합' as STDINFO_DTL_NM,
+			    SUM(CNT) AS CNT,
+	            '총합' as REG_MON
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+					     , STD.STDINFO_DTL_NM
+					     , NVL(REQ.CNT,0) CNT
+					FROM (  SELECT IFRM_TY_CD
+								   , COUNT(*) CNT
+					        FROM  JIT2101
+					        WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+					        GROUP BY IFRM_TY_CD
+					     ) REQ
+					     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM 
+					          FROM JIT9101
+					         WHERE STDINFO_DTL_UPPO_CD = 'M00016'
+					           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00016'
+					      ) STD
+					WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_TY_CD(+)
+			)X   		
+		ORDER BY REG_MON
+	</select>
+	
+	<select id="JiCmSta.selectDataKindGraph" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataKindGraph : 데이터 종류별 Graph 조회 */
+
+		SELECT STD.STDINFO_DTL_CD
+		     , STD.STDINFO_DTL_NM
+		     , NVL(REQ.CNT,0) CNT
+		FROM (  
+				SELECT TAA.IFRM_KND_CD
+						, COUNT(*) AS CNT
+				  FROM (
+
+							SELECT REGEXP_SUBSTR(TA.IFRM_KND_CD, '[^|]+', 1, LEVEL) AS IFRM_KND_CD
+							  FROM (
+										SELECT REPLACE(LISTAGG(IFRM_KND_CD,',')WITHIN GROUP (ORDER BY IFRM_KND_CD), ',', '|') AS IFRM_KND_CD
+										  FROM JIT2101 
+                                         WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+									) TA
+							CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_KND_CD, '[^|]+', '')) + 1
+				) TAA
+				GROUP BY TAA.IFRM_KND_CD
+		     ) REQ
+		     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+		         WHERE STDINFO_DTL_UPPO_CD = 'M00024'
+		           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00024'
+		      ) STD
+		WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_KND_CD(+)	
+	</select>
+	
+	<select id="JiCmSta.selectDataKindGraphCount" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataKindGraphCount : 데이터 종류별 누적건수 조회 */
+		SELECT 
+		    SUM(CNT) AS CNT
+		FROM (
+			SELECT STD.STDINFO_DTL_CD
+			     , STD.STDINFO_DTL_NM
+			     , NVL(REQ.CNT,0) CNT
+			FROM (  
+					SELECT TAA.IFRM_KND_CD
+							, COUNT(*) AS CNT
+					  FROM (
+	
+								SELECT REGEXP_SUBSTR(TA.IFRM_KND_CD, '[^|]+', 1, LEVEL) AS IFRM_KND_CD
+								  FROM (
+											SELECT REPLACE(LISTAGG(IFRM_KND_CD,',')WITHIN GROUP (ORDER BY IFRM_KND_CD), ',', '|') AS IFRM_KND_CD
+											  FROM JIT2101 
+	                                         WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+										) TA
+								CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_KND_CD, '[^|]+', '')) + 1
+					) TAA
+					GROUP BY TAA.IFRM_KND_CD
+			     ) REQ
+			     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+			         WHERE STDINFO_DTL_UPPO_CD = 'M00024'
+			           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00024'
+			      ) STD
+			WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_KND_CD(+)	
+        )X
+	</select>
+	
+	<select id="selectDataKindGraphExcelList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiCmSta.selectDataKindGraphExcelList : 데이터 종류별 일별 엑셀 다운로드 */
+
+		SELECT STD.STDINFO_DTL_CD
+		     , STD.STDINFO_DTL_NM
+		     , NVL(REQ.CNT,0) CNT
+		FROM (  
+				SELECT TAA.IFRM_KND_CD
+						, COUNT(*) AS CNT
+				  FROM (
+
+							SELECT REGEXP_SUBSTR(TA.IFRM_KND_CD, '[^|]+', 1, LEVEL) AS IFRM_KND_CD
+							  FROM (
+										SELECT REPLACE(LISTAGG(IFRM_KND_CD,',')WITHIN GROUP (ORDER BY IFRM_KND_CD), ',', '|') AS IFRM_KND_CD
+										  FROM JIT2101 
+                                         WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+									) TA
+							CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_KND_CD, '[^|]+', '')) + 1
+				) TAA
+				GROUP BY TAA.IFRM_KND_CD
+		     ) REQ
+		     , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+		         WHERE STDINFO_DTL_UPPO_CD = 'M00024'
+		           AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00024'
+		      ) STD
+		WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_KND_CD(+)	
+		
+		UNION ALL
+        
+        SELECT '총합' as STDINFO_DTL_CD,
+                '총합' as STDINFO_DTL_NM,
+                 SUM(CNT) AS CNT
+        FROM (
+            SELECT STD.STDINFO_DTL_CD
+                 , STD.STDINFO_DTL_NM
+                 , NVL(REQ.CNT,0) CNT
+            FROM (  
+                    SELECT TAA.IFRM_KND_CD
+                            , COUNT(*) AS CNT
+                      FROM (
+    
+                                SELECT REGEXP_SUBSTR(TA.IFRM_KND_CD, '[^|]+', 1, LEVEL) AS IFRM_KND_CD
+                                  FROM (
+                                            SELECT REPLACE(LISTAGG(IFRM_KND_CD,',')WITHIN GROUP (ORDER BY IFRM_KND_CD), ',', '|') AS IFRM_KND_CD
+                                              FROM JIT2101 
+                                             WHERE REQUST_YMD BETWEEN REPLACE(#start_ymd#,'-','') AND REPLACE(#end_ymd#,'-','')
+                                        ) TA
+                                CONNECT BY LEVEL <![CDATA[<=]]> LENGTH(REGEXP_REPLACE(TA.IFRM_KND_CD, '[^|]+', '')) + 1
+                    ) TAA
+                    GROUP BY TAA.IFRM_KND_CD
+                 ) REQ
+                 , (SELECT STDINFO_DTL_CD, STDINFO_DTL_NM FROM JIT9101
+                     WHERE STDINFO_DTL_UPPO_CD = 'M00024'
+                       AND STDINFO_DTL_CD <![CDATA[<>]]> 'M00024'
+                  ) STD
+            WHERE  STD.STDINFO_DTL_CD = REQ.IFRM_KND_CD(+)	
+            )X
+	</select>
+	
+	<select id="JiCmSta.selectprivMenuList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	<![CDATA[
+		SELECT MENU_CD, REPLACE(MENU_NM,'&amp;amp;','&') MENU_NM
+		 FROM JIT9160 TA
+		WHERE TA.MENU_CD IN ('000013','000353','000191','000525','000522')
+		ORDER BY DECODE(TA.MENU_CD, '000013','1','000353','2','000191','3','000525','4','000522','5') ASC	
+	]]>
+	</select>	
+	
+	<procedure id="JiCmSta.deleteAccessLogJob" parameterClass="java.util.HashMap" >
+
+		<![CDATA[
+			{ call DELETE_ACCESSLOGJOB() }
+		]]>
+
+	</procedure>	
+</sqlMap>

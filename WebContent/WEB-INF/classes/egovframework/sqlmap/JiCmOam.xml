@@ -1,0 +1,2900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmOam">
+ <!--  ########### jrcms 시작 ########################### -->
+ 	
+ 	
+	<!-- //////////////////////////// 조직관리 //////////////////////////// -->
+	<select id="JiCmOam.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9110_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+	 <select id="JiCmOam.selectOrgList" parameterClass="java.util.HashMap" resultClass="egovMap">	
+	 
+    	SELECT 
+    		ORG_MGR.*
+    		, (SELECT COUNT(*) FROM JIT9110 WHERE UPPO_ORG_CD=ORG_MGR.ORG_CD AND ORG_CD<![CDATA[ <> ]]>UPPO_ORG_CD
+					<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+
+					</isNotEmpty>	
+			
+					<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+					</isEmpty>    		
+    			) AS TREE_SUB_CNT 
+    		, (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD= ORG_MGR.UPPO_ORG_CD ) AS TREE_UPPO_CD_NM
+    		, STD_NM_FU03('M00006',ORG_MGR.ORG_TY_CD) AS ORG_TY_CD_NM 
+    	FROM
+    	(	 
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SYS_CONNECT_BY_PATH(A.ORG_NM,'::') AS ORG_NMS
+         			,SYS_CONNECT_BY_PATH(A.ORG_CD, '::') AS ORG_CS
+			   FROM JIT9110 A	
+    			<isEmpty property="sorg_cd">
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD
+    			</isEmpty>
+    			<isNotEmpty property="sorg_cd" >
+    				START WITH A.ORG_CD = #sorg_cd#
+    			</isNotEmpty>
+ 			   							
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD	
+		)	ORG_MGR
+
+    	WHERE 1=1
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+			<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+
+			</isNotEmpty>	
+			
+			<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+			</isEmpty>    	
+  	
+		    <isNotEmpty property="sorg_nm"><!-- 조직명 검색어가 있으면 -->	
+		       	AND ORG_NM LIKE '%' || #sorg_nm# || '%'    		
+		    </isNotEmpty>
+		    
+		    <isNotEmpty property="excelGbn">
+		    	AND lv<![CDATA[ >= ]]>1
+		    </isNotEmpty>
+		    
+		    <isEmpty property="excelGbn">
+				<isEmpty property="sorg_cd"><!-- 조직코드가 없으면 최상위 조직 -->				
+					AND lv=1
+				</isEmpty>
+				<isNotEmpty property="sorg_cd"><!-- 조직코드가 있으면 하위 조직 -->	
+					AND LV <![CDATA[ <= ]]> 2
+					AND ORG_CD <![CDATA[ <> ]]> #sorg_cd#
+				</isNotEmpty>		    
+		    </isEmpty>		    
+		
+    	ORDER BY lv ASC, ORG_SORT_NO ASC	 
+	
+	</select>
+	
+	
+	 <select id="JiCmOam.selectOrgListCts" parameterClass="java.util.HashMap" resultClass="egovMap">	
+    	; WITH ORG_MGR 
+    	AS (
+    		SELECT 
+    			 1+'' AS lv
+    			  ,[ORG_SEQNO]
+      				,[ORG_CD]
+      				,[ORG_NM]
+      				,[UPPO_ORG_CD]
+      				,[ORIGIN_ORG_CD]
+      				,[ORIGIN_UPPO_ORG_CD]
+      				,[ORG_SORT_NO]
+      				,[ORG_DESC]
+      				,CONVERT(VARCHAR(10),[USE_ST_YMD],121) USE_ST_YMD
+      				,CONVERT(VARCHAR(10),[USE_END_YMD],121) USE_END_YMD
+      				,[ORG_TY_CD]
+    			  ,CONVERT(VARCHAR(10),[REG_DT],121) REG_DT
+    			  ,[REG_ID]
+    			  ,CONVERT(VARCHAR(10),[MOD_DT],121) MOD_DT
+    			  ,[MOD_ID]
+    			  ,CONVERT(VARCHAR(10),[DEL_DT],121) DEL_DT
+    			  ,[DEL_ID]
+    			  ,[DEL_YN]	
+
+    			  , CONVERT (VARCHAR ( 300), CAST ( A.[ORG_CD] as VARCHAR (300 ))) AS ORG_CS
+    		  	  , CONVERT (VARCHAR ( 300), CAST ( A.[ORG_NM] as VARCHAR (300 ))) AS ORG_NMS	
+    		  
+    		FROM JIT9110 A
+    		<isEmpty property="sorg_cd">
+    			WHERE A.[ORG_CD] = A.[UPPO_ORG_CD]
+    		</isEmpty>
+    		<isNotEmpty property="sorg_cd" >
+    			WHERE A.[ORG_CD] = #sorg_cd#
+    		</isNotEmpty>    		
+
+            UNION ALL
+            
+    		SELECT 
+    			 (lv+1)+'' AS lv
+    			  ,B1.[ORG_SEQNO]
+      				,B1.[ORG_CD]
+      				,B1.[ORG_NM]
+      				,B1.[UPPO_ORG_CD]
+      				,B1.[ORIGIN_ORG_CD]
+      				,B1.[ORIGIN_UPPO_ORG_CD]
+      				,B1.[ORG_SORT_NO]
+      				,B1.[ORG_DESC]
+      				,CONVERT(VARCHAR(10),B1.[USE_ST_YMD],121) USE_ST_YMD
+      				,CONVERT(VARCHAR(10),B1.[USE_END_YMD],121) USE_END_YMD      				
+      				,B1.[ORG_TY_CD]
+    			  ,CONVERT(VARCHAR(10),B1.[REG_DT],121) REG_DT
+    			  ,B1.[REG_ID]
+    			  ,CONVERT(VARCHAR(10),B1.[MOD_DT],121) MOD_DT
+    			  ,B1.[MOD_ID]
+    			  ,CONVERT(VARCHAR(10),B1.[DEL_DT],121) DEL_DT
+    			  ,B1.[DEL_ID]
+    			  ,B1.[DEL_YN]	
+
+    			  , CONVERT (VARCHAR ( 300), CAST( B2.ORG_CS as VARCHAR ( 300))+ '::' + CAST ( B1.[ORG_CD] as VARCHAR (300 ))) AS ORG_CS 
+    			  , CONVERT (VARCHAR ( 300), CAST( B2.ORG_NMS as VARCHAR ( 300))+ '::' + CAST ( B1.[ORG_NM] as VARCHAR (300 ))) AS ORG_NMS 	
+    			  			  
+    		FROM JIT9110 B1 JOIN ORG_MGR B2 on B1.[UPPO_ORG_CD]=B2.[ORG_CD]
+    		<isEmpty property="sorg_cd">
+    			WHERE B1.[ORG_CD] <![CDATA[ <> ]]> B1.[UPPO_ORG_CD] 
+    		</isEmpty>
+    		<isNotEmpty property="sorg_cd" >
+    			WHERE B1.[ORG_CD] <![CDATA[ <> ]]>  #sorg_cd#
+    		</isNotEmpty> 
+  		
+    	)
+    	SELECT
+    	 	<isNotEmpty property="sorg_nm">	
+		       1+''	lv	
+		    </isNotEmpty>
+		    <isEmpty property="sorg_nm">	
+  			 lv
+  			 </isEmpty>
+    		,ORG_SEQNO
+      		,ORG_CD
+      		,CASE WHEN ORG_CD='0002' THEN '본사' ELSE ORG_NM END ORG_NM
+      		,UPPO_ORG_CD
+      		,ORIGIN_ORG_CD
+      		,ORIGIN_UPPO_ORG_CD
+      		,ORG_SORT_NO
+      		,ORG_DESC
+      		,USE_ST_YMD
+      		,USE_END_YMD      				
+      		,ORG_TY_CD
+    		,REG_DT
+    		,REG_ID
+    		,MOD_DT
+    		,MOD_ID
+    		,DEL_DT
+    		,DEL_ID
+    		,DEL_YN	
+
+    		, ORG_CS 
+    		, ORG_NMS 	
+    		, (SELECT COUNT(*) FROM JIT9110 WHERE [UPPO_ORG_CD]=ORG_MGR.[ORG_CD] AND [ORG_CD]<![CDATA[ <> ]]>[UPPO_ORG_CD]
+					<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+						AND (
+	  						(CONVERT(VARCHAR(10),USE_ST_YMD,121)   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(CONVERT(VARCHAR(10),USE_ST_YMD,121)   <![CDATA[ <= ]]>  #base_ymd# AND CONVERT(VARCHAR(10),USE_END_YMD,121)  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+
+					</isNotEmpty>	
+			
+					<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+					</isEmpty>    		
+    			) AS TREE_SUB_CNT 
+    		, (SELECT CASE WHEN ORG_CD='0002' THEN '본사' ELSE ORG_NM END ORG_NM FROM JIT9110 WHERE [ORG_CD]= ORG_MGR.[UPPO_ORG_CD] ) AS TREE_UPPO_CD_NM
+    		, STD_NM_FU03('M00006',ORG_MGR.ORG_TY_CD) AS ORG_TY_CD_NM 
+    	FROM ORG_MGR 
+    	WHERE 1=1
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+			<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+					AND (
+	  						(CONVERT(VARCHAR(10),USE_ST_YMD,121)   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(CONVERT(VARCHAR(10),USE_ST_YMD,121)   <![CDATA[ <= ]]>  #base_ymd# AND CONVERT(VARCHAR(10),USE_END_YMD,121)  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+
+			</isNotEmpty>	
+			
+			<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+			</isEmpty>    	
+  	
+		    <isNotEmpty property="sorg_nm"><!-- 조직명 검색어가 있으면 -->	
+		       	AND ORG_NM LIKE '%' + #sorg_nm# + '%'    		
+		    </isNotEmpty>
+		    
+
+		    AND lv <![CDATA[ >= ]]> 1
+   	
+    	ORDER BY lv ASC, ORG_SORT_NO ASC	 
+
+	 </select>	
+	
+	 <select id="JiCmOam.selectOrgTreeList" parameterClass="java.util.HashMap" resultClass="egovMap">	
+
+	 SELECT 
+    		 ORG_SEQNO AS TREE_SEQ
+    		,ORG_CD AS TREE_CD
+    		,ORG_NM AS TREE_NM
+    		,UPPO_ORG_CD AS TREE_UPPO_CD
+    		,ORG_SORT_NO AS ORG_SORT_NO
+    		,lv AS TREE_LEVEL
+    		,ORG_NMS AS TREE_NMS
+    		,ORG_CS AS TREE_CDS
+    		, (SELECT COUNT(*) FROM JIT9110 WHERE UPPO_ORG_CD=ORG_MGR.ORG_CD AND ORG_CD<![CDATA[ <> ]]>UPPO_ORG_CD
+					<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+
+					</isNotEmpty>	
+			
+					<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+					</isEmpty>     		
+    		
+    		
+    		) AS TREE_SUB_CNT 
+    		, ( SELECT ORG_NM FROM JIT9110 WHERE ORG_CD= ORG_MGR.UPPO_ORG_CD ) AS TREE_UPPO_CD_NM			
+	
+	 FROM (    
+				SELECT
+				     A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+    			    ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			    ,REG_ID
+    			    ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			    ,MOD_ID
+    			    ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			    ,DEL_ID
+    			    ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,300) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,300) AS ORG_CS
+			   FROM JIT9110 A	
+<!--     		<isEqual property="scode" compareValue="sysadm">
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD
+    			</isEqual>
+    			<isNotEqual property="scode" compareValue="sysadm">
+    				START WITH A.ORG_CD = '0002'
+    			</isNotEqual> -->
+    			 									
+			   	START WITH A.ORG_CD = A.UPPO_ORG_CD				
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD	
+			   
+		) ORG_MGR
+		WHERE 1=1
+
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+		<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+				AND (
+  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+						OR       
+					 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+					 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+            		)
+
+		</isNotEmpty>	
+		
+		<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+				AND (
+  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+						OR       
+					 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+					 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+            		)
+
+		</isEmpty>  
+		
+<!--    		<isNotEqual property="scode" compareValue="sysadm">
+   		AND lv <![CDATA[ >= ]]>  1
+   		</isNotEqual> -->
+    			
+	ORDER BY LV ASC, ORG_SORT_NO ASC
+
+	</select>
+	
+	 <select id="JiCmOam.selectOrgTreeList3" parameterClass="java.util.HashMap" resultClass="egovMap">	
+	 
+	 
+	SELECT 
+    		ORG_SEQNO AS TREE_SEQ
+    		,ORG_CD AS TREE_CD
+    		,ORG_NM AS TREE_NM
+    		,UPPO_ORG_CD AS TREE_UPPO_CD
+    		,ORG_SORT_NO AS ORG_SORT_NO
+    		,lv AS TREE_LEVEL
+    		, ORG_NMS AS TREE_NMS
+    		, ORG_CS AS TREE_CDS
+    		,  (SELECT COUNT(*) FROM JIT9110 WHERE UPPO_ORG_CD=ORG_MGR.ORG_CD AND ORG_CD<![CDATA[ <> ]]>UPPO_ORG_CD
+					<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+					</isNotEmpty>	
+			
+					<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+						AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+					</isEmpty>     		
+    		
+    		
+    		) AS TREE_SUB_CNT 
+    		
+    		, ORG_INFO_FU01(ORG_MGR.ORG_CD,DECODE(#base_ymd#,NULL,TO_CHAR(SYSDATE,'YYYYMMDD'),REPLACE(#base_ymd#,'-','')),'UPPO_ORG_CD_NM') AS TREE_UPPO_CD_NM			
+	
+	 FROM (    
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,300) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,300) AS ORG_CS
+			   FROM (
+				SELECT *
+				FROM JIT9110  
+    			WHERE 1=1 
+				<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+				</isNotEmpty>	
+				
+				<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+		
+				</isEmpty> 				   
+			   ) A	
+    			<isEqual property="scode" compareValue="sysadm">
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD
+    			</isEqual>
+    			<isNotEqual property="scode" compareValue="sysadm">
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD AND A.ORG_CD = '0002'
+    			</isNotEqual>			   									
+			   							
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD	
+			   
+	) ORG_MGR
+	WHERE 1=1
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+			<isNotEmpty property="base_ymd"><!-- 기준일자가 있으면 -->		
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+			</isNotEmpty>	
+			
+			<isEmpty property="base_ymd"><!-- 기준일자가 없으면 현재일자를 기준으로 가져온다 -->
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+	            		)
+	
+			</isEmpty>  
+			
+    		<isNotEqual property="scode" compareValue="sysadm">
+    		AND lv <![CDATA[ >= ]]>  1
+    		</isNotEqual>
+    			
+	ORDER BY LV ASC, ORG_SORT_NO ASC
+	
+
+	</select>	
+	
+	<insert id="JiCmOam.insertOrg">
+		INSERT INTO JIT9110
+		   (		
+			ORG_SEQNO , ORG_CD, ORG_NM, UPPO_ORG_CD 
+			, ORG_SORT_NO 
+			, ORG_DESC , USE_ST_YMD, USE_END_YMD
+			, REG_DT	,REG_ID, ORG_TY_CD, DEL_YN 
+		   ) VALUES(						
+		 	#iorg_seqno#
+		 	<isEmpty property="iorg_cd">
+		 		, LPAD(TO_CHAR(TO_NUMBER(#iorg_seqno#)),4,'0')
+		 		
+		 	</isEmpty>
+		 	<isNotEmpty property="iorg_cd">
+		 		, #iorg_cd#
+		 	</isNotEmpty>
+		 	
+		 	, #iorg_nm#
+		 	
+		 	<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 		, LPAD(TO_CHAR(TO_NUMBER(#iorg_seqno#)),4,'0')
+		 	</isEmpty>
+		 	<isNotEmpty property="iuppo_org_cd">
+		 		, #iuppo_org_cd# 
+		 	</isNotEmpty>
+
+		 	<isEmpty property="iorg_sort_no"><!-- 정렬순번이 입력되지 않은경우 해당레벨의 등록갯수를 조회해서 +1 해준다 -->
+		 		, (SELECT COUNT(*)+1 FROM JIT9110 		    
+        			WHERE 1=1
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE) 
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL)
+	            		)	
+		 			<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 				AND UPPO_ORG_CD = LPAD(TO_CHAR(TO_NUMBER(#iorg_seqno#)),4,'0')
+		 			</isEmpty>
+		 			<isNotEmpty property="iuppo_org_cd">
+		 				AND UPPO_ORG_CD = #iuppo_org_cd#
+		 			</isNotEmpty>	            					
+				
+        	  	)
+		 	</isEmpty>
+		 	<isNotEmpty property="iorg_sort_no">
+		 		, #iorg_sort_no# 
+		 	</isNotEmpty>
+		 			 	
+		 	
+			, #iorg_desc# 
+			<isEmpty property="iuse_st_ymd"><!-- 사용시작일자가 없으면 SYSDATE입력 -->
+				, null
+			</isEmpty>
+			<isNotEmpty property="iuse_st_ymd"><!-- 사용시작일자가 있으면 데이트형으로 입력 -->
+				, TO_DATE(#iuse_st_ymd#,'YYYY-MM-DD')
+			</isNotEmpty>				
+			
+			<isEmpty property="iuse_end_ymd"><!-- 사용종료일자가 없으면 NULL입력 -->
+				, null
+			</isEmpty>
+			<isNotEmpty property="iuse_end_ymd"><!-- 사용종료일자가 있으면 데이트형으로 입력 -->
+				, TO_DATE(#iuse_end_ymd#,'YYYY-MM-DD') 
+			</isNotEmpty>	
+					
+			,SYSDATE
+			,#user_id#
+			
+			,#iorg_ty_cd#
+			, 'N')				
+ 	
+	</insert>
+	
+	<insert id="JiCmOam.insertOrgMove">
+		INSERT INTO JIT9110
+		 (		
+			ORG_SEQNO , ORG_CD, ORG_NM, UPPO_ORG_CD 
+			, ORG_SORT_NO 
+			, ORG_DESC , USE_ST_YMD, USE_END_YMD
+			, REG_DT	,REG_ID, ORG_TY_CD, DEL_YN 
+		   ) VALUES(						
+		 	#iorg_seqno#
+		 	<isEmpty property="iorg_cd">
+		 		, LPAD(TO_CHAR(TO_NUMBER(#iorg_seqno#)),4,'0')
+		 	</isEmpty>
+		 	<isNotEmpty property="iorg_cd">
+		 		, #iorg_cd#
+		 	</isNotEmpty>
+		 	
+		 	, #iorg_nm#
+		 	
+		 	<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 		, LPAD(TO_CHAR(TO_NUMBER(#iorg_seqno#)),4,'0')
+		 	</isEmpty>
+		 	<isNotEmpty property="iuppo_org_cd">
+		 		, #iuppo_org_cd# 
+		 	</isNotEmpty>
+
+		 	<isEmpty property="iorg_sort_no"><!-- 정렬순번이 입력되지 않은경우 해당레벨의 등록갯수를 조회해서 +1 해준다 -->
+		 		, (SELECT COUNT(*)+1 FROM JIT9110 		    
+        			WHERE 1=1
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE) 
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL)
+	            		)	
+		 			<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 				AND UPPO_ORG_CD = REPLICATE('0',4 - LEN(CONVERT(VARCHAR(10),CONVERT(INT,#iorg_seqno#))))+#iorg_seqno#
+		 			</isEmpty>
+		 			<isNotEmpty property="iuppo_org_cd">
+		 				AND UPPO_ORG_CD = #iuppo_org_cd#
+		 			</isNotEmpty>	            					
+				
+        	  	)
+		 	</isEmpty>
+		 	<isNotEmpty property="iorg_sort_no">
+		 		, #iorg_sort_no# 
+		 	</isNotEmpty>
+		 			 	
+		 	
+			, #iorg_desc# 
+			<isEmpty property="iuse_st_ymd"><!-- 사용시작일자가 없으면 SYSDATE입력 -->
+				, SYSDATE
+			</isEmpty>
+			<isNotEmpty property="iuse_st_ymd"><!-- 사용시작일자가 있으면 데이트형으로 입력 -->
+				, TO_DATE(#iuse_st_ymd#,'YYYY-MM-DD')
+			</isNotEmpty>				
+			
+			<isEmpty property="iuse_end_ymd"><!-- 사용종료일자가 없으면 NULL입력 -->
+				, null
+			</isEmpty>
+			<isNotEmpty property="iuse_end_ymd"><!-- 사용종료일자가 있으면 데이트형으로 입력 -->
+				, TO_DATE(#iuse_end_ymd#,'YYYY-MM-DD') 
+			</isNotEmpty>	
+					
+			,SYSDATE
+			,#user_id#
+			
+			,#iorg_ty_cd#
+			, 'N')				
+ 	
+	</insert>	
+	
+	<update id="JiCmOam.updateOrgUseEnd">
+		UPDATE JIT9110 SET
+			MOD_DT = SYSDATE
+			,MOD_ID	= #user_id#	
+			,USE_END_YMD=
+			<isEmpty property="iuse_end_ymd"><!-- 사용종료일자가 없으면 NULL입력 -->
+				SYSDATE-1
+			</isEmpty>
+			<isNotEmpty property="iuse_end_ymd"><!-- 사용종료일자가 있으면 데이트형으로 입력 -->
+				TO_DATE(#iuse_end_ymd#,'YYYY-MM-DD')
+			</isNotEmpty>				
+		WHERE ORG_SEQNO = #iorg_seqno#
+
+	</update>
+	
+	<update id="JiCmOam.updateOrgSortForward">
+		UPDATE JIT9110 SET
+			ORG_SORT_NO=ORG_SORT_NO-1
+		
+		WHERE 1=1
+			AND ORG_SEQNO IN (
+				SELECT ORG_SEQNO FROM JIT9110
+				WHERE 1=1
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE) 
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL)
+	            		)	
+		 			<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 				AND UPPO_ORG_CD = ORG_CD
+		 			</isEmpty>
+		 			<isNotEmpty property="iuppo_org_cd">
+		 				AND UPPO_ORG_CD = #iuppo_org_cd#
+		 				AND UPPO_ORG_CD <![CDATA[ <> ]]> ORG_CD
+		 			</isNotEmpty>
+		 			
+		 			AND ORG_SORT_NO <![CDATA[ > ]]> #iorg_sort_no#
+	        	)
+
+	</update>
+	
+	<update id="JiCmOam.updateOrgSortBack">
+		UPDATE JIT9110 SET
+			ORG_SORT_NO=ORG_SORT_NO+1
+		WHERE 1=1
+			AND ORG_SEQNO IN (
+				SELECT ORG_SEQNO FROM JIT9110
+				WHERE 1=1
+					AND (
+	  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+							OR       
+						 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE) 
+						 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL)
+	            		)	
+		 			<isEmpty property="iuppo_org_cd"><!-- 상위 조직코드가 없으면 1레벨 이므로 조직코드와 동일하게입력 -->
+		 				AND UPPO_ORG_CD = ORG_CD
+		 			</isEmpty>
+		 			<isNotEmpty property="iuppo_org_cd">
+		 				AND UPPO_ORG_CD = #iuppo_org_cd#
+		 				AND UPPO_ORG_CD <![CDATA[ <> ]]> ORG_CD
+		 			</isNotEmpty>
+		 			
+		 			AND ORG_SORT_NO <![CDATA[ >= ]]> #iorg_sort_no#
+	        		AND ORG_SEQNO != #iorg_seqno#
+
+        	)
+	</update>		
+		
+	
+	<update id="JiCmOam.updateOrg">
+		UPDATE JIT9110 SET
+		 	ORG_NM =#iorg_nm#
+		 	, UPPO_ORG_CD =#iuppo_org_cd# 
+			, ORG_SORT_NO =#iorg_sort_no#
+			, ORG_DESC =#iorg_desc#
+			, USE_ST_YMD =
+			<isEmpty property="iuse_st_ymd"><!-- 사용시작일자가 없으면 SYSDATE입력 -->
+				NULL
+			</isEmpty>
+			<isNotEmpty property="iuse_st_ymd"><!-- 사용시작일자가 있으면 데이트형으로 입력 -->
+				TO_DATE(#iuse_st_ymd#,'YYYY-MM-DD')
+			</isNotEmpty>
+	
+			, ORG_TY_CD = #iorg_ty_cd#
+			, USE_END_YMD=
+			<isEmpty property="iuse_end_ymd"><!-- 사용종료일자가 없으면 SYSDATE입력 -->
+				NULL
+			</isEmpty>
+			<isNotEmpty property="iuse_end_ymd"><!-- 사용종료일자가 있으면 데이트형으로 입력 -->
+				TO_DATE(#iuse_end_ymd#,'YYYY-MM-DD')
+			</isNotEmpty>			
+			, MOD_DT = SYSDATE
+			, MOD_ID	= #user_id#								
+		WHERE ORG_SEQNO = #iorg_seqno#
+
+	</update>
+	
+	<update id="JiCmOam.deleteOrg">
+	
+		DELETE FROM JIT9110 
+		WHERE (ORG_SEQNO) IN 
+
+		   (SELECT  	
+
+		   A.ORG_SEQNO 	
+
+		   FROM JIT9110 A 	
+
+		   START WITH A.ORG_CD = #iorg_cd#	
+
+		   CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD) 
+		   
+
+	</update>
+	
+		<insert id="JiCmOam.insertJIT9110">
+	
+		MERGE INTO JIT9110 A
+		USING DUAL
+		ON(A.ORG_CD = #orgCd#)
+		WHEN MATCHED THEN
+				
+		 UPDATE SET A.MOD_DT = SYSDATE
+		           ,A.MOD_ID	= 'E00000001'
+		           ,A.ORG_NM = #orgNm#
+		           ,A.UPPO_ORG_CD = #uppoOrgCd#
+		           ,A.ORG_SORT_NO = #orgSortNo#
+
+		WHEN NOT MATCHED THEN
+			INSERT 
+			 (		
+				ORG_SEQNO , ORG_CD, ORG_NM, UPPO_ORG_CD 
+				, ORG_SORT_NO 
+				, ORG_DESC , USE_ST_YMD, USE_END_YMD
+				, REG_DT	,REG_ID, ORG_TY_CD, DEL_YN 
+		   	) VALUES(						
+		 	JIT9110_ORG_SEQNO_SQ.NEXTVAL
+		 	, #orgCd#
+		 	, #orgNm#
+	 		, #uppoOrgCd# 
+			, #orgSortNo#
+			, '' 
+			, null
+			, null
+			,SYSDATE
+			,'E00000001'
+			,'000029'
+			, 'N')	
+	</insert>
+	
+	
+	<select id="JiCmOam.getJIT9110Chk" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9110
+		WHERE ORG_CD=#orgCd#
+
+	</select>
+	
+	<insert id="JiCmOam.insertJIT9110_2">
+			INSERT INTO JIT9110
+			(
+				ORG_SEQNO , ORG_CD, ORG_NM, UPPO_ORG_CD
+				, ORG_SORT_NO
+				, ORG_DESC , USE_ST_YMD, USE_END_YMD
+				, REG_DT	,REG_ID, ORG_TY_CD, DEL_YN
+		   	) VALUES (
+		 	JIT9110_ORG_SEQNO_SQ.NEXTVAL
+		 	, #orgCd#
+		 	, #orgNm#
+	 		, #uppoOrgCd# 
+			, #orgSortNo#
+			, '' 
+			, null
+			, null
+			,SYSDATE
+			,'E00000001'
+			,'000029'
+			, 'N')	
+	</insert>
+	
+	<update id="JiCmOam.updateJIT9110_2">
+		UPDATE JIT9110 SET MOD_DT = SYSDATE
+		           ,MOD_ID	= 'E00000001'
+		           ,ORG_NM = #orgNm#
+		           ,UPPO_ORG_CD = #uppoOrgCd#
+		           ,ORG_SORT_NO = #orgSortNo#
+		WHERE ORG_CD=#orgCd#
+	</update>
+	<!-- //////////////////////////// 조직관리 //////////////////////////// -->
+	
+	
+	
+	<!-- //////////////////////////// 관리자관리 //////////////////////////// -->
+	
+	<!-- 관리자관리 전체조회 -->
+	<select id="JiCmOam.selectOrgAdminList" parameterClass="java.util.HashMap" resultClass="egovMap">
+SELECT 
+    		TO_CHAR(ROW_NUMBER() OVER(ORDER BY TA.GRD_CD ASC,TA.USER_ID ASC,TA.REG_DT DESC)) AS ROW_SEQNO	 
+			  , TO_CHAR(TA.USER_SEQNO) AS USER_SEQNO	
+		      , TA.USER_ID			
+		      , TA.USER_NM			
+		      , TA.LOGIN_IPNS		
+		      , TA.ORG_CD			
+		      , TA.GRD_CD			
+		      , NVL(TA.GRD_NM,'') GRD_NM				
+		      , TA.EMAIL			
+		      , TA.MOBLPHON			
+		      , TA.NAESUN			
+		      , TA.STATE_CD			
+		      , TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT		
+		      , TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 	
+		      , TA.IPNS_INIT_YN		
+		      , TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	
+		      , TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				
+		      , TA.USER_DESC	
+		      , NVL(TO_CHAR(TA.LOGIN_LAST,'YYYY-MM-DD HH24:MI:SS'),'-') LOGIN_LAST	
+		      , TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT	
+		      , TA.REG_ID	
+		      , TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT 	
+		      , TA.MOD_ID	
+		      , TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT	
+		      , TA.DEL_ID	
+		      , TA.DEL_YN	
+			  , TA.POS_CD
+			  , TA.POS_NM
+			  , TA.IPSA_YMD
+			  , TA.SEUNGGYUK_YMD
+
+		      ,DECODE(TA.USER_ID, TB. ORG_MANAGER,'Y','N') CHIEF_YN
+      		, STD_NM_FU03('M00006',TB.ORG_TY_CD) AS ORG_TY_CD_NM
+			,TB.ORG_NM
+			, CASE WHEN INSTR(TB.ORG_NMS,'::') > 0 THEN SUBSTR(TB.ORG_NMS,1,INSTR(TB.ORG_NMS,'::')-1) ELSE TB.ORG_NMS END AS EMP_TOP_ORG_NM
+			, CASE WHEN INSTR(TB.ORG_CS,'::') > 0 THEN SUBSTR(TB.ORG_CS,1,INSTR(TB.ORG_NMS,'::')-1) ELSE TB.ORG_NMS END AS EMP_TOP_ORG_CD
+			,TB.ORG_TY_CD
+			,TB.UPPO_ORG_CD 
+			,TB.ORG_NMS
+			,TB.ORG_CS
+		
+      	FROM JIT9120 TA
+    		, (
+    		
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+      				,A.ORG_MANAGER
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,300) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,300) AS ORG_CS
+			   FROM (
+				SELECT *
+				FROM JIT9110  
+    			WHERE 1=1 
+				<isNotEmpty property="base_ymd">		
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+				</isNotEmpty>	
+				
+				<isEmpty property="base_ymd">
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+		
+				</isEmpty> 				   
+			   ) A
+    			WHERE 1=1
+    			AND A.DEL_YN <![CDATA[ <> ]]> 'Y'	
+				<isNotEmpty property="base_ymd">	
+	  				AND (
+	  						(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>   #base_ymd# AND A.USE_END_YMD IS NULL)
+							OR       
+						 	(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>  #base_ymd# AND TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD')   <![CDATA[ >= ]]>   #base_ymd#)
+						 	OR
+						 	(A.USE_ST_YMD IS NULL AND A.USE_END_YMD IS NULL) 
+	            		)
+				</isNotEmpty>	
+			
+				<isEmpty property="base_ymd">
+	  				AND (
+	  						(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD') AND A.USE_END_YMD IS NULL)
+							OR       
+						 	(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>  TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD')   <![CDATA[ >= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD'))
+						 	OR
+						 	(A.USE_ST_YMD IS NULL AND A.USE_END_YMD IS NULL) 
+	            		)				
+
+	
+				</isEmpty>			   	
+   				START WITH A.ORG_CD = A.UPPO_ORG_CD
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD
+    		) TB    	
+    	WHERE 1=1
+     	AND TA.ORG_CD=TB.ORG_CD(+)
+     			<isEqual property="pcode" compareValue="000013">
+     			AND TA.USER_ID IN (SELECT DISTINCT USER_ID FROM JIT9132)
+     			</isEqual>
+				<isNotEmpty property="base_ymd">	
+	  				AND (
+	  						(TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD')   <![CDATA[ <= ]]>   #base_ymd# AND TA.USE_END_DT IS NULL)
+							OR       
+						 	(TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD')   <![CDATA[ <= ]]>  #base_ymd# AND TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD')   <![CDATA[ >= ]]>   #base_ymd#)
+						 	OR
+						 	(TA.USE_ST_DT IS NULL AND TA.USE_END_DT IS NULL) 
+	            		)
+				</isNotEmpty>	
+			
+				<isEmpty property="base_ymd">
+	  				AND (
+	  						(TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD')   <![CDATA[ <= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TA.USE_END_DT IS NULL)
+							OR       
+						 	(TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD')   <![CDATA[ <= ]]>  TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD')   <![CDATA[ >= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD'))
+						 	OR
+						 	(TA.USE_ST_DT IS NULL AND TA.USE_END_DT IS NULL) 
+	            		)				
+
+	
+				</isEmpty>     	
+     		 <!-- 하위조직 미포함이면 해당조직만 -->
+     		 <isEqual property="subinYn" compareValue="N">
+     		 	<isNotEmpty property="sorg_cd">
+     		 	AND TB.ORG_CD = #sorg_cd#
+     		 	</isNotEmpty>
+     		 </isEqual>
+     		 
+     		 <!-- 퇴직자포함여부값에 따라 -->
+     		 <isNotEmpty property="srt_yn">
+     		 	<isEqual property="srt_yn" compareValue="N">
+	     		 	AND TA.STATE_CD NOT IN ('T')
+	     		</isEqual>
+     		 </isNotEmpty>     		 
+     		 
+     		 
+    		<isNotEmpty property="sorg_cd" >
+    			AND TB.ORG_CS LIKE '%' || UPPER(#sorg_cd#) || '%'
+    		</isNotEmpty>      		 
+     		 
+     		 <!-- 상세조회일경우 -->
+     		 <isEqual property="pstate" compareValue="UF">
+     		 	<isNotEmpty property="suser_seq">
+     		 		AND TA.USER_SEQNO = #suser_seq#
+     		 	</isNotEmpty>
+     		 </isEqual>
+     	
+			 <isNotEmpty property="sty">
+			       		<isEqual property="sty" compareValue="user_nm">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.USER_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>
+			       		<isEqual property="sty" compareValue="user_id">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.USER_ID) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>	
+			       		<isEqual property="sty" compareValue="org_cd">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TB.ORG_CD) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>	
+			       		<isEqual property="sty" compareValue="org_nm">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TB.ORG_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>					   					   					   	
+			 </isNotEmpty> 
+ 		ORDER BY TA.GRD_CD ASC,TA.USER_ID ASC,TA.REG_DT DESC
+</select>
+		
+	<select id="JiCmOam.selectOrgAdminList_201907" parameterClass="java.util.HashMap" resultClass="egovMap">	
+		
+    	SELECT
+    		    ROW_NUMBER() OVER (ORDER BY TA.USER_SEQNO ASC) ROW_SEQNO
+			  , TO_CHAR(TA.USER_SEQNO) AS USER_SEQNO	<!-- 일련번호 -->
+		      , TA.USER_ID			<!-- 아이디 -->
+		      , TA.USER_NM			<!-- 성명 -->
+		      , TA.LOGIN_IPNS		
+		      , TA.ORG_CD			<!-- 조직코드 -->
+		      , TB.ORG_NM	<!-- 조직명 -->
+		      , TA.GRD_CD			<!-- 직급코드 -->
+		      , NVL(TA.GRD_NM,'') GRD_NM				<!-- 직급명 -->
+		      , TA.EMAIL			<!-- 이메일 -->
+		      , TA.MOBLPHON			<!-- 휴대폰번호 -->
+		      , TA.NAESUN			<!-- 내선번호 -->
+		      , TA.STATE_CD			<!-- 상태코드 -->
+		      , TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT		<!-- 사용시작일 -->
+		      , TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 	<!-- 사용종료일 -->
+		      , TA.IPNS_INIT_YN		<!-- 비밀번호 초기화여부 -->
+		      , TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	<!-- 비밀번호 변경일자 -->
+		      , TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				<!-- 로그인 실패 횟수 -->
+		      , TA.USER_DESC	<!-- 관리자비고 -->
+		      , NVL(TO_CHAR(TA.LOGIN_LAST,'YYYY-MM-DD HH24:MI:SS'),'-') LOGIN_LAST	<!-- 최종로그인 -->
+		      , TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT	<!-- 등록일 -->
+		      , TA.REG_ID	<!-- 등록자ID -->
+		      , TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT 	<!-- 수정일 -->
+		      , TA.MOD_ID	<!-- 수정자ID -->
+		      , TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT	<!-- 삭제일 -->
+		      , TA.DEL_ID	<!-- 삭제자ID -->
+		      , TA.DEL_YN	<!-- 삭제여부 -->
+		      
+			  , '' SOSOK_CD		<!-- 사업소코드 -->
+			  , '' SOSOK_CD1	<!-- 사업소코드 1차 -->
+			  , '' SOSOK_CD2	<!-- 사업소코드 2차 -->
+			  , '' SOSOK_CD3	<!-- 사업소코드 3차 -->
+			  , '' SOSOK_CD4	<!-- 사업소코드 4차 -->
+			  , '' SOSOK_HAN	<!-- 소속(Full name) -->
+			  , '' SOSOK_HAN1	<!-- 사업소명 1차 -->
+			  , '' SOSOK_HAN2	<!-- 사업소명 2차 -->
+			  , '' SOSOK_HAN3	<!-- 사업소명 3차 -->
+			  , '' SOSOK_HAN4	<!-- 사업소명 4차 -->
+			  , '' ZZJIKMU_TXT	<!-- 직위 -->
+			  , TA.POS_CD
+			  , TA.POS_NM
+			  , TA.IPSA_YMD
+			  , TA.SEUNGGYUK_YMD
+			  , TB.UPPO_ORG_CD
+			  , TB.ORG_NMS
+			  , TB.ORG_CS
+      	FROM JIT9120 TA  
+      		,(
+                SELECT
+                     A.ORG_SEQNO
+                      ,A.ORG_CD
+                      ,A.ORG_NM
+                      ,A.UPPO_ORG_CD
+                      ,A.ORIGIN_ORG_CD
+                      ,A.ORIGIN_UPPO_ORG_CD
+                      ,A.ORG_SORT_NO
+                      ,A.ORG_DESC
+                      ,A.ORG_TY_CD
+                      ,DEL_YN    
+                      ,LEVEL AS LV            
+                      ,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,300) AS ORG_NMS
+                      ,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,300) AS ORG_CS
+               FROM JIT9110 A    
+               WHERE A.DEL_YN = 'N'                                  
+                   START WITH A.ORG_CD = A.UPPO_ORG_CD                
+                   CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD      		
+      		) TB 	
+    	WHERE 1=1
+			AND TA.ORG_CD=TB.ORG_CD
+     		 <!-- 승인여부값에 따라 -->
+     		 <isNotEmpty property="sjoin_yn">
+     		 	AND TA.JOIN_YN = #sjoin_yn#
+     		 </isNotEmpty>
+     		 
+     		 <!-- 상세조회일경우 -->
+     		 <isEqual property="pstate" compareValue="UF">
+     		 	<isNotEmpty property="suser_seq">
+     		 		AND TA.USER_SEQNO = #suser_seq#
+     		 	</isNotEmpty>
+     		 </isEqual>
+     		 
+     		 <!-- 권한그룹값에 따라 -->
+     		 <isNotEmpty property="sauth_grp">
+     		 	AND TA.USER_ID IN(SELECT USER_ID FROM JIT9132 WHERE AUTH_GRP_CD=#sauth_grp# AND DEL_YN='N')
+     		 </isNotEmpty>      		 
+     		 
+			 <isNotEmpty property="sty">
+		       		<isEqual property="sty" compareValue="user_nm">
+		       			<isNotEmpty property="stext">
+		       				AND UPPER(TA.USER_NM) LIKE '%' || UPPER(#stext#) || '%'
+		       			</isNotEmpty>
+				   	</isEqual>
+		       		<isEqual property="sty" compareValue="user_id">
+		       			<isNotEmpty property="stext">
+		       				AND UPPER(TA.USER_ID) LIKE '%' || UPPER(#stext#) || '%'
+		       			</isNotEmpty>
+				   	</isEqual>
+		       		<isEqual property="sty" compareValue="sosok_han">
+		       			<isNotEmpty property="stext">
+		       				AND UPPER(TA.ORG_NM) LIKE '%' || UPPER(#stext#) || '%'
+		       			</isNotEmpty>
+				   	</isEqual>
+		       		<isEqual property="sty" compareValue="zzjikmu_txt">
+		       			<isNotEmpty property="stext">
+		       				AND UPPER(TA.POS_NM) LIKE '%' || UPPER(#stext#) || '%'
+		       			</isNotEmpty>
+				   	</isEqual>
+			 </isNotEmpty>
+			 <isEmpty property="sty">
+			 	<isNotEmpty property="stext">
+			 		AND ( UPPER(TA.USER_ID) LIKE '%' || UPPER(#stext#) || '%' OR UPPER(TA.USER_NM) LIKE '%' || UPPER(#stext#) || '%'  OR UPPER(TA.ORG_NM) LIKE '%' || UPPER(#stext#) || '%' OR UPPER(TA.POS_NM) LIKE '%' || UPPER(#stext#) || '%' )
+			 	</isNotEmpty>
+			 </isEmpty>
+ 		ORDER BY TA.USER_SEQNO DESC
+	
+	</select>	
+	
+
+	
+	<select id="JiCmOam.selectAdmInfo" parameterClass="java.util.HashMap" resultClass="egovMap">	
+		
+    	SELECT
+    		    ROW_NUMBER() OVER (ORDER BY TA.USER_SEQNO ASC) ROW_SEQNO
+			  , TO_CHAR(TA.USER_SEQNO) AS USER_SEQNO	<!-- 일련번호 -->
+		      , TA.USER_ID			<!-- 아이디 -->
+		      , TA.USER_NM			<!-- 성명 -->
+		      , TA.LOGIN_IPNS		
+		      , TA.ORG_CD			<!-- 조직코드 -->
+		      , (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=TA.ORG_CD) ORG_NM	<!-- 조직명 -->
+		      , TA.GRD_CD			<!-- 직급코드 -->
+		      , NVL(STD_NM_FU03('M00007', TA.GRD_CD),'') GRD_NM				<!-- 직급명 -->
+		      , TA.EMAIL			<!-- 이메일 -->
+		      , TA.MOBLPHON			<!-- 휴대폰번호 -->
+		      , TA.NAESUN			<!-- 내선번호 -->
+		      , TA.STATE_CD			<!-- 상태코드 -->
+		      , TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT		<!-- 사용시작일 -->
+		      , TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 	<!-- 사용종료일 -->
+		      , TA.IPNS_INIT_YN		<!-- 비밀번호 초기화여부 -->
+		      , TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	<!-- 비밀번호 변경일자 -->
+		      , TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				<!-- 로그인 실패 횟수 -->
+		      , USER_DESC	<!-- 관리자비고 -->
+		      , NVL(TO_CHAR(TA.LOGIN_LAST,'YYYY-MM-DD HH24:MI:SS'),'-') LOGIN_LAST	<!-- 최종로그인 -->
+		      , TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT	<!-- 등록일 -->
+		      , TA.REG_ID	<!-- 등록자ID -->
+		      , TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT 	<!-- 수정일 -->
+		      , TA.MOD_ID	<!-- 수정자ID -->
+		      , TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT	<!-- 삭제일 -->
+		      , TA.DEL_ID	<!-- 삭제자ID -->
+		      , TA.DEL_YN	<!-- 삭제여부 -->
+		      
+			  , '' SOSOK_CD		<!-- 사업소코드 -->
+			  , '' SOSOK_CD1	<!-- 사업소코드 1차 -->
+			  , '' SOSOK_CD2	<!-- 사업소코드 2차 -->
+			  , '' SOSOK_CD3	<!-- 사업소코드 3차 -->
+			  , '' SOSOK_CD4	<!-- 사업소코드 4차 -->
+			  , '' SOSOK_HAN	<!-- 소속(Full name) -->
+			  , '' SOSOK_HAN1	<!-- 사업소명 1차 -->
+			  , '' SOSOK_HAN2	<!-- 사업소명 2차 -->
+			  , '' SOSOK_HAN3	<!-- 사업소명 3차 -->
+			  , '' SOSOK_HAN4	<!-- 사업소명 4차 -->
+			  , '' ZZJIKMU_TXT	<!-- 직위 -->
+			  , TA.POS_CD
+			  , TA.POS_NM
+			  , TA.IPSA_YMD
+			  , TA.SEUNGGYUK_YMD
+			  
+      	FROM JIT9120 TA   	
+    	WHERE 1=1
+		
+     		 <!-- 로그인한 세션정보값에 따라 -->
+     		 <isNotEmpty property="login_sess_id">
+     		 	AND TA.USER_ID = #login_sess_id#
+     		 </isNotEmpty>
+ 
+	
+	</select>
+	
+	<!-- 전체관리자 조회 -->
+	<select id="JiCmOam.selectOrgAdminListInit" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+      		 USER_ID
+      		,USER_NM
+      		,ORG_CD
+      		,'' CNTAC_PHONENO
+      		,MOBLPHON CNTAC_PHONENO2
+      		,NAESUN
+      	FROM JIT9120
+      	WHERE 1=1
+      	AND USER_ID NOT IN('WwgKomipo') <!-- 전체관리자 제외 -->
+	</select>	
+	
+	
+	
+	<update id="JiCmOam.initAdminPass">
+			UPDATE JIT9120  SET  
+			       IPNS_CHG_YMD =SYSDATE
+			       ,IPNS_INIT_YN = 'Y'
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#initpass#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+	
+	<update id="loginAdminPinChg">
+			UPDATE JIT9120  SET  
+			       IPNS_CHG_YMD =SYSDATE
+			       ,IPNS_INIT_YN = 'Y'
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#dec_pass_chg#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+
+	<update id="JiCmOam.initAllAdminPass">
+			UPDATE JIT9120  SET  
+			       IPNS_CHG_YMD =SYSDATE
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#initpass#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #user_id#						
+	</update>	
+
+	<!-- 관리자 로그인 실패카운트 초기화 -->
+	<update id="JiCmOam.initAdminLogCnt">
+			UPDATE JIT9120  SET  
+			       LOGIN_FAIL_CNT = 0
+			WHERE USER_ID = #userId#						
+	</update>
+
+	<!-- 관리자 로그인 실패카운트 -->
+	<update id="JiCmOam.updateAdminloginFail">
+			UPDATE JIT9120  SET  
+			       LOGIN_FAIL_CNT = LOGIN_FAIL_CNT+1
+ 	        WHERE USER_ID = #USER_ID#						
+	</update>
+	
+	<!-- 관리자 가입승인 -->
+	<update id="JiCmOam.joinAdmin">
+			UPDATE JIT9120 SET  
+			       JOIN_YN='Y'
+			WHERE USER_ID = #suser_id#						
+	</update>		
+
+	
+	<insert id="JiCmOam.insertAdmin">
+		INSERT INTO JIT9120
+		 (
+			USER_SEQNO
+           ,USER_ID
+           ,USER_NM
+           ,ORG_CD
+           ,ORG_NM
+           ,LOGIN_IPNS
+           ,EMAIL
+           ,DUTY_CD
+           ,GRD_CD
+           ,GRD_NM
+           ,MOBLPHON
+           ,STATE_CD
+           ,IPNS_INIT_YN
+           ,IPNS_CHG_YMD
+           ,LOGIN_FAIL_CNT
+           ,REG_DT
+           ,REG_ID
+           ,DEL_YN
+      	   ,NAESUN
+      	   ,USER_DESC
+		   ,POS_NM
+      	   
+		   ) VALUES (
+		   
+		    #max_seq#
+           ,#user_id#
+           ,#user_nm#
+           ,DECODE(#sorg_cd#,null,'0000',#sorg_cd#)
+           ,(SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=DECODE(#sorg_cd#,null,'0000',#sorg_cd#))
+           ,damo.HASH_STR_DATA(#login_ipns#) 
+           ,#email#
+           ,#duty_cd#
+           ,#grd_cd#
+           ,#grd_nm#
+           ,#moblphon#
+           ,DECODE(#state_cd#,null,'C',#state_cd#)
+           ,'Y'
+           ,SYSDATE
+           ,0
+		   ,SYSDATE
+		   ,#reg_id#
+           ,'N'
+      	   ,#naesun#
+      	   ,#user_desc#
+      	   ,#pos_nm#
+
+		  )
+ 	
+	</insert>	
+	
+	
+	<update id="JiCmOam.updateLoginIpnsAdm">
+		/* JiCmOam.updateLoginIpnsAdm */
+		 UPDATE JIT9120
+			SET LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+				,IPNS_CHG_YMD = SYSDATE
+			    ,IPNS_INIT_YN = 'Y'
+			WHERE 1=1 
+			AND USER_ID = #suser_id#
+	</update>	
+	
+	
+	<update id="JiCmOam.updateAdmin">
+		UPDATE JIT9120 SET
+             USER_NM=#user_nm#
+            ,ORG_CD=DECODE(#sorg_cd#,null,'0000',#sorg_cd#)
+           
+          
+           <isNotEmpty property="login_ipns">
+            ,LOGIN_IPNS=damo.HASH_STR_DATA(#login_ipns#) 
+           </isNotEmpty>
+           <isNotEmpty property="email">
+            ,EMAIL=#email# 
+           </isNotEmpty>
+           <isNotEmpty property="now_jobduty_cd">
+           	,DUTY_CD=#duty_cd# 
+           </isNotEmpty>
+           <isNotEmpty property="grd_cd">
+           	,GRD_CD=#grd_cd# 
+           </isNotEmpty>
+           <isNotEmpty property="grd_nm">
+           	,GRD_NM=#grd_nm# 
+           </isNotEmpty>           
+
+           <isNotEmpty property="user_desc">
+           ,USER_DESC=#user_desc#
+           </isNotEmpty>
+           <isNotEmpty property="state_cd">
+           ,STATE_CD=DECODE(#state_cd#,null,'C',#state_cd#)
+           </isNotEmpty>
+
+           <isNotEmpty property="use_st_dt">
+           ,USE_ST_DT=TO_DATE(#use_st_dt#,'YYYY-MM-DD')
+           </isNotEmpty>
+           
+           <isNotEmpty property="use_end_dt">
+           ,USE_END_DT=TO_DATE(#use_end_dt#,'YYYY-MM-DD')
+           </isNotEmpty>
+           
+           ,MOD_DT=SYSDATE
+           
+           ,MOD_ID=#mod_id#
+ 
+
+           <isNotEmpty property="moblphon">
+      		,moblphon=#moblphon#
+           </isNotEmpty>
+           <isNotEmpty property="naesun">      		
+      		,NAESUN=#naesun#
+           </isNotEmpty>
+           <isNotEmpty property="pos_nm">      		
+      		,POS_NM=#pos_nm#
+           </isNotEmpty>           
+           
+      	   
+		   	WHERE USER_SEQNO=#suser_seq#
+	</update>	
+	
+
+	
+	<update id="JiCmOam.updateAdmin3">
+		UPDATE JIT9120 SET
+             USER_NM=#admInfo_user_nm#
+          
+           <isNotEmpty property="admInfo_sosok_han">
+            ,SOSOK_HAN=#admInfo_sosok_han# 
+           </isNotEmpty>
+           <isNotEmpty property="admInfo_zzjikmu_txt">
+            ,ZZJIKMU_TXT=#admInfo_zzjikmu_txt# 
+           </isNotEmpty>
+           
+
+           <isNotEmpty property="admInfo_email">
+            ,EMAIL=#admInfo_email# 
+           </isNotEmpty>
+           
+           ,MOD_DT=SYSDATE
+           
+           ,MOD_ID=#mod_id#
+
+           <isNotEmpty property="admInfo_moblphon">
+      		,moblphon=#admInfo_moblphon#
+           </isNotEmpty>
+           <isNotEmpty property="admInfo_naesun">      		
+      		,NAESUN=#admInfo_naesun#
+           </isNotEmpty>
+      	   
+		   	WHERE USER_ID=#mod_id#
+	</update>		
+	
+	
+	<!-- 관리자 삭제 -->
+	<update id="JiCmOam.deleteAdmin">
+			DELETE FROM JIT9120
+  	       	WHERE USER_SEQNO = #suser_seq#
+	</update>
+  
+    <!-- 중복아이디 체크 -->
+	<select id="JiCmOam.getAdminChk" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9120
+		WHERE USER_ID=#user_id#	
+	</select>    
+	
+	<!-- 일련번호 추출 -->
+	<select id="JiCmOam.getTableMaxSeq3" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9120_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+	<!-- 관리자 비밀변경시 현재 비밀번호 확인 -->
+	<select id="JiCmOam.checkpass" parameterClass="java.util.HashMap" resultClass="egovMap">
+			SELECT LOGIN_IPNS
+			FROM JIT9120
+      			WHERE USER_ID = #user_id#
+      			AND LOGIN_IPNS=damo.HASH_STR_DATA(#login_passwd#)
+	</select>	
+	
+	<!-- 관리자페이지 비밀번호변경 -->
+	<update id="JiCmOam.changepass">
+			UPDATE JIT9120 SET
+			       IPNS_CHG_YMD = SYSDATE
+			       ,LOGIN_FAIL_CNT = '0'
+			       ,LOGIN_IPNS=damo.HASH_STR_DATA(#login_passwd#)
+			       WHERE USER_ID = #user_id#
+	</update>	
+
+   <!-- //////////////////////////// 관리자관리 //////////////////////////// -->	 
+   
+   
+   
+   
+   <!-- //////////////////////////// 권한그룹관리 //////////////////////////// -->
+   <select id="JiCmOam.selectAuthGrpList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			 ROW_NUMBER() OVER (ORDER BY TA.AUTH_GRP_CD DESC) ROW_SEQNO
+			,TO_CHAR(TA.AUTH_GRP_SEQNO) AUTH_GRP_SEQNO
+      		,TA.AUTH_GRP_NM
+      		,TA.AUTH_GRP_CD
+      		,TA.AUTH_GRP_DESC
+      		,TO_CHAR((SELECT COUNT(*) FROM JIT9131 WHERE AUTH_GRP_CD=TA.AUTH_GRP_CD)) AUTH_GRP_MENU_CNT
+      		,TO_CHAR((SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD=TA.AUTH_GRP_CD)) AUTH_GRP_USER_CNT
+      		,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+      		,TA.REG_ID
+      		,TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') MOD_DT
+      		,TA.MOD_ID
+  		FROM JIT9130 TA
+  		WHERE 1=1
+  			<isNotEmpty property="sauth_grp_seqno">
+  				AND AUTH_GRP_SEQNO=#sauth_grp_seqno#
+  			</isNotEmpty>
+  		
+			 <isNotEmpty property="sty">
+			       		<isEqual property="sty" compareValue="auth_grp_nm">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.AUTH_GRP_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>
+			       		<isEqual property="sty" compareValue="auth_grp_cd">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.AUTH_GRP_CD) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>	
+   					   	
+			 </isNotEmpty>
+			 
+			 <isNotEmpty property="per_id">
+			 	<isEqual property="pcode" compareValue="000013">
+			 		AND TA.AUTH_GRP_CD IN (SELECT AUTH_GRP_CD FROM JIT9132 WHERE USER_ID=#per_id#)
+			 	</isEqual>
+			 </isNotEmpty>
+			    		
+  		ORDER BY TA.AUTH_GRP_CD ASC  
+   </select>
+   
+   
+   <select id="JiCmOam.selectAuthGrpMenuList" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 
+		SELECT 
+			TO_CHAR(ROWNUM) AS ROW_SEQNO
+			,TA.IDX
+			,TB.MENU_NM
+      		,TA.M_CODE AS MENU_CD
+      		,TB.M_NMS
+      		,TB.M_CODES
+      		,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+      		,TA.REG_ID
+      		,TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') MOD_DT
+      		,TA.MOD_ID
+  		FROM JIT9131 TA
+  		, (
+				SELECT
+		 			A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+		 			,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+		 			,A.M_S_STYLE 
+		 			, CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+		 			,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+		 			,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+		 			, STD_NM_FU03('M00006',A.LINK_TY) AS LINK_TY_NM
+		 			,A.CLASS_PATH		
+		 			,A.LINK_PATH ,A.BOARD_TY 
+		 			, STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+		 			,A.BOARD_GBN ,A.LINK_TARGET 
+		 			, CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+		 			,A.M_IMG_ON		
+		 			,A.M_IMG_OFF ,A.M_IMG_ALT ,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+		 			,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 			,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::')))  AS M_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD, '::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES
+		 			, A.JSP_INCLUDE_YN 
+		 			, CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+		 			, A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+		 			, A.BOARD_ETC_ITEM_NM , A.BOARD_OPT , A.M_TITLE_HTML , A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+		 			, DECODE(A.BOARD_TY,'000014'	
+		 				,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+		 			, A.M_OPT		
+			   FROM JIT9160 A
+			   WHERE LEVEL > 1										
+			   	START WITH A.MENU_CD = A.MENU_UPPO_CD					
+			   	CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD  		
+  		) TB
+  		WHERE 1=1
+  		AND TA.M_CODE=TB.MENU_CD
+  		
+  			<isNotEmpty property="sauth_grp_cd">
+  				AND TA.AUTH_GRP_CD=#sauth_grp_cd#
+  			</isNotEmpty>
+  			<isNotEmpty property="per_id">
+  				<isEqual property="pcode" compareValue="000013">
+  				AND TA.AUTH_GRP_CD IN (SELECT AUTH_GRP_CD FROM JIT9132 WHERE USER_ID=#per_id#)
+  				</isEqual>
+  			</isNotEmpty>
+  			
+  		ORDER BY TA.IDX ASC  
+   </select>
+   
+   <select id="JiCmOam.selectAuthGrpMenuListLog" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 
+		SELECT 
+			ROW_NUMBER() OVER (ORDER BY TA.LOG_IDX DESC) AS ROW_SEQNO
+			,TA.LOG_IDX
+			,TB.MENU_NM
+      		,TA.M_CODE AS MENU_CD
+      		,TB.M_NMS
+      		,TB.M_CODES
+      		,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+      		,TA.REG_ID
+      		,TA.LOG_MODE
+  		FROM JIT9131_LOG TA
+  		, (
+				SELECT
+		 			A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+		 			,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+		 			,A.M_S_STYLE 
+		 			, CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+		 			,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+		 			,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+		 			, STD_NM_FU03('M00006',A.LINK_TY) AS LINK_TY_NM
+		 			,A.CLASS_PATH		
+		 			,A.LINK_PATH ,A.BOARD_TY 
+		 			, STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+		 			,A.BOARD_GBN ,A.LINK_TARGET 
+		 			, CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+		 			,A.M_IMG_ON		
+		 			,A.M_IMG_OFF ,A.M_IMG_ALT ,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+		 			,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 			,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::')))  AS M_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD, '::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES
+		 			, A.JSP_INCLUDE_YN 
+		 			, CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+		 			, A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+		 			, A.BOARD_ETC_ITEM_NM , A.BOARD_OPT , A.M_TITLE_HTML , A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+		 			, DECODE(A.BOARD_TY,'000014'	
+		 				,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+		 			, A.M_OPT		
+			   FROM JIT9160 A
+			   WHERE LEVEL > 1										
+			   	START WITH A.MENU_CD = A.MENU_UPPO_CD					
+			   	CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD  		
+  		) TB
+  		WHERE 1=1
+  		AND TA.M_CODE=TB.MENU_CD
+  		
+  			<isNotEmpty property="sauth_grp_cd">
+  				AND TA.AUTH_GRP_CD=#sauth_grp_cd#
+  			</isNotEmpty>
+  			
+  			<isNotEmpty property="sp_sdate">
+  				AND TA.REG_DT <![CDATA[ >= ]]> TO_DATE(REPLACE(#sp_sdate#,'-','')||'000000','YYYYMMDDHH24MISS')
+  			</isNotEmpty>
+  			
+  			<isNotEmpty property="sp_edate">
+  				AND TA.REG_DT <![CDATA[ <= ]]> TO_DATE(REPLACE(#sp_edate#,'-','')||'235959','YYYYMMDDHH24MISS')
+  			</isNotEmpty>  			
+  		
+  		ORDER BY TA.LOG_IDX DESC  
+   </select>   
+   
+   <!-- 권한그룹 사용자리스트 -->
+   <select id="JiCmOam.selectAuthGrpUserList" parameterClass="java.util.HashMap" resultClass="egovMap">
+  
+		SELECT 
+			ROW_NUMBER() OVER (ORDER BY TA.IDX DESC) AS ROW_SEQNO
+			,TA.IDX
+      		,TA.AUTH_GRP_CD
+			,TB.USER_NM
+		      , TB.EMAIL			
+		      , TB.MOBLPHON			
+		      , TB.NAESUN			
+			,TA.USER_ID
+			,TC.ORG_NM
+			, CASE WHEN INSTR(TC.ORG_NMS,'::') <![CDATA[ > ]]> 0 THEN SUBSTR(TC.ORG_NMS,1,INSTR(TC.ORG_NMS,'::')-1) ELSE TC.ORG_NMS END AS EMP_TOP_ORG_NM
+			, CASE WHEN INSTR(TC.ORG_CS,'::') <![CDATA[ > ]]> 0 THEN SUBSTR(TC.ORG_CS,1,INSTR(TC.ORG_CS,'::')-1) ELSE TC.ORG_CS END AS EMP_TOP_ORG_CD				
+      		,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+      		,TA.REG_ID
+      		,TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') MOD_DT
+      		,TA.MOD_ID
+  		FROM JIT9132 TA, JIT9120 TB
+  		, (
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'))) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'))) AS ORG_CS
+			   FROM JIT9110 A	
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD	
+
+  		) TC
+  		WHERE 1=1
+  		AND TA.USER_ID=TB.USER_ID
+  		AND TB.ORG_CD=TC.ORG_CD
+  			<isNotEmpty property="sauth_grp_cd">
+  				AND TA.AUTH_GRP_CD=#sauth_grp_cd#
+  			</isNotEmpty>
+   		
+  		ORDER BY TA.IDX DESC  
+   </select>
+   
+   <select id="JiCmOam.selectAuthGrpUserListLog" parameterClass="java.util.HashMap" resultClass="egovMap">
+  
+		SELECT 
+			ROW_NUMBER() OVER (ORDER BY TA.LOG_IDX DESC) AS ROW_SEQNO
+			,TA.LOG_IDX
+      		,TA.AUTH_GRP_CD
+			,TB.USER_NM
+			,TA.USER_ID
+			,TC.ORG_NM
+			, CASE WHEN INSTR(TC.ORG_NMS,'::') <![CDATA[ > ]]> 0 THEN SUBSTR(TC.ORG_NMS,1,INSTR(TC.ORG_NMS,'::')-1) ELSE TC.ORG_NMS END AS EMP_TOP_ORG_NM
+			, CASE WHEN INSTR(TC.ORG_CS,'::') <![CDATA[ > ]]> 0 THEN SUBSTR(TC.ORG_CS,1,INSTR(TC.ORG_CS,'::')-1) ELSE TC.ORG_CS END AS EMP_TOP_ORG_CD				
+      		,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+      		,TA.REG_ID
+      		,TA.LOG_MODE
+  		FROM JIT9132_LOG TA, JIT9120 TB
+  		, (
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'))) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'))) AS ORG_CS
+			   FROM JIT9110 A	
+    				START WITH A.ORG_CD = A.UPPO_ORG_CD
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD	
+
+  		) TC
+  		WHERE 1=1
+  		AND TA.USER_ID=TB.USER_ID
+  		AND TB.ORG_CD=TC.ORG_CD
+  			<isNotEmpty property="sauth_grp_cd">
+  				AND TA.AUTH_GRP_CD=#sauth_grp_cd#
+  			</isNotEmpty>
+  			
+  			<isNotEmpty property="sp_sdate">
+  				AND TA.REG_DT <![CDATA[ >= ]]> TO_DATE(REPLACE(#sp_sdate#,'-','')||'000000','YYYYMMDDHH24MISS')
+  			</isNotEmpty>
+  			
+  			<isNotEmpty property="sp_edate">
+  				AND TA.REG_DT <![CDATA[ <= ]]> TO_DATE(REPLACE(#sp_edate#,'-','')||'235959','YYYYMMDDHH24MISS')
+  			</isNotEmpty>  			
+   		
+  		ORDER BY TA.LOG_IDX DESC  
+   </select>   
+
+	<select id="JiCmOam.getTableMaxSeqJIT9130" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9130_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+    <select id="JiCmOam.getMaxCode" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+    	SELECT 
+    		LPAD(TTA.MAX_C+1,#ColLen#,'0') MAX_CODE
+    	FROM (SELECT NVL(MAX(TA.AUTH_GRP_CD),0) MAX_C 
+        		FROM(
+        	 		SELECT AUTH_GRP_CD, DEL_YN
+					,CASE WHEN REGEXP_LIKE(AUTH_GRP_CD,#WhereStr#) THEN 
+							'Y'
+          				ELSE 
+           					'N'
+          				END AS ISNUM
+					FROM JIT9130
+
+				) TA WHERE TA.ISNUM='Y'
+				AND TA.DEL_YN='N'
+			) TTA
+			
+	</select>	
+	
+	<select id="JiCmOam.getTableMaxSeqJIT9131" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9131_IDX_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+	<select id="JiCmOam.getTableMaxSeqJIT9132" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9132_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+	<insert id="JiCmOam.insertAuthGrp">
+	INSERT INTO JIT9130
+           (
+           AUTH_GRP_SEQNO
+           ,AUTH_GRP_NM
+           ,AUTH_GRP_CD
+           ,REG_DT
+           ,REG_ID
+           ,AUTH_GRP_DESC
+           )
+     VALUES
+           (
+           #iseqnoJIT9130#
+           ,#auth_grp_nm#
+           ,#max_code#
+           ,SYSDATE
+           ,#reg_id#
+           ,#auth_grp_desc#
+           )
+     </insert>
+     
+	<insert id="JiCmOam.insertAuthGrpMenu">
+	INSERT INTO JIT9131
+           (
+           IDX
+           ,AUTH_GRP_CD
+           ,M_CODE
+           ,REG_DT
+           ,REG_ID
+           )
+     VALUES
+           (
+           #iseqnoJIT9131#
+           ,#max_code#
+           ,#menu_cd#
+           ,SYSDATE
+           ,#reg_id#
+           )
+     </insert>
+     
+	<insert id="JiCmOam.insertAuthGrpMenuLog">
+	INSERT INTO JIT9131_LOG
+           (
+           LOG_IDX
+           ,AUTH_GRP_CD
+           ,M_CODE
+           ,REG_DT
+           ,REG_ID
+           ,LOG_MODE
+           )
+     VALUES
+           (
+           #iseqnoJIT9131#
+           ,#max_code#
+           ,#menu_cd#
+           ,SYSDATE
+           ,#reg_id#
+           ,#log_mode#
+           )
+     </insert>     
+     
+	<insert id="JiCmOam.insertAuthGrpUser">
+	INSERT INTO JIT9132
+           (
+           IDX
+           ,AUTH_GRP_CD
+           ,USER_ID
+           ,REG_DT
+           ,REG_ID
+           )
+     VALUES
+           (
+           #iseqnoJIT9132#
+           ,#max_code#
+           ,#user_id#
+           ,SYSDATE
+           ,#reg_id#
+           )
+     </insert>
+     
+	<insert id="JiCmOam.insertAuthGrpUserLog">
+	INSERT INTO JIT9132_LOG
+           (
+           LOG_IDX
+           ,AUTH_GRP_CD
+           ,USER_ID
+           ,REG_DT
+           ,REG_ID
+           ,LOG_MODE
+           )
+     VALUES
+           (
+           #iseqnoJIT9132#
+           ,#max_code#
+           ,#user_id#
+           ,SYSDATE
+           ,#reg_id#
+           ,#log_mode#
+           )
+     </insert>     
+     
+	<update id="JiCmOam.updateAuthGrp">
+	UPDATE JIT9130 SET
+
+           AUTH_GRP_NM=#auth_grp_nm#
+           ,MOD_DT=SYSDATE
+           ,MOD_ID=#reg_id#
+           ,AUTH_GRP_DESC=#auth_grp_desc#
+     WHERE AUTH_GRP_SEQNO=#sauth_grp_seqno#
+     AND AUTH_GRP_CD=#sauth_grp_cd#
+     </update>
+     
+	<delete id="JiCmOam.deleteAuthGrp">
+
+		DELETE FROM JIT9130 
+		WHERE 1=1
+		AND AUTH_GRP_SEQNO=#sauth_grp_seqno#
+     	AND AUTH_GRP_CD=#sauth_grp_cd#
+
+	</delete>       
+     
+	<delete id="JiCmOam.deleteAuthGrpMenu">
+
+		DELETE FROM JIT9131 
+		WHERE 1=1
+		AND AUTH_GRP_CD=#sauth_grp_cd#
+		<isNotEmpty property="delkey"> 
+			AND IDX IN
+		    <iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				          #delkey_sp[]#
+	     	</iterate>		
+		</isNotEmpty>
+
+	</delete>
+	
+	<insert id="JiCmOam.insertAuthGrpMenuLogD">
+
+		INSERT INTO JIT9131_LOG
+           (
+           LOG_IDX
+           ,AUTH_GRP_CD
+           ,M_CODE
+           ,REG_DT
+           ,REG_ID
+           ,LOG_MODE
+           ) SELECT 
+           		JIT9131_LOG_SQ.NEXTVAL,
+           		AUTH_GRP_CD,
+           		M_CODE,
+           		SYSDATE,
+           		#reg_id#,
+           		#log_mode#
+           	 FROM JIT9131
+			 WHERE AUTH_GRP_CD=#sauth_grp_cd#
+				<isNotEmpty property="delkey"> 
+					AND IDX IN
+		    		<iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				          #delkey_sp[]#
+	     			</iterate>		
+				</isNotEmpty>
+
+	</insert>	
+	
+	<update id="JiCmOam.updateAuthGrpMenu">
+	UPDATE JIT9131 SET
+           M_CODE=#menu_cd#
+           ,MOD_DT=SYSDATE
+           ,MOD_ID=#reg_id#
+     WHERE IDX=#idx#
+     AND AUTH_GRP_CD=#sauth_grp_cd#
+     </update>
+     
+	<delete id="JiCmOam.deleteAuthGrpUser">
+
+		DELETE FROM JIT9132 
+		WHERE 1=1
+		AND AUTH_GRP_CD=#sauth_grp_cd#
+		<isNotEmpty property="delkey"> 
+			AND IDX IN
+		    <iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				          #delkey_sp[]#
+	     	</iterate>		
+		</isNotEmpty>
+
+	</delete>
+	
+	<insert id="JiCmOam.insertAuthGrpUserLogD">
+
+		INSERT INTO JIT9132_LOG
+           (
+           LOG_IDX
+           ,AUTH_GRP_CD
+           ,USER_ID
+           ,REG_DT
+           ,REG_ID
+           ,LOG_MODE
+           ) SELECT 
+           		JIT9132_LOG_SQ.NEXTVAL,
+           		AUTH_GRP_CD,
+           		USER_ID,
+           		SYSDATE,
+           		#reg_id#,
+           		#log_mode#
+           	 FROM JIT9132
+			 WHERE AUTH_GRP_CD=#sauth_grp_cd#
+				<isNotEmpty property="delkey"> 
+					AND IDX IN
+		    		<iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				          #delkey_sp[]#
+	     			</iterate>		
+				</isNotEmpty>
+
+	</insert>	
+	
+	<update id="JiCmOam.updateAuthGrpUser">
+	UPDATE JIT9132 SET
+           USER_ID=#user_id#
+           ,MOD_DT=SYSDATE
+           ,MOD_ID=#reg_id#
+     WHERE IDX=#idx#
+     AND AUTH_GRP_CD=#sauth_grp_cd#
+    </update>
+   
+   <!-- 해당메뉴 권한있는 관리자 조회(메일,SMS 발송용이라 전체관리자 제외) -->
+   <update id="JiCmOam.menuAuthAdmin">
+   		
+   </update>
+   
+   
+   <!-- //////////////////////////// 권한그룹관리 //////////////////////////// -->  
+   
+   
+   
+   
+   <!-- //////////////////////////// 사용자관리 //////////////////////////// -->	
+    <!-- 사용자관리 전체조회 -->
+	
+   	<select id="JiCmOam.selectOrgSawonList" parameterClass="java.util.HashMap" resultClass="egovMap">	
+
+    	SELECT 
+    		   ROW_NUMBER() OVER (ORDER BY TA.REG_DT ASC) ROW_SEQNO
+			  ,TO_CHAR(TA.USER_SEQNO) AS USER_SEQNO		<!-- 사용자 일련번호 -->
+		      ,TA.USER_ID					<!-- 사용자아이디 -->
+		      ,TA.USER_NM					<!-- 사용자명 -->
+		      ,TA.LOGIN_IPNS				<!-- 사용자로그인비밀번호 -->
+		      ,TA.USER_DESC					<!-- 사용자 비고 -->
+		      ,TA.USER_STATE_CD				<!-- 사용자 상태코드 -->
+		      ,TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT			<!-- 사용자 사용시작일 -->
+		      ,TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 		<!-- 사용자 사용종료일 -->
+		      ,TA.IPNS_INIT_YN											<!-- 비밀번호 초기화 여부 -->
+		      ,TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	<!-- 비밀번호 변경일자 -->
+		      ,TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				<!-- 로그인 실패 횟수 -->
+		      ,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT				<!-- 등록일 -->
+		      ,TA.REG_ID												<!-- 등록자 -->
+		      ,TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT 				<!-- 수정일 -->
+		      ,TA.MOD_ID												<!-- 수정자 -->
+		      ,TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT				<!-- 삭제일 -->
+		      ,TA.DEL_ID												<!-- 삭제자 -->
+		      ,TA.DEL_YN					<!-- 삭제여부 -->
+		      ,TA.JOIN_YN					<!-- 가입승인여부 -->
+		      ,TA.PRV_AGREE1				<!-- 개인정보동의1 -->
+		      ,TA.PRV_AGREE2				<!-- 개인정보동의2 -->
+		      ,TA.PRV_AGREE3				<!-- 개인정보동의3 -->
+		      ,TA.PRV_AGREE4				<!-- 개인정보동의4 -->
+			  ,TA.BRTHDY BRTHDY					<!-- 생년월일 -->
+			  ,TA.MOBLPHON MOBLPHON				    <!-- 휴대폰번호 -->
+			  ,TA.TELNO TELNO					    <!-- 유선전화번호 -->
+			  ,TA.EMAIL_RECPTN_AT			<!-- 메일수신여부 -->
+			  ,TA.SMS_RECPTN_AT			    <!-- SMS수신여부 -->
+			  ,TA.NEW_RECPTN_AT			    <!-- 뉴스레터 수신여부 -->
+			  ,TA.HAPPYCL_PROVD_AT		    <!-- 해피콜 제공여부 -->
+			  ,TA.INDVDLINFO_PRCUSE_AT	    <!-- 개인정보활용 동의 여부 -->
+			  ,TA.ZIP						<!-- 우편번호 -->
+			  ,TA.ADRES ADRES					    <!-- 주소 -->
+			  ,TA.BUNJI BUNJI					    <!-- 주소번지 -->
+			  ,TA.EMAIL EMAIL					    <!-- 이메일주소 -->
+			  ,TA.INDVDL_GRP_SE			    <!-- 개인 단체 구분(개인:P 단체:G) -->
+			  ,TA.GRP_NM					<!-- 단체명 -->
+			  ,TA.RPRSNTV					<!-- 대표자 -->
+			  ,TA.USE_DEPT				    <!-- 사용부서 -->
+			  ,TA.CHARGER					<!-- 담당자 -->
+			  ,TA.CONTACT
+			  ,NVL((SELECT LISTAGG(FILE_NM, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC ) AS FILE_NMS 
+	     		     FROM JIT9151
+	     		    WHERE MENU_CD = #file_menu_cd#
+	     		      AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO 
+	     		      AND DEL_YN = 'N'), '') AS FILE_NMS	/* 데이터 셋 파일 이름 */
+	     		      
+        	  ,NVL((SELECT LISTAGG(FILE_SEQNO, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC) AS FILE_NMS
+        	 		 FROM JIT9151
+        	 		WHERE MENU_CD =  #file_menu_cd#
+        	 		  AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO
+        	 		  AND DEL_YN = 'N'), '') AS FILE_SEQ 	/* 데이터 셋 파일 시퀀스 */
+			  ,TO_CHAR(TA.LOGIN_LAST,'YYYY-MM-DD HH24:MI:SS') LOGIN_LAST	<!-- 최종로그인 -->
+
+      	FROM JIT9111 TA
+    	WHERE 1=1
+
+     		 <!-- 승인여부값에 따라 -->
+     		 <isNotEmpty property="sjoin_yn">
+     		 	AND TA.JOIN_YN = #sjoin_yn#
+     		 </isNotEmpty>   		 
+     		 
+     		 <!-- 상세조회일경우 -->
+     		 <isEqual property="pstate" compareValue="UF">
+     		 	<isNotEmpty property="suser_seq">
+     		 		AND TA.USER_SEQNO = #suser_seq#
+     		 	</isNotEmpty>
+     		 </isEqual>
+     	
+			 <isNotEmpty property="sty">
+			       		<isEqual property="sty" compareValue="user_nm">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.USER_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>
+			       		<isEqual property="sty" compareValue="user_id">
+			       			<isNotEmpty property="stext">
+			       				AND UPPER(TA.USER_ID) LIKE '%' || UPPER(#stext#) || '%' 
+			       			</isNotEmpty>   		
+					   	</isEqual>				   					   					   	
+			 </isNotEmpty> 
+ 		ORDER BY TA.REG_DT DESC
+	</select>	
+
+
+    <!-- 전체사용자 조회 -->
+   	<select id="JiCmOam.selectOrgSawonListInit" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT	
+      		 USER_ID
+      		,USER_NM
+			,TELNO
+			,EMAIL_RECPTN_AT
+      	FROM JIT9111
+      	WHERE 1=1
+      	AND USER_ID NOT IN('EDPotal') <!-- 전체관리자 제외 -->
+	</select>	
+	
+	<update id="JiCmOam.initpass_kepcoenc">
+		UPDATE JIT9111  SET  
+		       IPNS_CHG_YMD =SYSDATE
+		       ,IPNS_INIT_YN = 'Y'
+		       ,LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#initpass#,'EDPORTAL','TB_KEY','SHA','') /* 비밀번호 단방향 암호화적용  */ 
+		       WHERE USER_ID = #suser_id#						
+	</update>
+	
+	<update id="JiCmOam.initpass">
+		UPDATE JIT9111  SET  
+		       IPNS_CHG_YMD =SYSDATE
+		       ,IPNS_INIT_YN = 'Y'
+		       ,LOGIN_IPNS = damo.HASH_STR_DATA(#initpass#) /* 비밀번호 단방향 암호화적용  */ 
+		       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+	<update id="loginPinChg_kepcoenc">
+			UPDATE JIT9111  SET  
+			       IPNS_CHG_YMD =SYSDATE
+			       ,IPNS_INIT_YN = 'Y'
+			       ,LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#dec_pass_chg#,'EDPORTAL','TB_KEY','SHA','') /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>
+	
+	<update id="loginPinChg">
+			UPDATE JIT9111  SET  
+			       IPNS_CHG_YMD =SYSDATE
+			       ,IPNS_INIT_YN = 'Y'
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#dec_pass_chg#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+	<update id="JiCmOam.initAllpass_kepcoenc">
+		UPDATE JIT9111  SET  
+		       IPNS_CHG_YMD =SYSDATE
+		       ,LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#initpass#,'EDPORTAL','TB_KEY','SHA','') /* 비밀번호 단방향 암호화적용  */ 
+		       WHERE USER_ID = #user_id#						
+	</update>	
+	
+	<update id="JiCmOam.initAllpass">
+		UPDATE JIT9111  SET  
+		       IPNS_CHG_YMD =SYSDATE
+		       ,LOGIN_IPNS = damo.HASH_STR_DATA(#initpass#) /* 비밀번호 단방향 암호화적용  */ 
+		       WHERE USER_ID = #user_id#						
+	</update>	
+	
+	<!-- 사용자 로그인 실패카운트 초기화 -->
+   	<update id="JiCmOam.initLogCnt">
+			UPDATE JIT9111  SET  
+			       LOGIN_FAIL_CNT = 0
+			       ,PW_MISMATCH_COUNT = 0
+			       ,STATUS ='C'
+			WHERE USER_ID = #suser_id#						
+	</update>
+
+	<!-- 사용자 로그인 실패카운트 -->
+	<update id="JiCmOam.updateloginFail">
+			UPDATE JIT9111  SET  
+			       LOGIN_FAIL_CNT = LOGIN_FAIL_CNT+1
+ 	        WHERE USER_ID = #USER_ID#						
+	</update>
+   
+    <!-- 가입승인 -->
+   	<update id="JiCmOam.joinUser">
+			UPDATE JIT9111 SET  
+			       JOIN_YN='Y'
+			WHERE USER_ID = #suser_id#						
+	</update>	
+   
+    <!-- 사용자 삭제 -->
+   	<update id="JiCmOam.deleteUser">
+			DELETE FROM JIT9111  
+  	       	WHERE USER_SEQNO = #suser_seq#						
+	</update>
+   
+   
+    <!-- 아이디 중복을 체크 -->
+   	<select id="JiCmOam.getUserChk" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9111
+		WHERE USER_ID=#user_id#	
+	</select> 
+
+	<select id="JiCmOam.getJIT9111Chk" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9111
+		WHERE USER_ID = #userId#
+
+	</select> 
+	
+	<insert id="JiCmOam.insertJIT9111_2_kepcoenc">
+		INSERT INTO JIT9111
+		 (	
+			USER_SEQNO,
+			USER_ID,
+			USER_NM,
+			LOGIN_IPNS,
+			IPNS_INIT_YN,
+			IPNS_CHG_YMD,
+			LOGIN_FAIL_CNT,
+			REG_DT,
+			DEL_YN,
+			JOIN_YN,
+			PRV_AGREE1,
+			PRV_AGREE2,
+			PRV_AGREE3,
+			PRV_AGREE4										
+		   )
+		   VALUES(						
+		    JIT9111_USER_SEQNO_SQ.NEXTVAL
+           ,#userId#
+           ,#userNm#
+           ,dbsec.sdb_crypto.encrypt(#loginIpns# ,'EDPORTAL','TB_KEY','SHA','')
+           ,'Y'
+           ,SYSDATE
+           ,0
+           ,SYSDATE
+           ,'N'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+						
+		  )	
+	</insert>	
+	
+	<insert id="JiCmOam.insertJIT9111_2">
+		INSERT INTO JIT9111
+		 (	
+			USER_SEQNO,
+			USER_ID,
+			USER_NM,
+			LOGIN_IPNS,
+			IPNS_INIT_YN,
+			IPNS_CHG_YMD,
+			LOGIN_FAIL_CNT,
+			REG_DT,
+			DEL_YN,
+			JOIN_YN,
+			PRV_AGREE1,
+			PRV_AGREE2,
+			PRV_AGREE3,
+			PRV_AGREE4										
+		   )
+		   VALUES(						
+		    JIT9111_USER_SEQNO_SQ.NEXTVAL
+           ,#userId#
+           ,#userNm#
+           ,damo.HASH_STR_DATA(#loginIpns#) 
+           ,'Y'
+           ,SYSDATE
+           ,0
+           ,SYSDATE
+           ,'N'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+						
+		  )	
+	</insert>	
+	
+	<update id="JiCmOam.updateJIT9111_2">
+		UPDATE JIT9111 SET MOD_DT = SYSDATE
+		           ,MOD_ID	= 'E00000001'
+		           ,USER_NM = #userNm#
+
+		WHERE USER_ID = #userId#
+	</update>	
+	
+	<insert id="JiCmOam.insertJIT9111_kepcoenc">
+		MERGE INTO JIT9111 A
+		USING DUAL
+		ON(A.USER_ID = #userId#)
+		WHEN MATCHED THEN
+				
+		 UPDATE SET A.MOD_DT = SYSDATE
+		           ,A.MOD_ID	= 'E00000001'
+		           ,A.USER_NM = #userNm#
+
+
+		WHEN NOT MATCHED THEN	
+		INSERT 
+		 (	
+			USER_SEQNO,
+			USER_ID,
+			USER_NM,
+			LOGIN_IPNS,
+			IPNS_INIT_YN,
+			IPNS_CHG_YMD,
+			LOGIN_FAIL_CNT,
+			REG_DT,
+			DEL_YN,
+			JOIN_YN,
+			PRV_AGREE1,
+			PRV_AGREE2,
+			PRV_AGREE3,
+			PRV_AGREE4										
+		   )
+		   VALUES(						
+		    JIT9111_USER_SEQNO_SQ.NEXTVAL
+           ,#userId#
+           ,#userNm#
+           ,dbsec.sdb_crypto.encrypt(#loginIpns# ,'EDPORTAL','TB_KEY','SHA','')
+           ,'Y'
+           ,SYSDATE
+           ,0
+           ,SYSDATE
+           ,'N'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+						
+		  )				
+ 	
+	</insert>
+	
+	<insert id="JiCmOam.insertJIT9111">
+		MERGE INTO JIT9111 A
+		USING DUAL
+		ON(A.USER_ID = #userId#)
+		WHEN MATCHED THEN
+				
+		 UPDATE SET A.MOD_DT = SYSDATE
+		           ,A.MOD_ID	= 'E00000001'
+		           ,A.USER_NM = #userNm#
+
+
+		WHEN NOT MATCHED THEN	
+		INSERT 
+		 (	
+			USER_SEQNO,
+			USER_ID,
+			USER_NM,
+			LOGIN_IPNS,
+			IPNS_INIT_YN,
+			IPNS_CHG_YMD,
+			LOGIN_FAIL_CNT,
+			REG_DT,
+			DEL_YN,
+			JOIN_YN,
+			PRV_AGREE1,
+			PRV_AGREE2,
+			PRV_AGREE3,
+			PRV_AGREE4										
+		   )
+		   VALUES(						
+		    JIT9111_USER_SEQNO_SQ.NEXTVAL
+           ,#userId#
+           ,#userNm#
+           ,damo.HASH_STR_DATA(#loginIpns#) 
+           ,'Y'
+           ,SYSDATE
+           ,0
+           ,SYSDATE
+           ,'N'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+           ,'Y'
+						
+		  )				
+ 	
+	</insert>		   
+   	
+	<!-- 아이디 체크 -->
+	<select id="JiCmOam.getCheckUserId" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		/* JiCmOam.getCheckUserId */
+		
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE USER_ID = #user_id#
+		
+	</select>
+	
+	<!-- 본인인증, 아이핀인증으로 중복가입 체크 -->
+	<select id="JiCmOam.getCheckDupInfo" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		/* JiCmOam.getCheckDupInfo */
+		
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE DUPINFO = #sDupInfo#
+		
+	</select>	
+	
+	<!-- 사용자정보 -->
+	
+	<select id="JiCmOam.selectUserInfo" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiCmOam.selectUserInfo */
+		SELECT TO_CHAR(TA.USER_SEQNO) USER_SEQNO
+				   ,TA.USER_ID
+				   ,TA.USER_NM
+				   ,TA.BRTHDY BRTHDY
+				   ,TA.LOGIN_IPNS
+				   ,TA.MOBLPHON MOBLPHON
+				   ,TA.TELNO TELNO
+				   ,TA.ZIP
+				   ,TA.ADRES ADRES
+				   ,TA.BUNJI BUNJI
+				   ,TA.EMAIL EMAIL
+				   ,TA.EMAIL_RECPTN_AT
+				   ,TA.SMS_RECPTN_AT
+				   ,TA.NEW_RECPTN_AT
+				   ,TA.HAPPYCL_PROVD_AT
+				   ,TA.INDVDLINFO_PRCUSE_AT
+				   ,TA.REG_DT
+				   ,TA.REG_ID
+				   ,TA.DEL_YN
+				   ,TA.DUPINFO
+				  <!--  20180911 추가 s -->
+				   ,TA.INDVDL_GRP_SE
+				   ,TA.GRP_NM
+				  <!--  20180911 추가 e -->
+				  ,TA.GRP_NM					<!-- 단체명 -->
+				  ,TA.RPRSNTV					<!-- 대표자 -->
+				  ,TA.USE_DEPT				    <!-- 사용부서 -->
+				  ,TA.CHARGER					<!-- 담당자 -->
+				  ,TA.CONTACT
+				  ,NVL((SELECT LISTAGG(FILE_NM, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC ) AS FILE_NMS 
+		     		     FROM JIT9151
+		     		    WHERE MENU_CD = '000138'
+		     		      AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO 
+		     		      AND DEL_YN = 'N'), '') AS FILE_NMS	/* 데이터 셋 파일 이름 */
+		     		      
+	        	  ,NVL((SELECT LISTAGG(FILE_SEQNO, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC) AS FILE_NMS
+	        	 		 FROM JIT9151
+	        	 		WHERE MENU_CD =  '000138'
+	        	 		  AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO
+	        	 		  AND DEL_YN = 'N'), '') AS FILE_SEQ 	/* 데이터 셋 파일 시퀀스 */
+				  ,TO_CHAR(TA.LOGIN_LAST,'YYYY-MM-DD HH24:MI:SS') LOGIN_LAST	<!-- 최종로그인 -->				  
+		FROM JIT9111 TA
+		WHERE 1=1
+		<isEqual property="chkyn" compareValue="Y">
+			<isNotEmpty property="user_id">
+				AND TA.USER_ID = #user_id#
+			</isNotEmpty>		
+			<isNotEmpty property="grp_nm">
+				AND TA.GRP_NM = #grp_nm#
+			</isNotEmpty>		
+			<isNotEmpty property="user_nm">
+				AND TA.USER_NM = #user_nm#
+			</isNotEmpty>		
+			<isNotEmpty property="brthdy">
+				AND TA.BRTHDY = #brthdy#
+			</isNotEmpty>
+			<isNotEmpty property="moblphon">
+				AND TA.MOBLPHON = #moblphon#
+			</isNotEmpty>
+			<isNotEmpty property="email">
+				AND TA.EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty property="sDupInfo">
+				AND TA.DUPINFO = #sDupInfo#
+			</isNotEmpty>
+			<isNotEmpty property="authcode">
+				AND TA.AUTHCODE = #authcode#
+			</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="chkyn" compareValue="Y">
+			<isNotEmpty property="user_id">
+				AND TA.USER_ID = #user_id#
+			</isNotEmpty>
+			<isEmpty property="user_id">
+				AND TA.USER_ID IS NULL
+			</isEmpty>		
+			<isNotEmpty property="user_nm">
+				AND TA.USER_NM = #user_nm#
+			</isNotEmpty>
+			<isNotEmpty property="brthdy">
+				AND TA.BRTHDY = #brthdy#
+			</isNotEmpty>
+			<isNotEmpty property="moblphon">
+				AND TA.MOBLPHON = #moblphon#
+			</isNotEmpty>
+			<isNotEmpty property="email">
+				AND TA.EMAIL = #email#
+			</isNotEmpty>
+			<isNotEmpty property="sDupInfo">
+				AND TA.DUPINFO = #sDupInfo#
+			</isNotEmpty>
+			<isNotEmpty property="authcode">
+				AND TA.AUTHCODE = #authcode#
+			</isNotEmpty>
+		</isNotEqual>
+		
+	</select>	
+	
+	<!-- 사용자 패스워드 체크 -->
+	<select id="JiCmOam.getCheckPw_kepcoenc" parameterClass="java.util.HashMap" resultClass="egovMap">
+	
+		/* JiCmOam.getCheckPw */
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE USER_ID = #user_id#
+		AND     LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#login_passwd#,'EDPORTAL','TB_KEY','SHA','')
+		
+	</select>
+	
+	<select id="JiCmOam.getCheckPw" parameterClass="java.util.HashMap" resultClass="egovMap">
+	
+		/* JiCmOam.getCheckPw */
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE USER_ID = #user_id#
+		AND     LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+		
+	</select>	
+	
+	<!-- 회원가입 사용자 등록 -->
+	<insert id="JiCmOam.insertUserInfo">
+		/* ORG_CD 이후 데이터 정의필요 */
+		/* JiCmOam.insertUserInfo */
+		INSERT INTO JIT9111(
+						   USER_SEQNO
+						  ,USER_ID
+						  ,USER_NM
+						  ,BRTHDY
+						  ,LOGIN_IPNS
+						  ,MOBLPHON
+						  ,TELNO
+						  ,ZIP
+						  ,ADRES
+						  ,BUNJI
+						  ,EMAIL
+						  ,EMAIL_RECPTN_AT
+						  ,SMS_RECPTN_AT
+						  ,NEW_RECPTN_AT
+						  ,HAPPYCL_PROVD_AT
+						  <isNotEmpty property="indvdlinfo_prcuse_at">
+						  ,INDVDLINFO_PRCUSE_AT
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_1">
+						  ,PRV_AGREE1
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_2">
+						  ,PRV_AGREE2
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_3">
+						  ,PRV_AGREE3
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_4">
+						  ,PRV_AGREE4
+						  </isNotEmpty>
+						  ,REG_DT
+						  <isNotEmpty property="reg_id">
+						  ,REG_ID
+						  </isNotEmpty>
+						  ,INDVDL_GRP_SE
+						  ,GRP_NM
+						  ,RPRSNTV
+						  ,USE_DEPT
+						  ,CHARGER
+						  ,CONTACT
+						  ,DEL_YN
+						  ,IPNS_INIT_YN
+						  
+						  ,LOGIN_FAIL_CNT
+						  ,DUPINFO
+						  <isNotEmpty property="addr_sido">
+						  ,ADDR_SIDO
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_sigungu">
+						  ,ADDR_SIGUNGU
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_dong">
+						  ,ADDR_DONG
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_road">
+						  ,ADDR_ROAD
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_bunji">
+						  ,ADDR_BUNJI
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_raad_num">
+						  ,ADDR_RAAD_NUM
+						  </isNotEmpty>	
+						  ,PW_UPDATE_TIME	
+						  ,IPNS_CHG_YMD					  
+     				
+					 ) VALUES (
+					 	   #user_seqno#
+						  ,#user_id#
+						  ,#user_nm#
+						  ,#brthdy#
+						  ,damo.HASH_STR_DATA(#login_passwd#)
+						  ,#moblphon#
+						  ,#telno#
+						  ,#zip#
+						  ,#adres#
+						  ,#bunji#
+						  ,#email#
+						  ,#email_recptn_at#
+						  ,#sms_recptn_at#
+						  ,#new_recptn_at#
+						  ,#happycl_provd_at#
+						  <isNotEmpty property="indvdlinfo_prcuse_at">
+						  ,#indvdlinfo_prcuse_at#
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_1">
+						  ,#agree_1#
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_2">
+						  ,#agree_2#
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_3">
+						  ,#agree_3#
+						  </isNotEmpty>
+						  <isNotEmpty property="agree_4">
+						  ,#agree_4#
+						  </isNotEmpty>
+						  ,sysdate
+						  <isNotEmpty property="reg_id">
+						  ,#reg_id#
+						  </isNotEmpty>
+						  ,#indvdl_grp_se#
+						  ,#grp_nm#
+						  ,#rprsntv#
+						  ,#use_dept#
+						  ,#charger#
+						  ,#contact#
+						  ,'N'
+						  ,'Y'
+
+						  ,0
+						  ,#sDupInfo#
+						  <isNotEmpty property="addr_sido">
+						  ,#addr_sido#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_sigungu">
+						  ,#addr_sigungu#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_dong">
+						  ,#addr_dong#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_road">
+						  ,#addr_road#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_bunji">
+						  ,#addr_bunji#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_raad_num">
+						  ,#addr_raad_num#
+						  </isNotEmpty>	
+						  ,SYSDATE	
+						  ,SYSDATE				  
+					 )
+		
+	</insert>	
+	
+	<!-- 사용자정보 수정 -->
+	
+	<!-- 사용자정보 수정 -->
+	<update id="JiCmOam.updateUserInfo">
+		
+		/* JiCmOam.updateUserInfo */
+		 UPDATE JIT9111
+				SET 
+				   <isEqual property="scode" compareValue="sysadm">
+				   BRTHDY = #brthdy#
+				   </isEqual>
+				   <isNotEmpty property="password">
+				   LOGIN_IPNS = damo.HASH_STR_DATA(#password#)
+				   </isNotEmpty>
+				   ,MOBLPHON = #moblphon#
+				   ,TELNO = #telno#
+				   ,ZIP = #zip#
+				   ,ADRES = #adres#
+				   ,BUNJI = #bunji#
+				   ,EMAIL = #email#
+				   ,EMAIL_RECPTN_AT = #email_recptn_at#
+				   ,SMS_RECPTN_AT = #sms_recptn_at#
+				   ,NEW_RECPTN_AT = #new_recptn_at#
+				   ,HAPPYCL_PROVD_AT = #happycl_provd_at#
+				   ,INDVDL_GRP_SE = #indvdl_grp_se#
+				   ,GRP_NM = #grp_nm#
+				   ,RPRSNTV = #rprsntv#
+				   ,USE_DEPT = #use_dept#
+				   ,CHARGER = #charger#
+				   ,CONTACT = #contact#
+		           ,MOD_DT=SYSDATE
+		           ,MOD_ID=#user_id#
+			WHERE USER_ID = #user_id#
+		
+	</update>	
+	
+
+	<!-- 인증번호 및 시간 업데이트  -->
+	<update id="JiCmOam.updateAuthCode_kepcoenc">
+		/* JiCmOam.updateAuthCode */
+		 UPDATE JIT9111
+			SET AUTHCODE = #authcode#
+				,AUTHCODE_DT = sysdate
+			WHERE USER_NM = #user_nm#
+			  	AND BRTHDY = dbsec.sdb_crypto.encrypt(#brthdy#,'EDPORTAL','TB_KEY','ARIA','')
+			<isNotEmpty property="moblphon">
+				AND MOBLPHON = dbsec.sdb_crypto.encrypt(#moblphon#,'EDPORTAL','TB_KEY','ARIA','')
+			</isNotEmpty>
+			<isNotEmpty property="email">
+				AND EMAIL = dbsec.sdb_crypto.encrypt(#email#,'EDPORTAL','TB_KEY','ARIA','')
+			</isNotEmpty>
+			  
+	</update>
+	
+	<!-- 인증번호 및 시간 업데이트  -->
+	<update id="JiCmOam.updateAuthCode">
+		/* JiCmOam.updateAuthCode */
+		 UPDATE JIT9111
+			SET AUTHCODE = #authcode#
+				,AUTHCODE_DT = sysdate
+			WHERE 1=1
+			<isEqual property="chkyn" compareValue="Y">
+				AND GRP_NM = #grp_nm#
+				<isNotEmpty property="user_id">
+					AND USER_ID = #user_id#
+				</isNotEmpty>				
+				<isNotEmpty property="moblphon">
+					AND MOBLPHON = #moblphon#
+				</isNotEmpty>
+				<isNotEmpty property="email">
+					AND EMAIL = #email#
+				</isNotEmpty>				
+			</isEqual>
+			<isNotEqual property="chkyn" compareValue="Y">
+					AND USER_NM = #user_nm#
+				  	AND BRTHDY = #brthdy#
+				<isNotEmpty property="moblphon">
+					AND MOBLPHON = #moblphon#
+				</isNotEmpty>
+				<isNotEmpty property="email">
+					AND EMAIL = #email#
+				</isNotEmpty>
+			</isNotEqual>
+			  
+	</update>	
+
+	<!-- 비밀번호찾기의 비밀번호 업데이트(사용자)  -->
+	<update id="JiCmOam.updateLoginIpns_kepcoenc">
+		/* JiCmOam.updateLoginIpns */
+		 UPDATE JIT9111
+			SET LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#login_passwd#,'EDPORTAL','TB_KEY','SHA','')
+			WHERE 1=1 
+			<!-- 본인인증, 아이핀 인경우 -->
+			<isNotEmpty property="sDupInfo">
+				AND DUPINFO = #sDupInfo#
+			</isNotEmpty>
+			
+			<!-- 휴대폰, 이메일인증인 경우 -->
+			<isEmpty property="sDupInfo">
+				<isNotEmpty property="user_id">
+					AND USER_ID = #user_id#
+				</isNotEmpty>
+				<isNotEmpty property="user_nm">
+					AND USER_NM = #user_nm#
+				</isNotEmpty>
+				<isNotEmpty property="brthdy">
+					AND BRTHDY = dbsec.sdb_crypto.encrypt(#brthdy#,'EDPORTAL','TB_KEY','ARIA','')
+				</isNotEmpty>
+				<isNotEmpty property="moblphon">
+					AND MOBLPHON = dbsec.sdb_crypto.encrypt(#moblphon#,'EDPORTAL','TB_KEY','ARIA','')
+				</isNotEmpty>
+				<isNotEmpty property="email">
+					AND EMAIL = dbsec.sdb_crypto.encrypt(#email#,'EDPORTAL','TB_KEY','ARIA','')
+				</isNotEmpty>
+			</isEmpty>
+	</update>
+	
+	<!-- 비밀번호찾기의 비밀번호 업데이트(사용자)  -->
+	<update id="JiCmOam.updateLoginIpns">
+		/* JiCmOam.updateLoginIpns */
+		 UPDATE JIT9111
+			SET LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+			WHERE 1=1 
+			<!-- 본인인증, 아이핀 인경우 -->
+			<isNotEmpty property="sDupInfo">
+				AND DUPINFO = #sDupInfo#
+			</isNotEmpty>
+			
+			<!-- 휴대폰, 이메일인증인 경우 -->
+			<isEmpty property="sDupInfo">
+				<isNotEmpty property="user_id">
+					AND USER_ID = TO_CHAR(#user_id#)
+				</isNotEmpty>
+				<isNotEmpty property="user_nm">
+					AND USER_NM = #user_nm#
+				</isNotEmpty>
+				<isNotEmpty property="brthdy">
+					AND BRTHDY = #brthdy#
+				</isNotEmpty>
+				<isNotEmpty property="moblphon">
+					AND MOBLPHON = #moblphon#
+				</isNotEmpty>
+				<isNotEmpty property="email">
+					AND EMAIL = #email#
+				</isNotEmpty>
+				<isNotEmpty property="authcode">
+					AND AUTHCODE = #authcode#
+				</isNotEmpty>				
+			</isEmpty>
+	</update>	
+	
+	<!-- 비밀번호초기화의 비밀번호 업데이트(관리자페이지의 사용자)  -->
+	<update id="JiCmOam.updateLoginIpnsAdmUser">
+		/* JiCmOam.updateLoginIpnsAdmUser */
+		 UPDATE JIT9111
+			SET LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+				,IPNS_CHG_YMD = SYSDATE
+			    ,IPNS_INIT_YN = 'Y'
+			WHERE 1=1 
+			AND USER_ID = #suser_id#
+	</update>	
+	
+	<!-- 일련번호 추출 -->
+	<select id="JiCmOam.getTableMaxSeq2" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9111_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+	
+	<!-- //////////////////////////// 사용자관리 //////////////////////////// -->	
+	
+	<procedure id="JiCmOam.insertJIT9110_UPDATEJob" parameterClass="java.util.HashMap" >
+
+		<![CDATA[
+			{ call JIT9110_FROM_CM_ORGINFO() }
+		]]>
+
+	</procedure>
+		
+	<procedure id="JiCmOam.insertJIT9120_UPDATEJob" parameterClass="java.util.HashMap" >
+
+		<![CDATA[
+			{ call JIT9120_FROM_CM_EMPINFO() }
+		]]>
+
+	</procedure>	
+	
+	<procedure id="JiCmOam.deleteAuthLogJob" parameterClass="java.util.HashMap" >
+
+		<![CDATA[
+			{ call DELETE_AUTHLOGJOB() }
+		]]>
+
+	</procedure>	
+	
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

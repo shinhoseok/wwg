@@ -1,0 +1,93 @@
+@charset "utf-8";
+/* CSS Document */
+
+:root {
+	--CON_ROOT: /KomipoWwg;
+}
+	
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	src: local('Noto Sans Light'), local('NotoSans-Light'), url(/KomipoWwg/font/notokr/notokr-light.eot);
+	src: url(/KomipoWwg/font/notokr-light.eot?#iefix) format('embedded-opentype'),
+		 url(/KomipoWwg/font/notokr-light.woff2) format('woff2'),
+		 url(/KomipoWwg/font/notokr-light.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	src: local('Noto Sans Regular'), local('NotoSans-Regular'), url(/KomipoWwg/font/notokr/notokr-regular.eot);
+	src: url(/KomipoWwg/font/notokr-regular.eot?#iefix) format('embedded-opentype'),
+		 url(/KomipoWwg/font/notokr-regular.woff2) format('woff2'),
+		 url(/KomipoWwg/font/notokr-regular.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 500;
+	src: local('Noto Sans Medium'), local('NotoSans-Medium'), url(/KomipoWwg/font/notokr/notokr-medium.eot);
+	src: url(/KomipoWwg/font/notokr-medium.eot?#iefix) format('embedded-opentype'),
+		 url(/KomipoWwg/font/notokr-medium.woff2) format('woff2'),
+		 url(/KomipoWwg/font/notokr-medium.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Noto Sans Bold'), local('NotoSans-Bold'), url(/KomipoWwg/font/notokr/notokr-bold.eot);
+	src: url(/KomipoWwg/font/notokr-bold.eot?#iefix) format('embedded-opentype'),
+		 url(/KomipoWwg/font/notokr-bold.woff2) format('woff2'),
+		 url(/KomipoWwg/font/notokr-bold.woff) format('woff');
+}
+
+
+/*Common*/
+html{ margin:0;padding:0;overflow-x:hidden;word-break:break-all;   
+/*white-space:nowrap;셀의 너비를 지정했다 하더라도 자동으로 줄바꿈이 되지 않게 하는 속성 */
+}
+body { width:100%; height:100%; font-family:"Noto Sans KR", sans-serif;}
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0;padding:0;}
+body,input,textarea,select,button,table{font-family:"Noto Sans KR", sans-serif; font-size:14px; color:#434343; }
+img,fieldset{border:none;}
+img {border:0;} /* 무조건 middle */
+ul,ol{list-style:none;}
+em,address{font-style:normal;}
+a{text-decoration:none;color:#2a2a2a;}
+/* a:hover,a:active,a:focus,a:visited{text-decoration:none;color:#2a2a2a;} */
+input { color:#555; font-size:14px;vertical-align:middle; padding:7px 5px; border:1px solid #d5d5d5; box-sizing:border-box;}
+input[type="checkbox"] {border:none;}
+select { color:#555; font-size:14px;vertical-align:middle; padding:6px 5px; border:1px solid #d5d5d5; box-sizing:border-box;} 
+hr,legend{display:none;}
+label{cursor:pointer;_cursor/**/:hand;}
+button{border:none;background:none;cursor:pointer;_cursor/**/:hand;}
+/* table{border:0;border-collapse:collapse;} */
+table{border:0;border-collapse:collapse; width:100%;}
+caption{display:none;}
+
+/*login*/
+#wrap_login { width:963px; height:366px; margin:auto; position:relative; margin-top:230px; color:#333; }
+#wrap_login:before { display:block; width:434px; height:434px; content:''; background:url(/KomipoWwg/images/cmsadmin/login/login_bg.gif) 0 0 no-repeat; position:absolute; top:-130px; right:-150px; z-index:-1; }
+#wrap_login h1 { font-size:21px; letter-spacing:-1px; line-height:1; font-weight:normal; margin-bottom:20px; padding-left:10px; }
+#wrap_login h1 strong { font-size:30px; color:#2d94d4; font-weight:bold; }
+#wrap_login h1 strong:before { width:32px; height:45px; display:inline-block; content:''; background:url(/KomipoWwg/images/cmsadmin/login/login_icon.gif) 0 0 no-repeat; position:relative; top:10px; margin-right:12px;  }
+#wrap_login h1 span { display:inline-block; margin-left:10px; position:relative; top:-3px; }
+#wrap_login .login_form { display:block; width:963px; height:366px; background:url(/KomipoWwg/images/cmsadmin/login/login_box.png) 0 0 no-repeat; position:relative; z-index:2;
+/*box-sizing*/-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; }
+#wrap_login .login_img { width:333px; height:191px; background:url(/KomipoWwg/images/cmsadmin/login/login_pc.png) 0 0 no-repeat; position:absolute; top:99px; left:43px; }
+#wrap_login .iogin_input { width:475px; margin-left:431px; margin-top:65px; }
+#wrap_login .input_row { background:#fff; border-radius:10px; width:100%; line-height:44px; margin-top:10px; position:relative; border:1px solid #aaaaaa; }
+#wrap_login .input_row label { font-size:14px; color:#9ea9b1; margin-left:20px; display:none; }
+#wrap_login .input_row .login_id { width:18px; height:25px; background:url(/KomipoWwg/images/cmsadmin/login/icon_id.png) 0 0 no-repeat; display:block; position:absolute; right:20px; top:13px; }
+#wrap_login .input_row .login_pw { width:20px; height:25px; background:url(/KomipoWwg/images/cmsadmin/login/icon_pw.png) 0 0 no-repeat; display:block; position:absolute; right:20px; top:13px; }
+#wrap_login .phoneauth_btn { position:relative;float:right; width:37%; margin:1%; cursor:pointer; color:#fff; background:#41484c; text-align:center; display:block; font-size:14px; line-height:38px; overflow:hidden; }
+#wrap_login .login_btn { color:#fff; font-size:24px; background:#515151; /*border-radius:10px;*/ width:100%; line-height:70px; margin-top:30px; text-align:center; 
+font-weight:500; font-family:"NotoKrM"; cursor:pointer; }
+#wrap_login .login_btn a { color:#fff; width:100%; height:100%; display:block; }
+#wrap_login .input_row input { font-size:14px; color:#9ea9b1; margin-left:20px; width:80%; padding-bottom:4px; border:none; }
+
+

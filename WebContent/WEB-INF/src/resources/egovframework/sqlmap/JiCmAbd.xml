@@ -1,0 +1,1731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmAbd">
+ <!--  ########### jrcms 시작 ########################### -->
+ 	<select id="JiCmAbd.getBOARD_Cnt" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) NUM_OF_ROWS 
+		  
+		  FROM JIT9150 TA	
+		  WHERE 1=1
+			<isEqual property="vmode" compareValue="maingongji">
+				AND TA.MENU_CD IN('000115')
+				AND TA.DATA_SPA_COL0 IN('000062','000063')
+				AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+				AND TA.OPEN_YN IN ('Y','T','P')
+				
+				ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+			</isEqual>
+			<isNotEqual property="vmode" compareValue="maingongji">
+
+
+
+				<!--  // 게시판 종류가 통합형일경우 해당게시판들을 모두 조회한다-->
+				<isEqual property="BOARD_TY" compareValue="000014">
+					AND TA.MENU_CD IN(
+						<iterate open="" close="" property="BOARD_INT_M_CODES_ARR" conjunction=","> 
+ 				 			#BOARD_INT_M_CODES_ARR[]# 
+						</iterate>	
+					)			
+					 
+					AND (SELECT COUNT(*) FROM JIT9160  WHERE 1=1
+        					AND MENU_CD = TA.MENU_CD
+							AND(
+								(M_SDATE <![CDATA[ <= ]]>  SYSDATE  AND SYSDATE <![CDATA[ <= ]]> M_EDATE)
+								OR	
+								(M_SDATE IS NULL AND SYSDATE <![CDATA[ <= ]]> M_EDATE)
+								OR
+								(M_SDATE <![CDATA[ <= ]]> SYSDATE AND M_EDATE IS NULL)
+								OR	
+								(M_SDATE IS NULL AND M_EDATE IS NULL)
+							)
+      					) > 0					 
+				</isEqual>
+				<isNotEqual property="BOARD_TY" compareValue="000014">
+					<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+<!-- 					<isEqual property="pcode" compareValue="000115">
+						WHERE TA.MENU_CD IN('000115')
+						AND TA.DATA_SPA_COL0 IN('000062','000063')				
+					</isEqual>
+				
+					<isEqual property="pcode" compareValue="000142">
+						WHERE TA.MENU_CD IN('000115')
+						AND TA.DATA_SPA_COL0 IN('000062','000064')				
+					</isEqual> -->
+					
+					<isNotEqual property="pcode" compareValue="000115">		
+						<isNotEqual property="pcode" compareValue="000142">		
+					 		AND TA.MENU_CD=#pcode#
+					 	</isNotEqual>
+					</isNotEqual>
+				</isNotEqual>
+				
+				
+				
+				<!-- 조달청 건의함의경우 사용자화면에서는 등록자 본인의 데이터만 볼수 있다-->
+				<isEqual property="pcode" compareValue="000132">
+					<isNotEqual property="scode" compareValue="sysadm">
+						AND TA.REG_ID=#USER_ID#
+					</isNotEqual>
+				</isEqual>
+								
+				<!--  // 게시판종류가 일정형일경우 해당월 데이터만 가져온다-->
+				<isEqual property="BOARD_TY" compareValue="000051">
+					AND (TO_CHAR(TA.DATA_SPA_ST_DT,'YYYYMM') = #cyymm# OR TO_CHAR(TA.DATA_SPA_END_DT,'YYYYMM') = #cyymm#) 
+				</isEqual>
+	
+							
+				<!--  // 게시판종류가 답변형일경우 BOARD_TY=000012:답변형 답변이 되는 게시물은 제외하고 가져온다-->
+				<!--  // 게시판종류가 통합형이고 답변형일경우-->
+				<isEqual property="BOARD_TY" compareValue="000014">
+					<isEqual property="BOARD_INT_TY" compareValue="000012">
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+					</isEqual> 
+				</isEqual>
+				<isEqual property="BOARD_TY" compareValue="000012">
+					
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+					
+				</isEqual>	
+				
+				<isEqual property="BOARD_TY" compareValue="000223">
+					
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO<![CDATA[ >= ]]>1
+						
+						<isEqual property="mylist_yn" compareValue="Y">
+							AND (SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH <![CDATA[ > ]]> 1 AND REG_ID=#USER_ID#) <![CDATA[ >= ]]> 1
+						</isEqual>
+					
+				</isEqual>				
+				<!-- // 관리자화면이 아닐경우 미게시외의 자료만 가져온다 -->
+				<isEqual property="scodeadm" compareValue="N">
+					AND (TA.OPEN_YN IN ('Y','T','P') OR (TA.OPEN_YN IN ('N') AND  TA.REG_ID=#USER_ID#))
+					
+				</isEqual>	
+				
+				<isEmpty property="se_field">
+					<isNotEmpty property="se_text">
+						AND (
+							TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+							OR TA.REG_ID LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+							OR DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0
+							OR TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%'
+						)
+					</isNotEmpty>
+				 
+				</isEmpty>				
+				
+			  <isNotEmpty property="se_field">
+			  	  <isNotEmpty property="se_text">
+				  		AND
+				  	<isEqual property="se_field" compareValue="REG_NAME" >
+				  		TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="REG_ID">
+				  		TA.REG_ID LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="B_TITLE">
+				  		TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+				    </isEqual>			    	    
+				    
+				  	<isEqual property="se_field"  compareValue="B_CONTENTS">
+				  		DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL0">
+				  		TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL1">
+				  		TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL2">
+				  		TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL3">
+				  		TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL4">
+				  		TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL5">
+				  		TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL6">
+				  		TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL7">
+				  		TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL8">
+				  		TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL9">
+				  		TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%' 
+				    </isEqual>				    				    			    			    				    				    			    			    			    			    
+				 </isNotEmpty>
+				 
+				 
+				 <isEmpty property="se_text">
+				 	<isNotEmpty property="se_code">
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL0" >
+				 			AND DATA_SPA_COL0 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL1" >
+				 			AND DATA_SPA_COL1 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL2" >
+				 			AND DATA_SPA_COL2 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL3" >
+				 			AND DATA_SPA_COL3 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL4" >
+				 			AND DATA_SPA_COL4 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL5" >
+				 			AND DATA_SPA_COL5 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL6" >
+				 			AND DATA_SPA_COL6 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL7" >
+				 			AND DATA_SPA_COL7 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL8" >
+				 			AND DATA_SPA_COL8 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL9" >
+				 			AND DATA_SPA_COL9 = #se_code#
+				 		</isEqual>				 						 						 						 					 					 						 						 					 		
+				 	</isNotEmpty>
+				 </isEmpty>		    
+		    
+			  </isNotEmpty>
+			  
+			  ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+			  	
+			</isNotEqual>		
+
+	</select>
+	
+	<!-- ORDER BY DECODE(TA.OPEN_YN,'T',0,1) ASC,TA.DATA_SEQNO DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC	 -->
+	
+	
+	<select id="JiCmAbd.getBOARD" parameterClass="java.util.HashMap"  resultMap="COMMON.selectBOARDCLOB">
+
+		SELECT TTA.* 
+		FROM(
+			SELECT
+			     TO_CHAR(DATA_SEQNO) DATA_SEQNO
+				,MENU_CD
+			    ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+				,DATA_TITLE
+				,DATA_IPNS
+				,TO_CHAR(INQ_CNT) INQ_CNT
+				,TO_CHAR(DATA_ORIGIN_NO) DATA_ORIGIN_NO
+				,TO_CHAR(DATA_DEPTH) DATA_DEPTH
+				,TO_CHAR(DATA_SORT_NO) DATA_SORT_NO
+				,OPEN_YN
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+				,NVL((SYSDATE - TA.REG_DT),0) DT_DIFF
+				,REG_ID
+				,IPIN_NO
+				,DUPL_INFO
+				,AUTH_TYPE				
+			    ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT
+			    ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                		FROM JIT9151
+                		WHERE 1=1
+
+		 					  AND MENU_CD=TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                              CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_NMS
+			                  
+  						,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                        FROM JIT9151
+                        WHERE 1=1
+	
+	 						  AND MENU_CD=TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                          	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_SEQ   
+                              
+			 			,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                         FROM JIT9151
+                         WHERE 1=1
+	
+	 					   AND MENU_CD=TA.MENU_CD
+                           AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                           AND DEL_DT IS NULL
+                           START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2 
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2 
+                           AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                           GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_NM
+			                            
+			 					,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                          FROM JIT9151
+                          WHERE 1=1
+
+	 					  AND MENU_CD=TA.MENU_CD
+                          AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                          AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                       	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                          AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                          GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_SEQ
+                          
+				,ROW_NUMBER() OVER (ORDER BY TA.REG_DT ASC, TA.DATA_SEQNO ASC) NUM_OF_ROWS
+				 
+			FROM JIT9150 TA
+			<!--  <isEqual prepend="AND" property="vmode" compareValue="maingongji">-->
+			<isEqual property="vmode" compareValue="maingongji">
+				WHERE TA.MENU_CD IN('000115')
+				AND TA.DEL_YN = 'N'
+				AND TA.DATA_SPA_COL0 IN('000062','000063')
+				AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+				AND TA.OPEN_YN IN ('Y','T','P')
+				ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+			</isEqual>
+			<isNotEqual property="vmode" compareValue="maingongji">
+				WHERE TA.MENU_CD=#pcode#
+				AND TA.DEL_YN = 'N'
+
+				<!--  // 게시판종류가 답변형일경우 BOARD_TY=0000000012:답변형 답변이 되는 게시물은 제외하고 가져온다-->
+				<!--  // 게시판종류가 통합형이고 답변형일경우-->
+				<isEqual property="BOARD_TY" compareValue="000025">
+					<isEqual property="BOARD_INT_TY" compareValue="000012">
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+					</isEqual> 
+				</isEqual>
+				<isEqual property="BOARD_TY" compareValue="000012">
+					
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+					
+				</isEqual>	
+				
+				<!--  // 게시판종류가 일정형일경우 해당월 데이터만 가져온다-->
+				<isEqual property="BOARD_TY" compareValue="000051">
+					AND (TO_CHAR(TA.DATA_SPA_ST_DT,'YYYYMM') = #cyymm# OR TO_CHAR(TA.DATA_SPA_END_DT,'YYYYMM') = #cyymm#) 
+				</isEqual>
+								
+				<!-- // 관리자화면이 아닐경우 미게시외의 자료만 가져온다 -->
+				<isEqual property="scodeadm" compareValue="N">
+					AND (TA.OPEN_YN IN ('Y','T','P') OR (TA.OPEN_YN IN ('N')))
+					
+				</isEqual>	
+				
+				<isEqual property="BOARD_TY" compareValue="000223">
+					
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO<![CDATA[ >= ]]>1
+						<isEqual property="mylist_yn" compareValue="Y">
+							AND (SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH <![CDATA[ > ]]> 1 AND REG_ID=#USER_ID#) <![CDATA[ >= ]]> 1
+						</isEqual>					
+				</isEqual>				
+				
+				<isEmpty property="se_field">
+					<isNotEmpty property="se_text">
+						AND (
+							TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+							OR DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0
+							<isEqual property="BOARD_TY" compareValue="000011">
+							OR TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+							</isEqual>
+							<isEqual property="BOARD_TY" compareValue="000012">
+							OR TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+							</isEqual>
+							OR TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+							OR TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%'
+						)
+					</isNotEmpty>
+				 
+				</isEmpty>					
+				
+			  <isNotEmpty property="se_field">
+			  	  <isNotEmpty property="se_text">
+				  		AND
+				  	<isEqual property="se_field" compareValue="REG_NAME" >
+				  		TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="REG_ID">
+				  		TA.REG_ID LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="B_TITLE">
+				  		TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+				    </isEqual>			    	    
+				    
+				  	<isEqual property="se_field"  compareValue="B_CONTENTS">
+				  		DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL0">
+				  		TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL1">
+				  		TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL2">
+				  		TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL3">
+				  		TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL4">
+				  		TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL5">
+				  		TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+				    </isEqual>
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL6">
+				  		TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL7">
+				  		TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL8">
+				  		TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+				    </isEqual>	
+				    
+				  	<isEqual property="se_field"  compareValue="DATA_SPA_COL9">
+				  		TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%' 
+				    </isEqual>				    				    			    			    				    				    			    			    			    			    
+				 </isNotEmpty>
+				 <isEmpty property="se_text">
+				 	<isNotEmpty property="se_code">
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL0" >
+				 			AND DATA_SPA_COL0 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL1" >
+				 			AND DATA_SPA_COL1 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL2" >
+				 			AND DATA_SPA_COL2 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL3" >
+				 			AND DATA_SPA_COL3 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL4" >
+				 			AND DATA_SPA_COL4 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL5" >
+				 			AND DATA_SPA_COL5 = #se_code#
+				 		</isEqual>	
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL6" >
+				 			AND DATA_SPA_COL6 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL7" >
+				 			AND DATA_SPA_COL7 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL8" >
+				 			AND DATA_SPA_COL8 = #se_code#
+				 		</isEqual>
+				 		
+				 		<isEqual property="se_field" compareValue="DATA_SPA_COL9" >
+				 			AND DATA_SPA_COL9 = #se_code#
+				 		</isEqual>				 						 						 						 					 					 						 						 					 		
+				 	</isNotEmpty>
+				 </isEmpty>		    
+			  </isNotEmpty>	
+                                      			                           
+			 ORDER BY TA.REG_DT DESC, TA.DATA_SEQNO DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO ASC, TA.DATA_DEPTH ASC
+			  
+			</isNotEqual>				
+		) TTA
+		<isEqual property="BOARD_TY" compareValue="000012">
+			<isNotEmpty property="se_step">
+				WHERE RPY_CNT=#se_step#
+	 		</isNotEmpty>
+		</isEqual>
+
+	</select>	
+	
+	<select id="JiCmAbd.getBOARD_pwdCheck" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+	SELECT 
+		damo.HASH_STR_DATA(#req_SECRET_NO#) AS DATA_IPNS
+	FROM
+		DUAL
+	</select>
+	
+	<select id="JiCmAbd.getBOARD_S2" parameterClass="java.util.HashMap" resultMap="COMMON.selectBOARDCLOB">
+		
+			SELECT
+			    DATA_SEQNO
+				,MENU_CD
+			   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+			   ,TA.DATA_IPNS
+				,DATA_TITLE
+				,DATA_DESC
+				,INQ_CNT
+				,DATA_ORIGIN_NO
+				,DATA_DEPTH
+				,DATA_SORT_NO
+				,OPEN_YN
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM	
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT	
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT					
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0_NM
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1_NM
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2_NM
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3_NM
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4_NM
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5_NM
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6_NM
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7_NM
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8_NM
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9_NM
+				,TA.DATA_SPA_COL0
+				,TA.DATA_SPA_COL1
+				,TA.DATA_SPA_COL2
+				,TA.DATA_SPA_COL3
+				,TA.DATA_SPA_COL4
+				,TA.DATA_SPA_COL5
+				,TA.DATA_SPA_COL6
+				,TA.DATA_SPA_COL7
+				,TA.DATA_SPA_COL8
+				,TA.DATA_SPA_COL9				
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT	
+				,NVL((SYSDATE - TA.REG_DT),0) DT_DIFF
+				,REG_ID
+				,IPIN_NO
+				,DUPL_INFO
+				,AUTH_TYPE				 
+			    ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT	
+			    ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+			   
+			    	FROM JIT9151
+			   		 WHERE 1=1
+			    
+						   AND MENU_CD=TA.MENU_CD
+                           AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                           AND DEL_DT IS NULL 
+                           START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1 
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                           AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                           GROUP BY MENU_CD, FILE_GROUP),'') FILE_NMS
+				 		   ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                           FROM JIT9151
+                           WHERE 1=1
+
+				 			  AND MENU_CD=TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL
+                              START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                           	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_SEQ   
+			 	,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+			                  FROM JIT9151
+			                  WHERE 1=1
+	
+				 					  AND MENU_CD=TA.MENU_CD
+		                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+		                              AND DEL_DT IS NULL
+		                              START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+		                           	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+		                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+		                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_NM
+		 							 ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                             FROM JIT9151
+                             WHERE 1=1
+	
+			 				AND MENU_CD=TA.MENU_CD
+                            AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                            AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                         	CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                            AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_SEQ   
+                            
+			  ,ROWNUM NUM_OF_ROWS
+			  
+			  FROM JIT9150 TA
+			  WHERE TA.MENU_CD=#pcode# AND TA.DATA_SEQNO=#sidx#
+				<!-- // 관리자화면이 아닐경우 미게시외의 자료만 가져온다 -->
+				<isNotEqual property="scode" compareValue="sysadm">
+					<isEqual property="BOARD_TY" compareValue="000012">
+						AND (CASE WHEN TA.OPEN_YN='Y' THEN
+								'Y'
+							ELSE
+								DECODE(TA.DATA_IPNS,damo.HASH_STR_DATA(#req_SECRET_NO#),'Y','N')
+							END)='Y'
+								<isNotEmpty property="USER_ID">
+									AND  (CASE WHEN TA.OPEN_YN='Y' THEN
+											'Y'
+										ELSE
+											DECODE(TA.AUTH_TYPE,'LOGIN',DECODE(TA.REG_ID,#USER_ID#,'Y','N'),'N')
+										END)='Y'
+								</isNotEmpty>
+								<isEmpty property="USER_ID">
+									AND  (CASE WHEN TA.OPEN_YN='Y' THEN
+											'Y'
+										ELSE
+											DECODE(TA.AUTH_TYPE,'LOGIN','N','Y')
+										END)='Y'
+								</isEmpty>
+					</isEqual>
+					<isNotEqual property="BOARD_TY" compareValue="000012">
+						<isEqual property="BOARD_TY" compareValue="000223">
+							<isEqual property="pstate" compareValue="XR2">
+								AND TA.REG_ID=#USER_ID# 
+							</isEqual>
+							<isEqual property="pstate" compareValue="U">
+								AND TA.REG_ID=#USER_ID# 
+							</isEqual>
+							<isEqual property="pstate" compareValue="D">
+								AND TA.REG_ID=#USER_ID# 
+							</isEqual>	
+							<isEqual property="pstate" compareValue="CF">
+								AND TA.REG_ID=#USER_ID# 
+							</isEqual>
+							<isEqual property="pstate" compareValue="UF">
+								AND TA.REG_ID=#USER_ID# 
+							</isEqual>																												
+						</isEqual>
+						<isNotEqual property="BOARD_TY" compareValue="000223">
+							AND (TA.OPEN_YN IN ('Y','T','P') OR (TA.OPEN_YN IN ('N') AND  TA.REG_ID=#USER_ID#))
+						</isNotEqual>
+					</isNotEqual>
+					
+				</isNotEqual>			  
+				<!-- XXX의경우 사용자화면에서는 등록자 본인의 데이터만 볼수 있다-->
+				<isEqual property="pcode" compareValue="000132">
+					<isNotEqual property="scode" compareValue="sysadm">
+						AND TA.REG_ID=#USER_ID#
+					</isNotEqual>
+				</isEqual>
+	</select>	
+	
+	<select id="JiCmAbd.getBOARD_S3" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+            SELECT DATA_SEQNO, OPEN_YN, MENU_CD, REG_ID
+            , (SELECT STDINFO_DTL_CD
+                FROM JIT9101 
+                WHERE STDINFO_DTL_CD = (SELECT BOARD_TY
+                                                            FROM JIT9160
+                                                            WHERE MENU_CD = #fpcode#)
+                )STDINFO_DTL_CD
+			  FROM 
+				  JIT9150
+			  WHERE DATA_SEQNO=#sidx# AND DEL_YN = 'N'
+			  
+	</select>	
+	
+	<select id="JiCmAbd.getBoardFileDown" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" remapResults="true">
+            SELECT DATA_SEQNO, OPEN_YN, MENU_CD, REG_ID
+            , (SELECT STDINFO_DTL_CD
+                FROM JIT9101 
+                WHERE STDINFO_DTL_CD = (SELECT BOARD_TY
+                                                            FROM JIT9160
+                                                            WHERE MENU_CD = #fpcode#)
+                )STDINFO_DTL_CD
+			  FROM
+			  <isEqual property="fpcode" compareValue="000484">
+			  	JIT_MSC_PROD
+			  </isEqual>
+			  <isEqual property="fpcode" compareValue="000470">
+			  	JIT_MSC_PROD
+			  </isEqual>
+			  <isEqual property="fpcode" compareValue="000523">
+			  	JIT_BOARD_PROPOSAL
+			  </isEqual>
+			  <isEqual property="fpcode" compareValue="000552">
+			  	JIT_BOARD_PROPOSAL
+			  </isEqual>
+			  <isNotEqual property="fpcode" compareValue="000484">		
+					<isNotEqual property="fpcode" compareValue="000523">
+						<isNotEqual property="fpcode" compareValue="000552">		
+ 							JIT9150
+ 						</isNotEqual>
+					</isNotEqual>
+			   </isNotEqual>
+			  WHERE DATA_SEQNO=#sidx# AND DEL_YN = 'N'
+	</select>	
+		<select id="JiCmAbd.getBOARD_S4" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+			SELECT STDINFO_DTL_CD
+			FROM JIT9101
+			WHERE STDINFO_DTL_CD = (SELECT BOARD_TY
+									FROM JIT9160
+									WHERE MENU_CD = #pcode#)
+            
+	</select>
+
+	
+	<update id="JiCmAbd.updateBOARD_mid">
+
+		UPDATE JIT9150 SET
+
+		DATA_SORT_NO=DATA_SORT_NO+1 
+
+		WHERE MENU_CD=#pcode# AND DATA_ORIGIN_NO=#r_idx# AND DATA_SORT_NO <![CDATA[ >= ]]> #r_order#
+
+	</update> 	
+	
+ 	<select id="JiCmAbd.deleteBOARD_Recnt" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+ 
+		SELECT 
+		 COUNT(DATA_SEQNO) REPLY_CNT 
+		 FROM  JIT9150
+		 WHERE DATA_ORIGIN_NO=#del_R_IDX# AND DATA_DEPTH <![CDATA[ > ]]> #del_R_DEPTH# AND DATA_SORT_NO <![CDATA[ > ]]> #del_R_ORDER# 
+
+ 	</select>	
+ 	
+ 	<select id="JiCmAbd.deleteBOARD_RE_Recnt" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		SELECT
+		 COUNT(IDX) RE_REPLY_CNT  
+		 FROM  JIT9150_RE
+		WHERE R_IDX=#del_R_IDX# AND R_DEPTH <![CDATA[ > ]]> #del_R_DEPTH# AND R_ORDER <![CDATA[ > ]]> #del_R_ORDER#	
+	
+
+ 	</select> 
+ 	
+	<delete id="JiCmAbd.deleteBOARDRE">
+
+		DELETE FROM JIT9150_RE
+
+		WHERE IDX=#sreidx# 
+
+	</delete> 		
+ 	
+	<delete id="JiCmAbd.deleteBOARD">
+
+		DELETE FROM JIT9150
+
+		WHERE DATA_SEQNO=#sidx# 
+
+	</delete>  	
+ 	
+	<delete id="JiCmAbd.deleteBOARD_RE">
+
+		DELETE FROM JIT9150_RE WHERE R_IDX=#del_R_IDX#
+
+	</delete> 
+	
+	<update id="JiCmAbd.updateDelBOARD">
+
+		UPDATE JIT9150 SET		
+
+		   DATA_SORT_NO=DATA_SORT_NO-1 
+
+		WHERE DATA_ORIGIN_NO=#del_R_IDX#  AND DATA_SORT_NO <![CDATA[ > ]]> #del_R_ORDER#   
+
+	</update>		
+	
+	<select id="JiCmAbd.getBOARDMain" parameterClass="java.util.HashMap"  resultMap="COMMON.selectBOARDCLOB">
+
+		SELECT TTA.* FROM(
+			SELECT
+			    TO_CHAR(DATA_SEQNO) DATA_SEQNO
+				,MENU_CD
+			   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+				,DATA_TITLE
+				,DATA_IPNS
+				,DATA_DESC
+				,TO_CHAR(INQ_CNT) INQ_CNT
+				,TO_CHAR(DATA_ORIGIN_NO) DATA_ORIGIN_NO
+				,TO_CHAR(DATA_DEPTH) DATA_DEPTH
+				,TO_CHAR(DATA_SORT_NO) DATA_SORT_NO
+				,OPEN_YN
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM	
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT	
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT					
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT	
+				,REG_ID
+				,IPIN_NO
+				,DUPL_INFO
+				,AUTH_TYPE				
+			    ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT	
+			    ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+			    
+			    FROM JIT9151
+					<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+					<isEqual property="pcode" compareValue="000115">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isEqual property="pcode" compareValue="000142">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isNotEqual property="pcode" compareValue="000115">		
+						<isNotEqual property="pcode" compareValue="000142">		
+ 							WHERE MENU_CD=TA.MENU_CD
+ 						</isNotEqual>
+					</isNotEqual>
+                     AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                     AND DEL_DT IS NULL
+                     START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1 
+                     CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                     AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                     GROUP BY MENU_CD, FILE_GROUP),'') FILE_NMS
+  					,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                     FROM JIT9151
+					<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+					<isEqual property="pcode" compareValue="000115">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isEqual property="pcode" compareValue="000142">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isNotEqual property="pcode" compareValue="000115">		
+						<isNotEqual property="pcode" compareValue="000142">		
+ 							WHERE MENU_CD=TA.MENU_CD
+ 						</isNotEqual>
+					</isNotEqual>
+                     AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                     AND DEL_DT IS NULL
+                     START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                     CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                     AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                     GROUP BY MENU_CD, FILE_GROUP),'') FILE_SEQ   
+			 		,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+	                 FROM JIT9151
+					<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+					<isEqual property="pcode" compareValue="000115">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+	
+					<isEqual property="pcode" compareValue="000142">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+	
+					<isNotEqual property="pcode" compareValue="000115">		
+						<isNotEqual property="pcode" compareValue="000142">		
+								WHERE MENU_CD=TA.MENU_CD
+							</isNotEqual>
+					</isNotEqual>
+                    AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                    AND DEL_DT IS NULL
+                    START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                    CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                    AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                    GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_NM
+			 	   ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                    FROM JIT9151
+					<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+					<isEqual property="pcode" compareValue="000115">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isEqual property="pcode" compareValue="000142">
+						WHERE MENU_CD IN  ('000115','000142')
+					</isEqual>
+
+					<isNotEqual property="pcode" compareValue="000115">		
+						<isNotEqual property="pcode" compareValue="000142">		
+ 							WHERE MENU_CD=TA.MENU_CD
+ 						</isNotEqual>
+					</isNotEqual>
+                    AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                    AND DEL_DT IS NULL
+                    START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                    CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                    AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                    GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_SEQ
+                                       			                           
+			 , TO_CHAR(RANK() OVER (ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC)) NUM_OF_ROWS
+		
+			   FROM JIT9150 TA	
+
+				WHERE TA.MENU_CD IN('000115')
+				AND TA.DEL_YN='N'
+				AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+				AND TA.OPEN_YN IN ('Y','T','P') 
+                                       			                           
+			 	ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+				
+		) TTA
+
+	</select>	
+	
+	
+	<select id="JiCmAbd.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9150_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+	<select id="JiCmAbd.getTableMaxSeq2" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9150_RE_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+	<insert id="JiCmAbd.insertBOARD">
+		 INSERT INTO JIT9150
+			(
+			DATA_SEQNO
+			,MENU_CD
+			,DATA_TITLE
+			,DATA_DESC
+			,INQ_CNT
+			,DATA_ORIGIN_NO
+			,DATA_DEPTH
+			,DATA_SORT_NO
+			,OPEN_YN
+ 			<isNotEmpty property="B_SDATE">
+			,DATA_SPA_ST_DT
+			</isNotEmpty>
+			<isNotEmpty property="B_EDATE">
+			,DATA_SPA_END_DT
+			</isNotEmpty>			
+			,PHOTO_IMAGE_ALT,
+			 DATA_SPA_COL0 
+			,DATA_SPA_COL1
+			,DATA_SPA_COL2
+			,DATA_SPA_COL3
+			,DATA_SPA_COL4
+			,DATA_SPA_COL5			
+			,DATA_SPA_COL6
+			,DATA_SPA_COL7
+			,DATA_SPA_COL8
+			,DATA_SPA_COL9
+			,REG_ID_NM
+			,REG_DT
+			,REG_ID
+			<isNotEmpty property="DATA_IPNS">
+			,DATA_IPNS
+			</isNotEmpty>
+			,IPIN_NO
+			,DUPL_INFO
+			,AUTH_TYPE			
+			)VALUES(
+			#data_seqno#, #pcode#, #B_TITLE#,#B_CONTENTS#,0,#r_idx#,#r_depth#,#r_order#,#GESI_FL#
+			 <isNotEmpty property="B_SDATE">
+				 , TO_DATE(#B_SDATE#,'YYYY-MM-DD')
+			</isNotEmpty>
+
+			<isNotEmpty property="B_EDATE">
+				 , TO_DATE(#B_EDATE#,'YYYY-MM-DD')
+			</isNotEmpty>
+			,#REG_PHOTO_ALT#,
+			<iterate open="" close="" property="B_ETC_ARR" conjunction=","> 
+ 				 #B_ETC_ARR[]# 
+			</iterate> 
+			,#REG_NAME#
+			<isEmpty property="REG_DT">
+				 ,SYSDATE
+			</isEmpty>
+			<isNotEmpty property="REG_DT">
+				 ,TO_DATE(#REG_DT#,'YYYY-MM-DD')
+			</isNotEmpty>
+			,#USER_ID#
+			<isNotEmpty property="DATA_IPNS">
+			,damo.HASH_STR_DATA(#DATA_IPNS#)
+			</isNotEmpty>
+			,#IPIN_NO#
+			,#DUPL_INFO#
+			,#AUTH_TYPE#		
+			) 	
+ 	</insert>
+ 	
+	<update id="JiCmAbd.updateBOARD_Read_Cnt">
+
+		<![CDATA[
+
+		 UPDATE JIT9150 SET
+
+		 INQ_CNT = INQ_CNT+1
+
+		 WHERE MENU_CD=#pcode# AND DATA_SEQNO =#sidx#
+
+		]]>
+
+	</update>
+	
+	<select id="JiCmAbd.getBOARD_R" parameterClass="java.util.HashMap" resultMap="COMMON.selectBOARDCLOB">
+		
+			SELECT
+			    DATA_SEQNO
+				,MENU_CD
+			   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+				,DATA_TITLE
+				,DATA_DESC
+				,INQ_CNT
+				,DATA_ORIGIN_NO
+				,DATA_DEPTH
+				,DATA_SORT_NO
+				,OPEN_YN
+				,DATA_IPNS
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM	
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT	
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT					
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT	
+				,REG_ID
+				,IPIN_NO
+				,DUPL_INFO
+				,AUTH_TYPE				
+			    ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT	
+			    ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                FROM JIT9151
+				<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+				<isEqual property="pcode" compareValue="000115">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isEqual property="pcode" compareValue="000142">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isNotEqual property="pcode" compareValue="000115">		
+					<isNotEqual property="pcode" compareValue="000142">
+							WHERE MENU_CD=TA.MENU_CD
+						</isNotEqual>
+				</isNotEqual>
+                AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                AND DEL_DT IS NULL
+                START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1 
+                CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                GROUP BY MENU_CD, FILE_GROUP),'') FILE_NMS
+  				,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                FROM JIT9151
+				<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+				<isEqual property="pcode" compareValue="000115">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isEqual property="pcode" compareValue="000142">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isNotEqual property="pcode" compareValue="000115">		
+					<isNotEqual property="pcode" compareValue="000142">		
+							WHERE MENU_CD=TA.MENU_CD
+						</isNotEqual>
+				</isNotEqual>
+                AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                AND DEL_DT IS NULL
+                START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                GROUP BY MENU_CD, FILE_GROUP),'') FILE_SEQ   
+			   ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                FROM JIT9151
+				<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+				<isEqual property="pcode" compareValue="000115">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isEqual property="pcode" compareValue="000142">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isNotEqual property="pcode" compareValue="000115">		
+					<isNotEqual property="pcode" compareValue="000142">		
+							WHERE MENU_CD=TA.MENU_CD
+						</isNotEqual>
+				</isNotEqual>
+                AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                AND DEL_DT IS NULL
+                START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_NM
+			   ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                FROM JIT9151
+				<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+				<isEqual property="pcode" compareValue="000115">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isEqual property="pcode" compareValue="000142">
+					WHERE MENU_CD IN  ('000115','000142')
+				</isEqual>
+
+				<isNotEqual property="pcode" compareValue="000115">		
+					<isNotEqual property="pcode" compareValue="000142">		
+							WHERE MENU_CD=TA.MENU_CD
+						</isNotEqual>
+				</isNotEqual>
+                AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                AND DEL_DT IS NULL
+                START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_SEQ                                 			                           
+			 , ROWNUM NUM_OF_ROWS
+		   FROM JIT9150 TA
+		  WHERE TA.MENU_CD=#pcode# AND TA.DATA_ORIGIN_NO=#sidx# AND DATA_DEPTH=2 AND DATA_SORT_NO=2	
+		   
+	</select>	
+	
+	<select id="JiCmAbd.getBOARDRR" parameterClass="java.util.HashMap" resultClass="egovMap">
+	 SELECT				
+		   TO_CHAR(TA.IDX) 	IDX	
+		   ,TA.MENU_CD	
+		   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS M_NM 
+		   ,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT	
+		   ,TO_CHAR(MOD_DT,'YYYY-MM-DD') MOD_DT	  
+		   ,TA.REG_ID	
+		   ,TA.MOD_ID	
+		   ,TA.B_TITLE		
+		   ,TA.READ_CNT	
+		   ,TO_CHAR(TA.R_IDX) 	R_IDX		
+		   ,TO_CHAR(TA.R_DEPTH) 	R_DEPTH		
+		   ,TO_CHAR(TA.R_ORDER) 	R_ORDER		
+		   ,TA.DATA_IPNS PASSWD	
+		   ,TA.OPEN_YN GESI_FL	
+		   ,CASE WHEN TA.OPEN_YN='Y' THEN
+		   		'일반게시'
+				WHEN TA.OPEN_YN='N' THEN 
+				'게시하지않음'
+				WHEN TA.OPEN_YN='T' THEN  
+				'게시판공지글'
+				WHEN TA.OPEN_YN='P' THEN 
+				'비밀글'
+				ELSE
+				'일반게시'
+				END AS GESI_FL_NM	
+		   ,TA.REG_ID_NM REG_NAME	
+		   ,TA.REG_SVNUMBER	
+		   ,TA.B_ETC0	
+		   ,TA.B_ETC1	
+		   ,TA.B_ETC2	
+		   ,TA.B_ETC3	
+		   ,TA.B_ETC4	
+		   ,TA.B_ETC5	
+		   ,TA.B_ETC6	
+		   ,TA.B_ETC7	
+		   ,TA.B_ETC8	
+		   ,TA.B_ETC9	
+		   ,TO_CHAR(TA.RR_IDX) 	RR_IDX		
+		   FROM JIT9150_RE TA	
+		   WHERE TA.MENU_CD=#pcode# AND TA.RR_IDX=#sidx#
+		   ORDER BY TA.R_IDX DESC, TA.R_ORDER, TA.R_DEPTH ASC
+		   
+	</select>
+	
+	<select id="JiCmAbd.getBOARD_RN" parameterClass="java.util.HashMap" resultClass="egovMap">
+				SELECT * FROM(
+					SELECT 
+					  DATA_SEQNO,DATA_TITLE
+					  ,LEAD(DATA_SEQNO,1,0) OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) NEXT_SEQ
+					  ,LEAD(DATA_TITLE,1,'') OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) NEXT_TITLE
+					  ,LAG(DATA_SEQNO,1,0) OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) PREV_SEQ
+					  ,LAG(DATA_TITLE,1,'') OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) PREV_TITLE
+					  ,LEAD((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),1,'') OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) NEXT_COL0
+					  ,LAG((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),1,'') OVER(ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC) PREV_COL0
+
+					FROM JIT9150 TA 
+					WHERE 1=1
+					<isEqual property="vmode" compareValue="maingongji">
+						AND TA.MENU_CD IN('000115')
+						AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+						AND TA.OPEN_YN IN ('Y','T','P') 
+						ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+					</isEqual>
+					<isNotEqual property="vmode" compareValue="maingongji">
+						<!--  // 게시판 종류가 통합형일경우 해당게시판들을 모두 조회한다-->
+						<isEqual property="BOARD_TY" compareValue="000014">
+							AND TA.MENU_CD IN(
+							<iterate open="" close="" property="BOARD_INT_M_CODES_ARR" conjunction=","> 
+ 				 				#BOARD_INT_M_CODES_ARR[]# 
+							</iterate>	
+							)			
+					 
+							AND (SELECT COUNT(*) FROM JIT9160  WHERE 1=1
+        						AND MENU_CD = TA.MENU_CD
+								AND(
+									(M_SDATE <![CDATA[ <= ]]>  SYSDATE  AND SYSDATE <![CDATA[ <= ]]> M_EDATE)
+									OR	
+									(M_SDATE IS NULL AND SYSDATE <![CDATA[ <= ]]> M_EDATE)
+									OR
+									(M_SDATE <![CDATA[ <= ]]> SYSDATE AND M_EDATE IS NULL)
+									OR	
+									(M_SDATE IS NULL AND M_EDATE IS NULL)
+								)
+      						) > 0					 
+						</isEqual>
+
+						<!-- 공지사항 게시판의 경우 	홈페이지공지	 000115		회원사 공지 000142-->
+						<isEqual property="pcode" compareValue="000115">
+							AND TA.MENU_CD IN('000115')
+							<!-- AND TA.DATA_SPA_COL0 IN('000062','000063')	 -->			
+						</isEqual>
+				
+				
+						<isNotEqual property="pcode" compareValue="000115">		
+							<isNotEqual property="pcode" compareValue="000142">		
+					 			AND TA.MENU_CD=#pcode#
+					 		</isNotEqual>
+						</isNotEqual>
+
+						
+						<!-- 조달청 건의함의경우 사용자화면에서는 등록자 본인의 데이터만 볼수 있다-->
+						<isNotEqual property="scode" compareValue="sysadm">
+							<isEqual property="BOARD_TY" compareValue="000012">
+							AND (CASE WHEN TA.OPEN_YN='Y' THEN
+									'Y'
+								ELSE
+									DECODE(TA.DATA_IPNS,damo.HASH_STR_DATA(#req_SECRET_NO#),'Y','N')
+								END)='Y'							
+								
+								<isNotEmpty property="USER_ID">
+									AND  (CASE WHEN TA.OPEN_YN='Y' THEN
+											'Y'
+										ELSE
+											DECODE(TA.AUTH_TYPE,'LOGIN',DECODE(TA.REG_ID,#USER_ID#,'Y','N'),'N')
+										END)='Y'
+								</isNotEmpty>
+								<isEmpty property="USER_ID">
+									AND  (CASE WHEN TA.OPEN_YN='Y' THEN
+											'Y'
+										ELSE
+											DECODE(TA.AUTH_TYPE,'LOGIN','N','Y')
+										END)='Y'
+								</isEmpty>
+							</isEqual>
+							<isNotEqual property="BOARD_TY" compareValue="000012">
+							AND (TA.OPEN_YN IN ('Y','T','P') OR (TA.OPEN_YN IN ('N') AND  TA.REG_ID=#USER_ID#))
+							</isNotEqual>
+							
+						</isNotEqual>						
+					
+						
+						<!--  // 게시판종류가 답변형일경우 BOARD_TY=000012:답변형 답변이 되는 게시물은 제외하고 가져온다-->
+						<!--  // 게시판종류가 통합형이고 답변형일경우-->
+						<isEqual property="BOARD_TY" compareValue="000014">
+							<isEqual property="BOARD_INT_TY" compareValue="000012">
+								AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+							</isEqual> 
+						</isEqual>
+						<isEqual property="BOARD_TY" compareValue="000012">
+							
+								AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO=1
+							
+						</isEqual>	
+						<isEqual property="BOARD_TY" compareValue="000223">
+							
+								AND TA.DATA_DEPTH=1 AND TA.DATA_SORT_NO<![CDATA[ >= ]]>1
+							
+						</isEqual>
+						
+					<isEmpty property="se_field">
+						<isNotEmpty property="se_text">
+							AND (
+								TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+								OR TA.REG_ID LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+								OR DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0
+								OR TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+								OR TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%'
+							)
+						</isNotEmpty>
+				 
+					</isEmpty>								
+						
+					  <isNotEmpty property="se_field">
+						  <isNotEmpty property="se_text">
+								AND
+							<isEqual property="se_field" compareValue="REG_NAME" >
+								TA.REG_ID_NM LIKE '%' || #se_text# || '%' 
+							</isEqual>
+							
+							<isEqual property="se_field"  compareValue="REG_ID">
+								TA.REG_ID LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="B_TITLE">
+								TA.DATA_TITLE LIKE '%' || #se_text# || '%' 
+							</isEqual>			    	    
+							
+							<isEqual property="se_field"  compareValue="B_CONTENTS">
+								DBMS_LOB.INSTR(DATA_DESC, #se_text# ) > 0 
+							</isEqual>
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL0">
+								TA.DATA_SPA_COL0 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL1">
+								TA.DATA_SPA_COL1 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL2">
+								TA.DATA_SPA_COL2 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL3">
+								TA.DATA_SPA_COL3 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL4">
+								TA.DATA_SPA_COL4 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL5">
+								TA.DATA_SPA_COL5 LIKE '%' || #se_text# || '%' 
+							</isEqual>
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL6">
+								TA.DATA_SPA_COL6 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL7">
+								TA.DATA_SPA_COL7 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL8">
+								TA.DATA_SPA_COL8 LIKE '%' || #se_text# || '%' 
+							</isEqual>	
+							
+							<isEqual property="se_field"  compareValue="DATA_SPA_COL9">
+								TA.DATA_SPA_COL9 LIKE '%' || #se_text# || '%' 
+							</isEqual>				    				    			    			    				    				    			    			    			    			    
+						 </isNotEmpty>
+						 <isEmpty property="se_text">
+							<isNotEmpty property="se_code">
+								<isEqual property="se_field" compareValue="DATA_SPA_COL0" >
+									AND DATA_SPA_COL0 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL1" >
+									AND DATA_SPA_COL1 = #se_code#
+								</isEqual>	
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL2" >
+									AND DATA_SPA_COL2 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL3" >
+									AND DATA_SPA_COL3 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL4" >
+									AND DATA_SPA_COL4 = #se_code#
+								</isEqual>	
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL5" >
+									AND DATA_SPA_COL5 = #se_code#
+								</isEqual>	
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL6" >
+									AND DATA_SPA_COL6 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL7" >
+									AND DATA_SPA_COL7 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL8" >
+									AND DATA_SPA_COL8 = #se_code#
+								</isEqual>
+								
+								<isEqual property="se_field" compareValue="DATA_SPA_COL9" >
+									AND DATA_SPA_COL9 = #se_code#
+								</isEqual>				 						 						 						 					 					 						 						 					 		
+							</isNotEmpty>
+						 </isEmpty>		    
+					
+					  </isNotEmpty>
+					  
+			 			<!-- 게시판 종류가 자유형일경우 -->
+			 			<isEqual property="BOARD_TY" compareValue="000011">                                          			                           
+			 		 	ORDER BY TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+    					</isEqual>
+			 			<isNotEqual property="BOARD_TY" compareValue="000011">                                          			                           
+			 	 		ORDER BY TA.REG_DT DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+    					</isNotEqual>					  
+					 	
+					</isNotEqual>
+				) WHERE DATA_SEQNO=#sidx#	
+	  
+	</select>		 
+	
+	<select id="JiCmAbd.getBOARD_Gongji" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+			SELECT
+
+			  TA.DATA_SEQNO
+
+ 			FROM JIT9150 TA	
+
+ 			WHERE MENU_CD=#pcode# AND OPEN_YN='T'	
+
+	</select>
+	
+	<select id="JiCmAbd.getBOARD_YhNews_Dup" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9150
+		WHERE MENU_CD='000045'
+		AND DATA_SPA_COL0=#guid#
+	</select>	
+	
+ 	<update id="JiCmAbd.updateBOARD">
+
+		 UPDATE JIT9150 SET
+			  MOD_ID=#USER_ID# 
+			, MOD_DT=SYSDATE
+			, DATA_TITLE=#B_TITLE#
+			, DATA_DESC=#B_CONTENTS#
+			, OPEN_YN=#GESI_FL#
+			, REG_ID_NM=#REG_NAME#
+			, PHOTO_IMAGE_ALT=#REG_PHOTO_ALT#
+			<isEmpty property="B_SDATE">
+				 , DATA_SPA_ST_DT=NULL
+			</isEmpty>
+			<isNotEmpty property="B_SDATE">
+				 , DATA_SPA_ST_DT=TO_DATE(#B_SDATE#,'YYYY-MM-DD')
+			</isNotEmpty>
+			<isEmpty property="B_EDATE">
+				 , DATA_SPA_END_DT=NULL
+			</isEmpty>
+			<isNotEmpty property="B_SDATE">
+				 , DATA_SPA_END_DT=TO_DATE(#B_EDATE#,'YYYY-MM-DD')
+			</isNotEmpty>
+
+			<isNotEmpty property="B_ETC0">
+				, DATA_SPA_COL0 = #B_ETC0#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC1">
+				, DATA_SPA_COL1 = #B_ETC1#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC2">
+				, DATA_SPA_COL2 = #B_ETC2#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC3">
+				, DATA_SPA_COL3 = #B_ETC3#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC4">
+				, DATA_SPA_COL4 = #B_ETC4#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC5">
+				, DATA_SPA_COL5 = #B_ETC5#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC6">
+				, DATA_SPA_COL6 = #B_ETC6#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC7">
+				, DATA_SPA_COL7 = #B_ETC7#
+			</isNotEmpty>
+			<isNotEmpty property="B_ETC8">
+				, DATA_SPA_COL8 = #B_ETC8#
+			</isNotEmpty>	
+			<isNotEmpty property="B_ETC9">
+				, DATA_SPA_COL9 = #B_ETC9#
+			</isNotEmpty>
+			
+			<isNotEmpty property="REG_DT">
+				 ,REG_DT=TO_DATE(#REG_DT#,'YYYY-MM-DD')
+			</isNotEmpty>			
+
+			WHERE DATA_SEQNO=#sidx#
+
+
+ 	</update>	
+ 	
+ 	
+ 	<insert id="JiCmAbd.insertBOARDRE">
+		 INSERT INTO JIT9150_RE
+			(IDX, MENU_CD, REG_DT, REG_ID, B_TITLE 
+			 ,READ_CNT, R_IDX, R_DEPTH, R_ORDER, DATA_IPNS 
+			 ,OPEN_YN, REG_ID_NM 
+			 ,REG_SVNUMBER, RR_IDX 
+			 ,B_ETC0
+			 ,B_ETC1
+			 ,B_ETC2
+			 ,B_ETC3
+			 ,B_ETC4
+			 ,B_ETC5
+			 ,B_ETC6
+			 ,B_ETC7
+			 ,B_ETC8			 			 			 			 			 			 			 
+			 ,B_ETC9
+				
+			)VALUES(
+			 #max_seq#, #pcode#
+			,SYSDATE
+
+			, #USER_ID#, #B_TITLE#
+			, 0, #r_idx#, #r_depth#, #r_order#, damo.HASH_STR_DATA(#PASSWD#)	
+			, #GESI_FL#, #REG_NAME#
+			, #REG_SVNUMBER#, #sidx#
+			
+			,
+			<iterate open="" close="" property="B_ETC_ARR" conjunction=","> 
+ 				 #B_ETC_ARR[]# 
+			</iterate>
+
+			 ) 	
+			 
+ 	</insert> 	
+ 	
+	<select id="JiCmAbd.getBOARDRR_S" parameterClass="java.util.HashMap" resultClass="egovMap">
+		 SELECT				
+		   TA.IDX		
+		   ,TA.MENU_CD	
+		   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS M_NM 
+		   ,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT	
+		   ,TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') MOD_DT	  
+		   ,TA.REG_ID	
+		   ,TA.MOD_ID	
+		   ,TA.B_TITLE		
+		   ,TA.READ_CNT	
+		   ,TA.R_IDX	
+		   ,TA.R_DEPTH	
+		   ,TA.R_ORDER	
+		   ,TA.DATA_IPNS PASSWD	
+		   ,TA.OPEN_YN GESI_FL	
+		   ,DECODE(TA.OPEN_YN,'Y','일반게시','N','게시하지않음','T','게시판공지글','P','비밀글','일반게시') AS GESI_FL_NM	
+		   ,TA.REG_ID_NM REG_NAME	
+		   ,TA.REG_SVNUMBER	
+		   ,TA.B_ETC0	
+		   ,TA.B_ETC1	
+		   ,TA.B_ETC2	
+		   ,TA.B_ETC3	
+		   ,TA.B_ETC4	
+		   ,TA.B_ETC5	
+		   ,TA.B_ETC6	
+		   ,TA.B_ETC7	
+		   ,TA.B_ETC8	
+		   ,TA.B_ETC9	
+		   ,TA.RR_IDX	
+			      
+		   FROM JIT9150_RE TA	
+		   WHERE TA.MENU_CD=#pcode# AND TA.IDX=#sreidx#
+		   ORDER BY TA.R_IDX DESC, TA.R_ORDER, TA.R_DEPTH ASC
+	</select>
+	
+ 	<update id="JiCmAbd.updateBOARDRE">
+		 UPDATE JIT9150_RE SET
+			 MOD_DT=SYSDATE, REG_ID=#USER_ID#, B_TITLE=#B_TITLE# 
+			 ,REG_ID_NM=#REG_NAME#
+			WHERE IDX=#sidx#
+				
+
+ 	</update>	
+ 	
+	<select id="JiCmAbd.selectBOARDREList" parameterClass="java.util.HashMap"  resultMap="COMMON.selectBOARDCLOB">
+
+		SELECT TTA.* 
+		FROM(
+			SELECT
+			     TO_CHAR(DATA_SEQNO) DATA_SEQNO
+				,MENU_CD
+			    ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+				,DATA_TITLE
+				,DATA_IPNS
+				, '' as DATA_DESC
+				,TO_CHAR(INQ_CNT) INQ_CNT
+				,TO_CHAR(DATA_ORIGIN_NO) DATA_ORIGIN_NO
+				,TO_CHAR(DATA_DEPTH) DATA_DEPTH
+				,TO_CHAR(DATA_SORT_NO) DATA_SORT_NO
+				,OPEN_YN
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT
+				,NVL((SYSDATE - TA.REG_DT),0) DT_DIFF
+				,REG_ID
+				,IPIN_NO
+				,DUPL_INFO
+				,AUTH_TYPE				
+			    ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT
+			    <isEqual property="pcode" compareValue="000091">
+			    ,'' AS FILE_NMS
+			    ,'' AS FILE_SEQ
+			    ,'' AS FILE_GROUP_SEQ
+			    ,'' AS FILE_GROUP_NM
+			    </isEqual>
+			    <isNotEqual property="pcode" compareValue="000091">
+			    ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                		FROM JIT9151
+                		WHERE 1=1
+
+		 					  AND MENU_CD=TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                              CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_NMS
+			                  
+  						,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),'::')) AS FILE_SEQNO
+                        FROM JIT9151
+                        WHERE 1=1
+	
+	 						  AND MENU_CD=TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                          	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                              AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                              GROUP BY MENU_CD, FILE_GROUP),'') FILE_SEQ   
+                              
+			 			,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),'::')) AS FILE_NMS
+                         FROM JIT9151
+                         WHERE 1=1
+	
+	 					   AND MENU_CD=TA.MENU_CD
+                           AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                           AND DEL_DT IS NULL
+                           START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2 
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2 
+                           AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                           GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_NM
+			                            
+			 					,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                          FROM JIT9151
+                          WHERE 1=1
+
+	 					  AND MENU_CD=TA.MENU_CD
+                          AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                          AND DEL_DT IS NULL START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                       	  CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                          AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                          GROUP BY MENU_CD, FILE_GROUP),'') FILE_GROUP_SEQ
+                </isNotEqual>
+				,ROW_NUMBER() OVER (ORDER BY TA.REG_DT ASC, TA.DATA_SEQNO ASC) NUM_OF_ROWS
+			FROM JIT9150 TA
+				WHERE TA.MENU_CD=#pcode#
+				AND TA.DEL_YN = 'N'
+				AND TA.DATA_ORIGIN_NO = #sidx#
+				<isEqual property="pstate" compareValue="XR2">
+					<isNotEqual property="scode" compareValue="sysadm">
+						AND TA.REG_ID = #USER_ID#
+					</isNotEqual>
+					<isEmpty property="sreidx">
+						AND TA.DATA_SEQNO IS NULL
+					</isEmpty>				
+					<isNotEmpty property="sreidx">
+						AND TA.DATA_SEQNO = #sreidx#
+					</isNotEmpty>
+				</isEqual>
+					
+				AND TA.DATA_DEPTH!=1 AND TA.DATA_SORT_NO!=1
+
+                                      			                           
+			 ORDER BY TA.REG_DT DESC, TA.DATA_SEQNO DESC, TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO ASC, TA.DATA_DEPTH ASC
+				
+		) TTA
+
+
+	</select> 	 			
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

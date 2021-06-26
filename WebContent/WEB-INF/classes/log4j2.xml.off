@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+<!-- 		<Property name="logPath">/web_log/jeus7/logs/DMZ_AP1/DMZ_AP1_komipowwg/</Property> -->
+<!-- 		<Property name="logPath">D:/project/komipo-wwg/eGovFrameDev-3.5.1-64bit/workspace/komipo-wwg/logs</Property> -->
+	</Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+        
+		 <RollingFile name="rollingFiles" fileName="${logPath}/daily/dailyRollingSample.log" filePattern="${logPath}/daily/dailyRollingSample.log.%d{yyyy-MM-dd}">
+			 <PatternLayout pattern="%d %5p [%c] %m%n" />
+			 <Policies>
+				 <!-- interval(default 1)이므로 1초 간격으로 rolling 수행 --> 
+				 <TimeBasedTriggeringPolicy />
+			 </Policies>
+		 </RollingFile> 		
+    </Appenders>
+    <Loggers>
+        <Logger name="com.ji" level="OFF" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFiles" />
+        </Logger>
+
+	    <logger name="jdbc.sqlonly" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="jdbc.resultset" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="jdbc.audit" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="jdbc.connection" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="log4jdbc.debug" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="java.sql" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    
+        <Logger name="egovframework" level="OFF" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFiles" />
+        </Logger>
+		  <!-- log SQL with timing information, post execution -->
+	    <logger name="jdbc.sqltiming" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="jdbc.resultsettable" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="org.springframework" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+	    <logger name="org.apache.commons" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+            <AppenderRef ref="rollingFiles" />
+	    </logger>
+   
+        <Root level="OFF">
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>

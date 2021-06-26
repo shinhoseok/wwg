@@ -1,0 +1,146 @@
+@charset "utf-8";
+
+/****************************************/
+/*	Name: adcapsule
+/*	PART: SITE COMMON STYLE
+/*	Version: 1.0
+/*	Author: [써냐]BLUEWEBD™
+/****************************************/
+
+/* basis Selector */
+/* basis Selector */
+html {}
+body {}
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, thead, tbody, tr, th, td, form, fieldset, legend, input, textarea, button {margin:0; padding:0; font-weight:normal; color:#666; font-family:malgun Gothic;}
+body, input, select, div, textarea, table, button {font-size:12px; color:#000;}
+article, aside, hgroup, header, footer, figure, figcaption, nav, section {display: block;}
+table {width:100%; border:0; border-spacing:0px; border-collapse:collapse;}
+html:first-child select {padding-right:6px; height:20px;} /* Opera 9 & Below Fix */
+option {vertical-align:middle;  padding:3px 0;} /* Firefox Fix */
+legend {display:none; visibility:hidden;}
+img, fieldset, button {vertical-align:middle; border:0;}
+ul, ol {list-style:none;}
+em, address {font-style:normal;}
+hr {display:none; visibility:hidden;}
+caption  {height: 0; width: 0; font-size: 0; line-height: 0; margin: 0; padding: 0; text-indent:-9999px;}
+input, textarea, button {line-height: 1.2; vertical-align: middle;}
+/*input*/
+input::-webkit-input-placeholder { color:#010101 !important} /* 웹킷 전용 속성 */
+input:-moz-placeholder { color:#010101 !important; opacity:1}/* Mozilla Firefox 4 to 18 */
+input::-moz-placeholder { color:#010101 !important; opacity:1} /* Mozilla Firefox 19+ */
+input:-ms-input-placeholder { color:#010101}/* Internet Explorer 10+ */
+input[type=text], input[type=password] {background:#fff; color:#444; padding:6px 1px 4px 1px;/*  text-indent:7px; *text-indent:0; */ vertical-align:middle; border:1px solid #ddd;}
+.overlay_wrap {position:relative;}
+.overlay_wrap .overlay_guide {position:absolute; top:1px; left:8px; font-size:12px; color:#010101; cursor:inherit;}
+
+textarea {background:#ffffff; width:100%;  min-height:90px; resize:none; font-size:13px; line-height:18px; padding:15px; color:#000; vertical-align:middle; border:1px solid #ddd;}
+input[type=text]:hover, input[type=password]:hover, textarea:hover {border:1px solid #89b4d3;}
+select {border:1px solid #ccc; height:26px; padding:2px 2px 2px 4px;  vertical-align:middle; color:#666;}
+input[type="file"] {vertical-align:middle; height:22px; width:80%; margin-right:6px;}
+input[type="checkbox"],input[type="radio"] {margin:0; padding:0; vertical-align:middle; width:13px; height:13px; line-height:13px;}
+label {cursor:pointer;}
+a {text-decoration:none;color:#454545; vertical-align:middle;}
+a:hover, a:active, a:focus{text-decoration:none;}
+
+/* design select */
+.select-wrap{display:inline-block;*display:inline;zoom:1;vertical-align:middle}
+.select-wrap .select-list {display:none;position:absolute;top:34px;left:0;width:100%;overflow:hidden;z-index:100}
+span.select {position:relative;display:block;width:148px; height:33px;line-height:33px;}
+span.select .def{display:block;position:absolute;left:0;top:0;width:138px;height:33px;padding-left:8px;border:1px solid #ddd;
+background:#fff url(/publish/img/ico/ico_sel.png) no-repeat 95% center;color:#010101;font-size:13px;}
+span.select .options {width:100%;text-align:left;background: #fff;}
+span.select .options.on {z-index: 9999;}
+span.select .options li {border:1px solid #ddd;border-top:0;text-indent:8px;background:#fff;height:33px;line-height:33px;}
+span.select .options li a {display:block;font-size:13px;}
+span.select .options li a:hover,span.select .options li a.focus {background:#999;color: #fff;}
+.tbl tbody tr td span.select a:hover, .tbl tbody tr td span.select a:focus {text-decoration:none;}
+span.select .options li:first-child { border-top:1px solid #ddd;}
+span.select .options li:hover a {color:#fff;font-weight:bold;}
+/* html {}
+body {}
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, thead, tbody, tr, th, td, form, fieldset, legend, input, textarea, button {margin:0; padding:0; font-weight:normal; color:#666; font-family:malgun Gothic, Dotum;}
+body, input, select, div, textarea, table, button {font-size:12px; color:#666;}
+table {width:100%; border:0; border-spacing:0px; border-collapse:collapse;}
+html:first-child select {padding-right:6px; height:20px;} Opera 9 & Below Fix
+option {vertical-align:middle;  padding:3px 0;} Firefox Fix
+legend {display:none; visibility:hidden;}
+img, fieldset, button {vertical-align:middle; border:0;}
+ul, ol {list-style:none;}
+em, address {font-style:normal;}
+hr {display:none; visibility:hidden;}
+caption  {height: 0; width: 0; font-size: 0; line-height: 0; margin: 0; padding: 0; text-indent:-9999px;}
+input, textarea, button {line-height: 1.2; vertical-align: middle;}
+input
+input[type=text], input[type=password] {background:#ffffff; width:126px; height:19px; padding:3px 0 2px 0; color:#666; text-indent:7px; *text-indent:0; vertical-align:middle; border:1px solid #cdcdcd;}
+textarea {background:#ffffff; width:100%; height:100px; padding:4px 0 1px 0; color:#454545; text-indent:7px; *text-indent:0; vertical-align:middle; border:1px solid #e0e0e0;}
+input[type=text]:hover, input[type=password]:hover, textarea:hover {border:1px solid #89b4d3;}
+select {border:1px solid #ccc; height:26px; padding:2px 2px 2px 4px;  vertical-align:middle; color:#666;}
+input[type="file"] {vertical-align:middle; height:22px; width:80%; margin-right:6px;}
+input[type="checkbox"],input[type="radio"] { margin:0; padding:0; vertical-align:middle; width:13px; height:13px; line-height:13px;}
+label {cursor:pointer;}
+a {text-decoration:none;color:#454545;} */
+/* a:hover, a:active, a:focus{text-decoration:underline;} */
+/* a:focus {outline:#000 dashed 1px} */ /* ie8 기준 접근성 포커스위치 확인*/
+
+/****************************/
+/* Common Style             */
+/****************************/
+.hands {cursor:pointer !important;}
+.hide {display:block; height: 0; width: 0; font-size: 0; line-height: 0; margin: 0; padding: 0; overflow:hidden;}
+
+.fixed {table-layout:fixed;} 
+.txt_break {
+	/* word-break:break-all !important;word-wrap:break-word !important; */
+	word-wrap: break-word !important; /* Internet Explorer 5.5+ */
+	white-space: pre-wrap !important; /* css-3 */
+	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+	white-space: -pre-wrap !important; /* Opera 4-6 */
+	white-space: -o-pre-wrap !important; /* Opera 7 */
+	
+	} 
+
+.txt_nowrap {white-space:nowrap;} 
+.ls_m01 {letter-spacing:-1px;}
+.ls_nm {letter-spacing:normal !important;}
+	
+/* clear class */
+.clear {clear:both !important;}
+.clfix:after {content:'.'; display:block; height:0px; clear:both; visibility:hidden;}
+.clfix {display:inline-block;}
+.clfix {display:block;}
+* html .clfix {height:1%;} /* hides from ie-mac */
+.clfix {zoom:1;} /*for ie 5.5-7*/
+
+/* ALIGN */
+.alC {text-align:center !important;}
+.alL {text-align:left !important;}
+.alR {text-align:right !important;}
+.alJ {text-align:justify !important;}
+
+.vaT {vertical-align:top !important;}
+.vaM {vertical-align:middle !important;}
+.vaB {vertical-align:bottom !important;}
+.vapx {vertical-align:-1px !important;}
+
+/* TEXT COLOR*/
+/* pointBl-blue, pointOr-orange, pointRe-red, pointGn-green, pointGy-gray, pointBk-black, pointWh-white */
+.pointBl {color:#1479c7 !important;}
+.pointOr {color:#ff6000 !important;}
+.pointRe {color:#fc3b33 !important;}
+.pointGn {color:#61ac1e !important;}
+.pointGy01 {color:#606060 !important;}
+.pointGy02 {color:#666 !important;}
+.pointGy03 {color:#999 !important;}
+.pointBk {color:#000 !important;}
+.pointWh {color:#fff !important;}
+.pointPK {color:#F03D98 !important;}
+
+/* Loding */
+.load_aja * {display:inline-block;*display:inline; *zoom:1; }
+.imgajax {margin-top:65px;}
+.load_aja {background-color:#fff; z-index:100; border-radius:10px; text-align:center;}
+.load_aja .tt_load {font-size:27px; font-family:nsb,sans-serif; padding-top:37px; padding-bottom:8px;}
+.load_aja .tt_load02 {font-size:20px;}
+.load_aja {width:405px; height:264px; position:absolute;top:50%;left:50%; margin-top:-52px; margin-left:-202px; color:#474747;}
+
+.dimm100 {position:fixed;top:0;left:0; width:100%; height:100%; background-color:#000; opacity:0.6; filter:alpha(opacity=60); z-index:80; *display:none;}

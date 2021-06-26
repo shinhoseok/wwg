@@ -1,0 +1,794 @@
+@import url(/KomipoWwg/style/project_css/common.css);
+/*서브공통*/
+.subVisual{height: 148px;}
+.subTitle{color: #fff;}
+.subTitle h2{font-size: 26px;text-shadow: 0 0 5px rgba(0,0,0,0.25);padding: 39px 0 8px 0;}
+.subTitle p{text-shadow: 0 0 5px rgba(0,0,0,0.25);}
+.contents{margin: 70px 0 147px 0;}
+.cts_mid{margin-top: 60px;}
+.cts_title{text-align: center;}
+.cts_title h3{font-size: 38px;color: #333;font-weight: 600;background: url(/KomipoWwg/images/project_img/sub/title_bg.png)center bottom no-repeat;padding-bottom: 43px;}
+.prg{margin-top: 40px;}
+.prg p{font-size: 16px;color: #333;line-height: 1.4;}
+/****20190911추가***/.prg p strong{font-weight:500;}
+.titleBox{text-align: center;}
+.titleBox p{font-size: 20px;color: #333;margin-top: 10px;}
+.titleB{font-size: 32px;color: #014c8f;font-weight: 600;padding-left: 18px;display: inline-block;position: relative;word-break:normal;}
+.titleB em{color: #333;font-weight: 400;}
+.titleB::before{content:'';width: 10px;height:10px;display: block;background: url(/KomipoWwg/images/project_img/sub/titleB_bg.jpg)left top no-repeat;position: absolute;left:0;top:0;}
+.titleM{font-size: 24px;color: #333;font-weight: 500;background:url(/KomipoWwg/images/project_img/sub/titleM_bg.jpg)left bottom no-repeat;padding-bottom: 16px;margin-bottom:25px;}
+.titleM2{font-size:20px;color:#333;margin-bottom:14px;font-weight: 500;}
+.titleAlert{font-size:18px;color:#ef4000;background: url(/KomipoWwg/images/project_img/common/alert.jpg)left center no-repeat;padding-left:28px;font-weight:500;margin-bottom:10px;}
+.listbg p{padding-left: 13px;position: relative;}
+.listbg p::before{content: '';width: 3px;height:3px;background: #0080c1;position: absolute;left:2px;top:10px;display: block;}
+/*버튼*/
+.blueBtn{font-size: 16px;color: #fff;background: #0080c1;height: 40px;line-height: 38px;text-align: center;display: inline-block;padding: 0 45px;font-weight:300;}
+.btnB{font-size:16px;color: #fff;text-align: center; background: #0080c1;width:100%;height: 45px;line-height: 43px;display: block;font-weight:300;}
+.btnR{font-size:16px;color: #fff;text-align: center; background: #ef4000;width:190px;height: 45px;line-height: 43px;display: block;font-weight:300;}
+.btnG{font-size:16px;color: #fff;text-align: center; background: #1bc100;width:100%;height: 45px;line-height: 43px;display: block;font-weight:300;}
+.btnO{font-size:16px;color: #fff;text-align: center; background: #f78733;width:100%;height: 45px;line-height: 43px;display: block;font-weight:300;}
+.btnRM{font-size:14px;color: #fff;text-align: center; background: #ef4000;width:96px;height: 30px;line-height: 28px;display: inline-block;font-weight:300;}
+.btnBL{font-size:14px;color: #fff;text-align: center; background: #012d5e;width:96px;height: 30px;line-height: 28px;display: inline-block;font-weight:300;}
+.btnBM{font-size:14px;color: #fff;text-align: center; background: #0080c1;width:96px;height: 30px;line-height: 28px;display: inline-block;font-weight:300;}
+.btnBL2{font-size: 16px;color: #fff;background: #012d5e;height: 40px;line-height: 38px;text-align: center;display: inline-block;padding: 0 45px;font-weight:300;}
+.btnBK{font-size:16px;color: #fff;text-align: center; background: #333333;width:120px;height: 40px;line-height: 38px;display: inline-block;font-weight:3001;}
+/*inputArea*/
+.inputArea{background: #eef1f2;height: 80px;width: 100%;text-align: center;line-height: 78px;}
+.inputArea .areaInner{display: inline-block}
+/*테이블공통*/
+.total{color: #333;background: url(/KomipoWwg/images/project_img/sub/total.png)left center no-repeat;padding-left: 19px;margin-top: 39px;}
+.total span{color: #014c8f;}
+.tableArea{margin-top: 15px;}
+.attach{font-size: 0;line-height: 0;width: 18px;height: 18px;display: inline-block;background: url(/KomipoWwg/images/project_img/sub/attach.png)left top no-repeat;vertical-align: middle;}
+.pagingArea{height: 25px;text-align: center;margin-top: 50px;}
+.pagingArea a{color: #333;display: inline-block;padding: 0 10px;height: 25px;vertical-align: bottom;}
+.pagingArea a.now{color: #fff;position: relative;background: url(/KomipoWwg/images/project_img/sub/paging_now.png)left 2px top no-repeat;padding-top: 1.4px}
+.pagingArea button{font-size: 0;line-height: 0;display: inline-block;padding: 0 10px;height: 25px;}
+.pagingArea .first_btn{background: url(/KomipoWwg/images/project_img/sub/first_page.png)left top 4px no-repeat;width: 11px;}
+.pagingArea .prev_btn{background: url(/KomipoWwg/images/project_img/sub/prev_page.png)left top 4px no-repeat;width: 7px;margin-right: 10px;}
+.pagingArea .next_btn{background: url(/KomipoWwg/images/project_img/sub/next_page.png)left top 4px no-repeat;width: 7px;margin-left: 10px;}
+.pagingArea .last_btn{background: url(/KomipoWwg/images/project_img/sub/last_page.png)left top 4px no-repeat;width: 11px;}
+.btnArea{margin-top: 40px;text-align: right;}
+/*테이블A*/
+.tableA{border-top: 1px solid #0081c2;font-size:16px;}
+.tableA tr{border-bottom: 1px solid #ccc;height: 50px;}
+.tableA thead tr{background: #eef1f2;}
+.tableA tbody tr:hover{background:#f1f6f7;transition:1s;}
+.tableA tr th{color: #333;font-weight: 500;position: relative;}
+.tableA tr th::after{content: '';width: 1px;height: 15px;background: #ccc;display: block;position: absolute;right: 0;top: 17px;}
+.tableA tr th:last-child::after{display: none;}
+.tableA tr td{text-align: center;}
+.tableA tr td:nth-child(2){text-align: left;padding-left: 32px;}
+.tableA tr td a:hover{color: #0081c2;}
+/*테이블B*/
+.tableB{font-size:14px;color:#333;border:1px solid #ccc;}
+.tableB tr{border-bottom:1px solid #ccc;}
+.tableB th{background: #eef1f2;border-right:1px solid #ccc;}
+.tableB td{padding: 10px;line-height:1.5;}
+/*테이블C*/
+.tableC{font-size:14px;color:#333;border-bottom:1px solid #ccc;border-top: 1px solid #0081c2;}
+.tableC tr{border-bottom:1px solid #ccc;}
+/*20190911 수정*/.tableC th{background: #eef1f2;border-right:1px solid #ccc;font-weight: 500;padding:10px;}
+.tableC th{background: #eef1f2;border-right:1px solid #ccc;font-weight: 500;}
+.tableC .emp>span{position: relative;display:inline-block;}
+.tableC th.emp>span::after{content: '';width: 5px;height:5px;display: block;background: url(/KomipoWwg/images/project_img/common/emph.png)right top no-repeat;position: absolute;right:-10px;top:3px;}
+.tableC td{padding:10px;border-right:1px solid #ccc;}
+.tableC tr td:last-child{border-right: 0;}
+.tableC td select{font-size:13px;height:30px;box-sizing: border-box; padding: 0 28px 0 8px;vertical-align: top;}
+.tableC td span{display: block;margin-top: 5px;}
+/*20190826 추가*/
+.tableC td.left{text-align:left !important;padding-left:10px}
+.tableC td em{display:block;padding-left: 10px;position: relative;}
+.tableC td em::after{content: '';width:3px;height:3px;background: #0080c1;display: block;position: absolute;left:0;top:7px;}
+/*20190826 추가*/
+/*테이블D*/
+.tableD{font-size:14px;color:#555;border-bottom:1px solid #ccc;border-top: 1px solid #0081c2;}
+.tableD tr{border-bottom:1px solid #ccc;}
+.tableD td{border-right:1px solid #ccc;padding:10px 15px;}
+.tableD td:last-child{border-right:0;}
+/*뷰테이블 리스트*/
+.viewList{margin-top: 40px;}
+.viewList>div{border-bottom: 1px solid #ccc;}
+.viewList .prevList{border-top: 1px solid #ccc;}
+.viewList a{font-size: 16px;overflow: hidden;display: block;height: 50px;line-height: 50px;}
+.viewList span{float: left;display: block;color: #014c8f;width: 180px;text-align: center;background: #eef1f2;position: relative;}
+.viewList span::after{content: '';width: 11px;height: 7px;background: url(/KomipoWwg/images/project_img/common/arrow04.png)left top no-repeat;display: block;position: absolute;left: 19px;top: 22px;}
+.viewList .prevList span::after{transform: rotate(180deg);}
+.viewList p{float: left;padding-left: 21px;overflow: hidden;}
+.viewList a:hover p{color: #0081c2;transition:0.5s;}
+/*탭메뉴*/
+.tabmenu{margin-top:40px;position: relative;}
+.tabmenu ul{overflow: hidden;border-bottom:1px solid #0081c2;}
+.tabmenu ul li{display:inline-block;width: 33.13222222%;margin-right: 1px;}
+.tabmenu ul li:last-child{margin-right:0;}
+.tabmenu ul li a{font-size:16px;color:#666;background: #eef1f2;border: 1px solid #ccc;border-bottom:0;height:50px;line-height:48px;display: block;text-align: center;box-sizing: border-box;}
+.tabmenu ul li.current a{color:#fff;background: #0081c2;border: 1px solid #0081c2;}
+.tabmenu ul li:hover a{color:#0081c2;transition: 0.5s;}
+.tabmenu ul li.current:hover a{color:#fff;}
+.tab-content{padding-top:21px;display: none;}
+.tab-content.current{display: block;}
+.tabmenu .tab_prev{ position: absolute; top: 0; left: -25px; width: 40px; height: 51px; background: -webkit-gradient(linear,left top,right top,color-stop(16.66%,#fff),color-stop(100%,rgba(255,255,255,0)));
+display: none;}
+.tabmenu .tab_next{position: absolute; top: 0; right: -15px; width: 40px; height: 51px; background: -webkit-gradient(linear,left top,right top,color-stop(0,rgba(255,255,255,0)),color-stop(60%,#fff));
+display: none;}
+
+
+/*서브메뉴*/
+.lnbArea{background: #eeedf0;border-bottom: 1px solid #dbdbdb;height: 50px;box-sizing: border-box;}
+.lnbArea:after{content: '';display: block;clear: both;}
+.lnb{float: left;}
+.lnb>li{float: left;border-right: 1px solid #dbdbdb;background: url(/KomipoWwg/images/project_img/common/arrow03.png)right 19px top 23px no-repeat;position: relative;}
+.lnb>li.on{background: url(/KomipoWwg/images/project_img/common/arrow03_up.png)right 19px top 23px no-repeat;}
+.lnb>li.home{border-left: 1px solid #dbdbdb;background: none;}
+.lnb>li>a{font-size: 15px;color: #666;height: 50px;line-height: 50px;padding-left: 20px;width: 270px;display: block;box-sizing: border-box;}
+.lnb>li.home>a{font-size: 0;line-height:0;background: url(/KomipoWwg/images/project_img/sub/home.png)center center no-repeat;width: 49px;height: 50px;padding: 0;}
+.lnb>li.last_depth{background: url(/KomipoWwg/images/project_img/common/arrow04.png)right 19px top 23px no-repeat;}
+.lnb>li.last_depth.on{background: url(/KomipoWwg/images/project_img/common/arrow04_up.png)right 19px top 23px no-repeat;}
+.lnb>li.last_depth>a{color: #014c8f;}
+.lnb_more{position: absolute;left:-1px;top: 50px;width: 100%;background:#eeedf0;border: 1px solid #dbdbdb;border-top: 0;display: none;z-index:20;}
+.lnb_more>ul>li{height: 50px;}
+.lnb_more>ul>li>a{font-size:14px;line-height: 50px;padding: 0 20px;display: block;}
+.lnb_more>ul>li>a:hover{background: #01b0f1 url(/KomipoWwg/images/project_img/common/arrow_w.png)right 20px center no-repeat;color: #fff;}
+.shareMenu{float: right;}
+.shareMenu div{float: left;text-align: center;}
+.shareMenu div a{line-height: 50px;display: block;font-size: 0;width: 50px;height: 50px;}
+.shareMenu .snsShare{background: #012d5e url(/KomipoWwg/images/project_img/sub/share.png)center center no-repeat;position: relative;}
+.shareMenu .printShare{background: #0080c1 url(/KomipoWwg/images/project_img/sub/print.png)center center no-repeat}
+.snsList{position: absolute;left:0;top:50px;display: none;z-index:10;}
+.snsList button{font-size:0;line-height:0;width:50px;height:50px;display: block;}
+.snsList button.url{background: #02947d url(/KomipoWwg/images/project_img/sub/url.png)center center no-repeat; }
+.snsList button.facebook{background: #365899 url(/KomipoWwg/images/project_img/sub/facebook.jpg)center center no-repeat;}
+.snsList button.mail{background: #01b0f1 url(/KomipoWwg/images/project_img/sub/mail.png)center center no-repeat;}
+/*동반성장 ceo 메시지*/
+.sub_strategy .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_strategyBg.jpg)center top no-repeat;}
+.sub_strategy .tableC{font-size:16px;}
+/*20190911 수정*/.sub_strategy .tableC th{padding:13px 10px;}
+.sub_strategy .tableC th{padding:13px 0;}
+.sub_strategy .tableC th:last-child{border-right:0;}
+.sub_strategy .tableC td{padding: 10px 15px;}
+.sub_strategy img{width:100%;}
+.ceo .imgArea{overflow: hidden;}
+.ceo .imgArea img{float: left;margin-right: 30px;width:auto;}
+.ceo .imgArea img:last-child{margin-right: 0;}
+.ceo .prg{margin-top:16px;}
+/*동반성장 3.0 New Paradigm*/
+.paradigm .tableC th, .paradigm .tableC td{text-align: center;}
+.paradigm .tableC tr.totalT{background: #eef1f2;color: #014c8f;font-weight:500;}
+.paradigm .imgArea{overflow: hidden;}
+.paradigm .imgArea img{float: left;margin-right: 30px;width:auto;}
+.paradigm .imgArea img:last-child{margin-right:0;}
+.paradigm .prg ul{overflow: hidden;}
+.paradigm .prg ul li{overflow: hidden;width:100%;margin-bottom:40px;}
+.paradigm .prg ul li:last-child{margin-bottom: 0;}
+.paradigm .prg ul li.f_left, .paradigm ul li.f_right{width:50%;}
+.paradigm .prg ul li img{float: left;width:auto;}
+.paradigm .prg ul li .textArea{padding-left:91px;background: url(/KomipoWwg/images/project_img/sub/dotted_bg.png)left 70px top 5px no-repeat;}
+.paradigm .prg ul li p{font-size:18px;color: #014c8f;font-weight: 500;margin-bottom: 3px;}
+.paradigm .prg ul li span{font-size:16px;background: url(/KomipoWwg/images/project_img/sub/listBg.png)left top 7px no-repeat;padding-left: 12px; display: inline-block;}
+/*2030 동반성장전략*/
+.strategy2030 .prg{overflow: hidden;}
+.listImg{float: left; width: 31.3%; margin-right: 3%; text-align: center; position: relative;padding-bottom:30px}
+.listImg:last-child{margin-right:0;}
+.listImg .inner{position: relative; z-index: 10;}
+.listImg .inner img{width:268px;}
+.listImg .inner .none{display: none;}
+.listImg .inner>div{margin:5px 20px 0 20px;}
+.listImg:after{content: ''; width: 100%; height: 231px;; background: #eef1f2; position: absolute; left: 0; bottom: 0; display: block;}
+.listImg p{font-size:18px;color: #333;height:50px;}
+.strategy2030 .tableC td div p{color: #555;margin-bottom: 8px}
+.strategy2030 .tableC td div p:last-child{margin-bottom: 0;}
+/*동반성장 지원체계·역할*/
+.support .tableC td div p{color: #555;margin-bottom: 8px}
+.support .tableC td div p:last-child{margin-bottom: 0;}
+/*조직도*/
+.prg p.telNum{font-size: 16px;color: #555;}
+.prg p.telNum span{font-size:18px;color: #014c8f;background: url(/KomipoWwg/images/project_img/common/tel.png)left center no-repeat;padding:0 22px;position: relative;}
+.prg p.telNum span::after{content: '';width: 1px;height: 12px;background: #ccc;position: absolute;right:10px;top:9px;display: block;}
+.organization .tableC td div p{color: #555;margin-bottom: 8px}
+.organization .tableC td div p:last-child{margin-bottom: 0;}
+.organization .tableC td div span{color: #555;font-size:14px;margin-bottom: 8px;padding-left:15px;}
+/*찾아오시는 길*/
+.prg p.address{font-size: 16px;color: #555;margin-right:30px;}
+.prg p.address span{font-size:18px;color: #014c8f;background: url(/KomipoWwg/images/project_img/common/location.png)left center no-repeat;padding:0 22px;position: relative;}
+.prg p.address span::after{content: '';width: 1px;height: 12px;background: #ccc;position: absolute;right:10px;top:9px;display: block;}
+.location .locationInfo{overflow: hidden;margin-top:10px;}
+.location .locationInfo p{float: left;}
+.location .traffic>div{margin-bottom:10px;overflow: hidden;padding:30px;}
+.location .traffic>div.car{background:#eef1f2 url(/KomipoWwg/images/project_img/sub/car.png)left 3% center no-repeat;}
+.location .traffic>div.bus{background:#eef1f2 url(/KomipoWwg/images/project_img/sub/bus.png)left 3% center no-repeat;}
+.location .traffic>div.train{background:#eef1f2 url(/KomipoWwg/images/project_img/sub/train.png)left 3% center no-repeat;}
+.location .traffic>div h5{font-size:28px;font-weight:600;float: left;padding: 0 0 0 13%;line-height:73px;}
+.location .traffic>div.car h5{color: #014c8f;}
+.location .traffic>div.bus h5{color: #018f0b;}
+.location .traffic>div.train h5{color: #e56a0f;}
+.location .traffic>div .listbg{padding-left:27%;position: relative;}
+.location .traffic>div .listbg::before{content: '';width:1px;height: 79px;display: block;background: url(/KomipoWwg/images/project_img/sub/dotted_bg.png)left top repeat-y;position: absolute;left:23%;top:50%;margin-top: -39px;}
+.location .traffic>div .listbg p{color: #555;margin-bottom: 8px}
+.location .traffic>div .listbg p:last-child{margin-bottom: 0;}
+/*CEO 및 경영진 현장경영*/
+.sub_culture .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_cultureBg.jpg)center top no-repeat;}
+.sub_culture .tableC{font-size:16px;}
+.sub_culture .tableC th{padding:13px 0;}
+.sub_culture .tableC td{padding:13px;}
+.sub_culture .tableC th:last-child{border-right:0;}
+.numList>ul{overflow: hidden;}
+.numList>ul>li.f_left, .numList ul li.f_right{width:50%;}
+.numList>ul>li>p{font-size:16px;color:#333;padding-left:19px;margin-bottom:10px;}
+.numList>ul>li:last-child>p, .numList ul li:nth-last-child(2)>p{margin-bottom:0;}
+.numList>ul>li:nth-child(1)>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 5px no-repeat;}
+.numList>ul>li:nth-child(2)>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 5px no-repeat;}
+.numList>ul>li:nth-child(3)>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 5px no-repeat;}
+.numList>ul>li:nth-child(4)>p{background: url(/KomipoWwg/images/project_img/sub/num4.jpg)left top 5px no-repeat;}
+.numList>ul>li:nth-child(5)>p{background: url(/KomipoWwg/images/project_img/sub/num5.jpg)left top 5px no-repeat;}
+.numList>ul>li:nth-child(6)>p{background: url(/KomipoWwg/images/project_img/sub/num6.jpg)left top 5px no-repeat;}
+/*********20190911 추가*********/.numList>ul>li:nth-child(7)>p{background: url(/KomipoWwg/images/project_img/sub/num7.jpg)left top 5px no-repeat;}
+/*20190826 추가*/
+.numList>ul>li.num1>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 5px no-repeat;}
+.numList>ul>li.num2>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 5px no-repeat;}
+.numList>ul>li.num3>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 5px no-repeat;}
+.numList>ul>li.num4>p{background: url(/KomipoWwg/images/project_img/sub/num4.jpg)left top 5px no-repeat;}
+.numList>ul>li.num5>p{background: url(/KomipoWwg/images/project_img/sub/num5.jpg)left top 5px no-repeat;}
+.numList>ul>li.num6>p{background: url(/KomipoWwg/images/project_img/sub/num6.jpg)left top 5px no-repeat;}
+/*********20190911 추가*********/.numList>ul>li.num7>p{background: url(/KomipoWwg/images/project_img/sub/num7.jpg)left top 5px no-repeat;}
+/*20190826 추가*/
+.numList>ul>li>span{color:#555;display: block;margin-left:11px;padding-left: 10px;position: relative;margin-bottom:10px;}
+.numList>ul>li>span::after{content: '';width:3px;height:3px;background: #0080c1;display: block;position: absolute;left:0;top:7px;}
+.picSlide{background: url(/KomipoWwg/images/project_img/sub/picslideBg.jpg)right top no-repeat;padding:42px 68px 34px 68px;height:auto;box-sizing:border-box;position: relative;}
+.picSlide ul{ margin-left: 20px;}
+.picSlide ul li div{text-align: center;margin-right:2%}
+.picSlide ul li p{font-size:16px;color:#333;margin-top:12px;margin-left:-10%;}
+.picSlide .slick-arrow{font-size:0;line-height:0;width:21px;height:40px;display: block;position: absolute;top:50%;margin-top:-30px;}
+.picSlide .slick-prev{background: url(/KomipoWwg/images/project_img/sub/pic_prev.png)left top no-repeat;left:-60px;}
+.picSlide .slick-next{background: url(/KomipoWwg/images/project_img/sub/pic_next.png)left top no-repeat;right:-40px;}
+.executive .numList>ul>li:last-child>span, .executive .numList>ul>li:nth-last-child(2)>span{margin-top:10px;}
+.executive .numList>ul>li:last-child>span:last-child, .executive .numList>ul>li:nth-last-child(2)>span:last-child{margin-bottom:0;}
+/*동반성장포럼 개최*/
+.forum .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:10px}
+/*동반성장 워크숍*/
+.workshop .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:10px}
+.workshop .imgArea{overflow: hidden;}
+.workshop .imgArea img{float: left;margin-right: 30px;width: auto;}
+.workshop .imgArea img:last-child{margin-right: 0;}
+/*다자간 성과공유제 운영*/
+.sharing .numList>ul>li:last-child>p, .sharing .numList ul li:nth-last-child(2)>p{margin-bottom:10px;}
+.sharing .imgBox{background: #eef2f5;overflow: hidden;padding:32px 0 35px 0;margin-top:20px;}
+.sharing .imgBox>div{float: left;text-align: center;width:50%;box-sizing:border-box;position: relative;}
+.sharing .imgBox>div:first-child{border-right:1px dotted #333;}
+.sharing .imgBox>div p{font-size:16px;color:#333;margin:10px 10% 0 10%;position: relative;bottom:0;}
+.sharing .listbg p{margin: 6px 0;}
+.sharing .prg>.listbg p{font-size:14px;color:#555;}
+.sharing .prg:last-child .tableC td{text-align: center;}
+.sharing .prg:last-child .tableC td:last-child{text-align: left;}
+/*동반성장 우수사례 발굴*/
+.best .imgArea{overflow: hidden;}
+.best .imgArea img{float: left;margin-right: 30px;width: auto;}
+.best .imgArea img:last-child{margin-right: 0;}
+/*KOMIPO-BEST 100 경영컨설팅 지원*/
+.sub_support .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_supportBg.jpg)center top no-repeat;}
+.sub_support .imgArea{overflow: hidden;}
+.sub_support .imgArea img{float: left;margin-right: 30px;width: auto;}
+.sub_support .imgArea img:last-child{margin-right:0;}
+.best100 .numList>ul>li:nth-last-child(2)>p{margin-bottom:10px;}
+.border_p{padding-bottom:20px;border-bottom:1px dotted #333;}
+/*품질안전 경영시스템 인증 지원*/
+.quality .prg:nth-child(4) li:first-child{height:88px;}
+.quality .numList>ul>li:last-child>p, .quality .numList>ul>li:nth-last-child(2)>p{margin-bottom:10px;}
+/*해우소 설치 지원*/
+.haeuso .prg p{margin-bottom:10px;}
+/*구매조건부 기술개발사업*/
+.sub_support .tableArea{margin-top:5px;}
+.sub_support .tableC{font-size:16px;}
+.sub_support .tableC th{padding:13px 0;}
+.sub_support .tableC th:last-child{border-right:0;}
+.sub_support .tableC td{padding:13px;text-align: center;}
+.squareList{padding-bottom:10px;}
+.squareList ul{overflow: hidden;}
+.squareList ul li{width: 22%;margin-right:4%;box-sizing:border-box;border-radius: 9px;position: relative;padding:14px 20px;}
+.squareList ul li.f_right{margin-top:4%;}
+.squareList ul li.list3{margin-top:4%;}
+.squareList ul li::after{content: '';width:37px;height:11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;right:-45px;top:50%;background-size:100% 11px;}
+.squareList ul li:nth-child(4)::after,.squareList ul li:nth-child(5)::after, .squareList ul li:nth-child(12)::after{display: none;}
+.squareList ul li.f_right::after{transform: rotate(180deg);}
+.squareList ul li:nth-child(5)::before{content: '';width:37px;height:11px;display: block;transform: rotate(90deg);background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;left:50%;top:-32%;margin-left:-18px;background-size:100% 11px;}
+.squareList ul li:nth-child(9)::before{content: '';width:37px;height:11px;display: block;transform: rotate(90deg);background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;left:50%;top:-32%;margin-left:-18px;}
+.squareList ul li:nth-child(3n-2){background: #f0f8ff;border:2px solid #01abec;}
+.squareList ul li:nth-child(3n-1){background: #f0fff2;border:2px solid #07ec01;}
+.squareList ul li:nth-child(3n){background: #fffbf0;border:2px solid #f09300;}
+.squareList ul li:nth-child(4), .squareList ul li:nth-child(5), .squareList ul li:nth-child(12){margin-right:0;}
+.squareList ul li .inner{text-align: center;}
+.squareList ul li em{font-size:14px;position: absolute;left:15px;top:7px;display: block;font-weight:500;}
+.squareList ul li:nth-child(3n-2) em{color:#014c8f;}
+.squareList ul li:nth-child(3n-1) em{color:#018f0b;}
+.squareList ul li:nth-child(3n) em{color:#e56a0f;}
+.squareList ul li p{font-size:22px;color: #333;font-weight:550;border-bottom:1px dotted #333;margin-bottom:8px;padding-bottom:8px;}
+.squareList ul li span{font-size:18px;color:#333;display: block;}
+/*중소기업지원협력연구개발사업*/
+.business .tableC tr:nth-child(2) td:last-child, .business .tableC tr:nth-child(3) td:last-child{border-right:1px solid #ccc;}
+/*보유기술 이전사업*/
+.possesion .btnBL{font-size:14px;background:#012d5e url(/KomipoWwg/images/project_img/sub/down.png)right 10px center no-repeat;width:auto; padding: 0 35px 0 15px;margin-bottom: 10px;}
+.possesion .blue1{display: block;}
+/*수출협의회 운영*/
+.export01 .numList>ul>li:nth-child(4){height:88px;}
+/*금융지원(파워에너지론)*/
+.power .imgArea{margin-top:10px;}
+.power .imgArea.subimg img{float: none;width:100%;margin-right:0;}
+/*KOMIPO 상생협력대출*/
+.loan .tableC td:nth-child(2){text-align: left;}
+.loan .squareList{padding:10px 0;}
+.loan .squareList ul li{width:30%;margin-right: 5%;}
+.loan .squareList ul li:last-child{margin-right:0;}
+.loan .squareList ul li::after{background: url(/KomipoWwg/images/project_img/common/listArrow2.png)left top no-repeat;width:50px;background-size: 100% 11px;right:-55px;}
+.loan .squareList ul li:last-child::after{display: none;}
+.loan .squareList ul li span{font-size:16px;}
+/*동반성장 2030 중장기 로드맵*/
+.borderG{border-bottom:1px solid #ccc;padding-bottom:10px;}
+.roadmap .tableC td:nth-child(2), .roadmap .tableC td:nth-child(3){text-align:left;}
+.roadmap .prg:nth-child(3) .tableC{margin:10px 0;}
+.roadmap .subP{color:#555;margin:5px 15px;}
+/*KOMIPO Best100*/
+.partners .tabmenu ul li{width:16.43%}
+/*상생결제시스템 도입*/
+.winwin .imgBox{background: #eef2f5;overflow: hidden;padding:37px 78px;margin-top:20px;}
+.winwin .imgBox>div{float: left;width:50%;box-sizing:border-box;}
+.winwin .imgBox .imgArea{padding-left:20px;}
+.winwin .textArea>div{margin-top:40px;}
+.winwin .textArea>div>p{font-size:18px;color:#333;margin-bottom:10px;}
+.winwin .textArea>div>.listbg{background: #fff;padding:14px 18px;}
+.winwin .textArea>div>.listbg p{margin-bottom:5px;}
+.winwin .textArea>div>.listbg span{padding-left:15px;display:block;margin-bottom:5px;}
+.winwin .textArea>div>.listbg span em{display: block;padding: 5px 0 0 50px;}
+.winwin .textArea>div>.listbg span em.blue3{display: inline-block;padding:0;}
+.winwin .tableC{margin: 25px 0 15px 0;}
+.winwin .tableC th{text-align: center;}
+.winwin .tableC td{text-align: left}
+.winwin .numList>ul>li:last-child>p{margin-bottom:10px;}
+.winwin .numList>ul>li:nth-child(2)>p, .winwin .numList ul li:nth-last-child(2)>p{margin-bottom:10px;}
+/*Power-Up K-장보고 프로젝트*/
+.powerup .prg>p{margin-bottom:10px;}
+.powerup .prg>p.blue2{margin-bottom:15px;}
+.numList ul li:nth-last-child(2)>p{margin-bottom:10px;}
+.powerup .numList>ul>li>span{font-size:16px;color:#555;margin-left:0;}
+.powerup .numList>ul>li:last-child>span{margin-bottom:0;}
+.powerup .numList>ul>li>span::after{top:9px;}
+.imgList ul{overflow: hidden;width:100%;}
+.imgList ul li{float: left;width:49%;margin-right:2%;text-align: center;margin-top:25px;}
+.imgList ul li:nth-child(2n){margin-right:0;}
+.imgList ul li img{width:100%;}
+.imgList ul li span{font-size:16px;color:#333;display: block;margin-top:5px;}
+.powerup .btn_p{margin-top:35px;}
+.powerup .btnBL{background: #012d5e url(/KomipoWwg/images/project_img/sub/band.png)left 10px center no-repeat;padding: 0 15px 0 60px;width:auto;margin-top:18px;}
+.powerup .imgArea{margin-top:25px;}
+.powerup .imgArea div{float: left;margin-right:30px;text-align: center;}
+.powerup .imgArea div:last-child{margin-right:0;}
+.powerup .imgArea div img{float: none;margin-right:0;}
+.powerup .imgArea div span{display: block;font-size:16px;color:#333;margin-top:5px;}
+/*공지사항*/
+.sub_notice .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_noticeBg.jpg)center top no-repeat;}
+.sub_notice .inputArea select{width: 158px;height: 40px;margin-right: 3px;}
+.sub_notice .inputArea input{height: 40px;width: 490px;margin-right: 3px;}
+.sub_notice .imgArea{overflow: hidden;}
+.sub_notice .imgArea img {float: left;margin-right: 30px;width: auto;}
+.sub_notice .imgArea img:last-child {margin-right: 0;}
+/*공지사항 - 뷰*/
+.noticeView .tableA tbody tr:hover{background:none;}
+.noticeView .tableA thead tr:nth-child(1) th{color: #555;}
+.noticeView .tableA thead tr:nth-child(1) th:first-child{text-align: left;padding-left: 40px;color: #333;}
+.noticeView .tableA thead tr:nth-child(1) th:first-child::after{display: none;}
+.noticeView .tableA thead tr:nth-child(2){border-bottom: 0;height: 90px;}
+.noticeView .tableA thead tr:nth-child(2){background: none;}
+.noticeView .tableA th p{width: 900px;}
+.noticeView .tableA tbody tr{height: auto;}
+.noticeView .tableA td{text-align: left;padding: 0px 40px 20px 40px;}
+.attach_list{border:1px solid #ccc;text-align: left;margin: 0 20px;min-height: 52px;padding: 14px 19px;box-sizing: border-box;overflow: hidden;}
+.attach_list span{color: #014c8f;font-weight: 500;position: relative;margin-right: 5px;vertical-align: top;float: left;}
+.attach_list span::after{content: '';width: 1px;height: 15px;background: #ccc;display: block;position: absolute;right: -16px;top: 5px;}
+.attach_list div{float: left;}
+.attach_list .attachFile{background: url(/KomipoWwg/images/project_img/sub/attach.png)left center no-repeat;padding-left: 25px;margin: 0 20px;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;word-wrap: normal;width: 350px;overflow: hidden; display: inline-block;font-weight: 400;}
+.attach_list .attachFile:hover{text-decoration: underline;}
+/*중소기업 Q&A*/
+.qna .lock{background: url(/KomipoWwg/images/project_img/sub/lock_b.png)right center no-repeat;padding-right:20px;}
+.AFin{font-size: 13px;color: #fff;background: #0080c1;height: 24px;width: 75px;border-radius: 12px;display: inline-block;line-height: 23px;}
+.AWait{font-size: 13px;color: #fff;background: #a5a7a7;height: 24px;width: 75px;border-radius: 12px;display: inline-block;line-height: 23px;}
+.qna_write .tableC{font-size:16px;}
+.qna_write .tableC th{font-weight:400;}
+.qna_write .tableC p{font-size:14px;}
+.qna_write .tableC tr:nth-child(3) td{padding:10px 0;}
+.qna_write .tableC td span{display: inline-block;}
+.qna_write .tableC #title{width:100%;}
+.qna_write .inputFile{float: left;background: #f5f5f5;padding: 2.5px;margin-right:3px;width:50%;}
+.qna_write .filebtn{float: left;}
+.qna_write .btnBL{font-size: 16px;height: 40px;line-height: 38px;padding: 0 45px;width:auto;margin-left:3px;}
+.qna_write img{width:100%;}
+.filebtn button{font-size:0;line-height:0;width:29px;height:29px;vertical-align: top;}
+.filebtn .add{background: url(/KomipoWwg/images/project_img/sub/add.jpg)left top no-repeat;}
+.filebtn .remove{background: url(/KomipoWwg/images/project_img/sub/remove.jpg)left top no-repeat;}
+.qna_view tbody tr:first-child{border-bottom:0;}
+.qna_view .tableA td.reply{padding:20px;}
+.qna_view .reply>div{background: #eef1f2;padding:25px;}
+.qna_view .reply p{font-size:16px;color: #555;padding-top:15px;line-height: 1.5;}
+.qna_view .reply p.title{color:#014c8f;font-weight:500;border-bottom:1px solid #ccc;padding-top:0;padding-bottom:10px;}
+.qna_view .reply p.title span{color: #555;display: inline-block;float: right;}
+/*온라인 직거래 장터*/
+.market .tabmenu ul li{width: 19.77%;}
+.market .inputArea{margin-top:48px;}
+.market_list{margin-top: 20px;}
+.market_list .inner{overflow: hidden;}
+.market_list .product{background: #eef1f2;float: left;width: 23.5%;height:300px;margin:0 2% 2% 0;text-align: center;}
+.market_list .product:nth-child(4n){margin-right:0;}
+#.market_list .product:nth-child(9), .market_list .product:nth-child(10), .market_list .product:nth-child(11), .market_list .product:nth-child(12){margin-bottom:0;}
+.market_list .product a{display: block;border:2px solid #eef1f2;padding-top:30px;height:300px;box-sizing:border-box;}
+.market_list .product p{font-size:16px;font-weight:500;color: #333;margin: 0 20px;margin-top:18px;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;overflow:hidden;}
+.market_list .product>a>div{position: relative;text-align: center;height:200px;}
+.market_list .product .circle{width:200px;height:200px;border-radius: 50%;overflow: hidden;position: absolute;left:50%;top:0;margin-left:-100px;}
+.market_list .product .circle img{position: relative;left: -5px;transition: 0.5s;}
+.market_list .product a:hover{border:2px solid #0080c1;transition:1s;}
+.market_list .product a:hover p{color:#014c8f;transition: 0.5s;}
+.market_list .product a:hover .circle img{transform: scale3d(1.15, 1.15, 1);transition: 0.5s;}
+/*온라인 직거래장터 - 뷰*/
+.market .view .prg{margin-top:35px;}
+.market .view .prg:first-child{overflow: hidden;}
+.market .view .imgArea{float: left;overflow: hidden;width:560px;height:500px;}
+.market .view .imgInner{width:100%;height:100%;}
+.market .view .imgInner img{border:1px solid #ccc;padding:3px;box-sizing: border-box;float: none;}
+.market .view .productInfo{float: left;border-top:1px solid #0081c2;margin-left: 5%;width: 48%;}
+.market .view .productInfo h5{font-size:24px;color: #333;font-weight:500;padding:25px 30px;}
+.market .view .productInfo .tableB{border-left:0;border-right:0;font-size:16px;}
+.market .view .productInfo .tableB tr{height: 52px;}
+.market .view .productInfo .tableB th{font-weight:400;}
+.market .view .productInfo .tableB td{padding:10px 15px;}
+.market .view .mobileImg{display: none;}
+.market .view .product_img{margin-top:29px;}
+.market .view .product_img ul{overflow: hidden;}
+.market .view .product_img ul li{float: left;width: 22.75%;margin-right:3%;}
+.market .view .product_img ul li:last-child{margin-right:0;}
+.market .view .product_img ul li a{display: block;height:100%;overflow: hidden;}
+.market .view .product_img ul li a img{width:100%;padding: 3px;box-sizing: border-box;border:1px solid #ccc;}
+.market .view .product_img ul li.pic img{border:2px solid #0080c1;padding: 2px;}
+.market .view .product_img ul li:hover img{border:2px solid #0080c1;padding: 2px;transition: 0.5s;}
+.market .view .tableC tr{height:52px;font-size:16px;}
+.market .view .tableC th{font-weight:400;}
+.market .view .tableC td{padding:10px 15px;}
+.market .view .btnArea{overflow: hidden;}
+.market .view .btnArea .leftBtn{float: left;}
+.market .view .btnArea .leftBtn .btnBL{font-size:16px;width: 120px;height: 40px;line-height: 38px;margin-left:3px;}
+.market .view .btnArea .btnB{font-size:16px;width: 120px;height: 40px;line-height: 38px;display: inline-block;float: right;}
+.market .attach_list{margin:0;}
+/*중소기업제품정보*/
+.productInfo .tableC th:last-child{border-right:0;}
+.productInfo .tableC{font-size:16px;}
+.productInfo .tableC th{text-align: center;padding:13px 0;}
+.productInfo .tableC td{padding:13px;}
+.productInfo .tableC td p{margin-bottom:2px;}
+.productInfo .tableC td p:last-child{margin-bottom:0;}
+.productInfo .siteList{overflow: hidden;}
+.productInfo .siteList li{float: left;width:18.6%;position: relative;margin-right:8.5%;}
+.productInfo .siteList li:last-child{margin-right:0;}
+.productInfo .siteList li a{display: block;}
+.productInfo .siteList li::after{content: '';width:1px;height:160px;display: block;background: url(/KomipoWwg/images/project_img/sub/dotted_bg.png)right top repeat-y;position: absolute;right:-25%;top:0;}
+.productInfo .siteList li:last-child::after{display: none;}
+.productInfo .siteList .textArea{text-align: center;}
+.productInfo .siteList .textArea span{display: block;font-size:16px;color:#333;margin:5px 0;}
+.productInfo .siteList .textArea em{display: block;color:#014c8f;}
+/*중부발전 구매담당자*/
+.slideTab{background: #eef1f2;padding:17px 20px;}
+.slideTab ul{overflow: hidden;}
+.slideTab ul li{float: left;width:16.66%;margin-bottom:15px;}
+.slideTab ul li:nth-child(7), .slideTab ul li:nth-child(8), .slideTab ul li:nth-child(9), .slideTab ul li:nth-child(10), .slideTab ul li:nth-child(11), .slideTab ul li:nth-child(12){margin-bottom:0;}
+.slideTab ul li a{display: block;padding-left:10px;position: relative;}
+.slideTab ul li a:hover{color:#014c8f;}
+.slideTab ul li a::before {content: '';width: 3px;height: 3px;background: #0080c1;position: absolute;left: 2px;top: 8px;display: block;}
+.manager .prg{overflow: hidden;}
+.manager .tableC th{padding:10px 0;}
+.manager .tableC th:last-child{border-right:0;}
+.manager .tableC td{color:#555;text-align:center;padding:10px;}
+.tableAreaL{float: left;width:49%}
+.tableAreaR{float: right;width:49%}
+/*아이디어 제안*/
+.idea .listImg p{height:auto;}
+.idea .listImg:after{height:211px;}
+.idea .firstPrg{margin-top:15px;}
+.idea .prg{overflow: hidden;}
+.stepList ul{overflow: hidden;}
+.stepList ul li{float: left;margin-right:3%;width:17.6%;height:70px;position: relative;}
+.stepList ul li:nth-child(1){background:url(/KomipoWwg/images/project_img/sub/step01.png)left top no-repeat;}
+.stepList ul li:nth-child(2){background:url(/KomipoWwg/images/project_img/sub/step02.png)left top no-repeat;}
+.stepList ul li:nth-child(3){background:url(/KomipoWwg/images/project_img/sub/step03.png)left top no-repeat;}
+.stepList ul li:nth-child(4){background:url(/KomipoWwg/images/project_img/sub/step04.png)left top no-repeat;}
+.stepList ul li:nth-child(5){background:url(/KomipoWwg/images/project_img/sub/step05.png)left top no-repeat;margin-right:0;}
+.stepList ul li::after{content: '';width: 37px;height: 11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;right: -50px;top: 45%;margin-right:13px;background-size:30px 11px;z-index: 5;}
+.stepList ul li:nth-child(5)::after{display: none;}
+.stepList ul li p{font-size:20px;color:#fff;display: inline-block;height:70px;width:100%;text-align: center;line-height:70px;padding-left:20%;box-sizing:border-box;}
+.receiptList{overflow: hidden;}
+.receiptList>div{float: left;width:49%;margin-right:2%;height:210px;}
+.receiptList>div:nth-child(1){background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt01.png)left 40px center no-repeat;}
+.receiptList>div:nth-child(2){background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt02.png)left 40px center no-repeat;margin-right:0;}
+.receiptList>div .textArea{padding:35px 0 0 40%;}
+.receiptList p{font-size:24px;color:#333;}
+.receiptList span{font-size:16px;color:#333;display:block;margin:11px 0 30px 0;}
+.receiptList a{display: inline-block;font-size:16px;width:120px;height:40px;line-height:38px;}
+.idea .numList>ul>li>span{margin-left:0;}
+/*입찰정보 시스템*/
+.sub_system .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_systemBg.jpg)center top no-repeat;}
+.sub_system .cts_mid{overflow: hidden;}
+.sub_system .imgArea{float: left;width:50%;}
+.sub_system .imgArea img{width:564px;}
+.sub_system .textArea{float: left;width:48%;margin-left:2%;margin-top:35px;}
+.sub_system .titleM{background: none;padding-bottom:0;margin:38px 0 10px 20px;font-weight:550;}
+.sub_system .textArea p{font-size:16px;color:#333;margin-left:20px;}
+.sub_system .btnB{width:120px;height:40px;line-height:38px;margin:33px 0 0 20px;}
+
+/*로그인*/
+.member .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_memberBg.jpg)center top no-repeat;}
+.login .loginInput{border-top:1px solid #0081c2;border-bottom: 1px solid #ccc;overflow: hidden;margin-top: 40px;}
+.login .loginInput>div{float: left;width:50%;padding:0 50px;margin:50px 0;box-sizing: border-box;height:215px;position: relative;}
+.login .loginInput .memJoin .btnArea{position: absolute;bottom:0;}
+.login .memLogin{border-right:1px dotted #333;}
+.login .memLogin .inputArea{background: none;height: auto;margin-bottom:12px;}
+.login .memLogin .inputArea>div{line-height: 0;position: relative;}
+.login .memLogin .inputArea .id{margin-bottom:10px;}
+.login .memLogin .inputArea .inputtxt{display: block;height:45px;box-sizing: border-box;width:100%;padding:11px 11px 11px 41px;box-shadow: none;position: relative;}
+.login .memLogin .inputArea label{font-size:0;line-height:0;display: block;position: absolute;left:16px;top:12px;z-index: 10;;}
+.login .memLogin .inputArea .id label{background: url(/KomipoWwg/images/project_img/common/user.png)left top no-repeat;width:17px;height:18px;}
+.login .memLogin .inputArea .pass label{background: url(/KomipoWwg/images/project_img/common/password.png)left top no-repeat;width:14px;height:20px;}
+.login .memcheck{overflow: hidden;}
+.login .memcheck .checkBox{overflow: hidden;color: #333;float: left;}
+.login .memcheck .memsearch{color: #333;float: right;}
+.login .memcheck .memsearch a{display: inline-block;}
+.login .memcheck .memsearch a:nth-child(1){padding-right:13px;position: relative;}
+.login .memcheck .memsearch a:nth-child(1):after{content: '';width:1px;height: 12px;background: #cfcfcf;display: block;position: absolute;right:0;top:4px;}
+.login .memcheck .memsearch a:nth-child(2){padding-left:10px;}
+.login .memcheck .memsearch a:hover{text-decoration:underline;}
+.login .memJoin .joinTitle{background: url(/KomipoWwg/images/project_img/common/join_img.png)left top no-repeat;padding-top: 64px;}
+.login .memJoin .joinTitle p{font-size: 22px;color: #333;letter-spacing: -1px;}
+.login .memJoin .joinTitle p strong{font-size: 28px;color: #014c8f;}
+/*회원가입*/
+.join_tab ul{overflow: hidden;}
+.join_tab ul li{float: left;width:24.6%;margin-right:0.5%;border-bottom: 2px solid #ccc;height: 48px;box-sizing: border-box;}
+.join_tab ul li:last-child{margin-right:0;}
+.join_tab ul li p{font-size: 16px;color: #949494;display: block;display: block;padding:13px 20px 13px 51px;overflow: hidden;}
+.join_tab ul li:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01.jpg)left 20px center no-repeat;}
+.join_tab ul li:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02.png)left 20px center no-repeat;}
+.join_tab ul li:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03.png)left 20px center no-repeat;}
+.join_tab ul li:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04.png)left 20px center no-repeat;}
+.join_tab ul li span{font-size: 12px;color: #949494;float: right;margin-top: 4px;}
+.join_tab ul li.tab{background: url(/KomipoWwg/images/project_img/common/tab_border.png)left bottom no-repeat;border:0;}
+.join_tab ul li.tab p{color: #333;}
+.join_tab ul li.tab:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01_tab.jpg)left 20px center no-repeat;}
+.join_tab ul li.tab:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02_tab.png)left 20px center no-repeat;}
+.join_tab ul li.tab:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03_tab.png)left 20px center no-repeat;}
+.join_tab ul li.tab:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04_tab.png)left 20px center no-repeat;}
+.join_tab ul li.tab span{color: #0080c1;}
+.join .prg{margin-top:40px;}
+.join .textArea{border:1px solid #ccc;height: 250px;overflow-x:hidden;overflow-y: scroll;font-size:15px;line-height: 24px;padding:20px;box-sizing: border-box;}
+.join .lastPrg{border-bottom:1px dotted #333;padding-bottom:30px;}
+.join .btnArea{text-align: center;}
+.join .btnArea a{width:210px;height: 50px;line-height: 48px;font-size:16px;display: inline-block;}
+.join .txtNotice{font-size:14px;color: #ef4000;margin:13px 0;display: block;}
+/*step01*/
+.agree p{display: inline-block;}
+.agree .radioBox{display: inline-block;font-size:16px;color: #333;}
+.agree .radioBox label{margin-left:20px;}
+.join01 .btnB{width:300px;display: inline-block;}
+/*step02*/
+.join02 .prg{overflow: hidden;} 
+.join02 .prg .certify{float: left;width:31.3%;margin-right:3%;text-align: center;position: relative;}
+.join02 .prg .certify:after{content: '';width:100%;height: 301px;background: #eef1f2;position: absolute;left:0;bottom:0;display: block;}
+.join02 .prg .certify:last-child{margin-right:0;}
+.join02 .prg .certify .inner{margin:0 70px;position: relative;z-index: 10;}
+.join02 .prg .certify p{font-size:20px;color: #333;letter-spacing: -1px;}
+.join02 .prg .certify .btnArea{padding-bottom:38px;}
+/*step03*/
+.emphasis{float: right;background: url(/KomipoWwg/images/project_img/common/emph.png)left top no-repeat;padding-left: 10px;margin-bottom:10px;}
+.join03 .tableC td input{width: 410px}
+.join03 #tel1, .join03 #tel2, .join03 #tel3{width:110px;}
+.join03 #address{width:100%;margin-top:5px}
+.join03 #mail{width:260px;}
+.join03 .tableC td button{margin-left:3px;}
+.join03 .radioBox label{margin-right:20px;}
+.join03 .btnArea{overflow: hidden;text-align: center;}
+.join03 .btnArea .btnBL{margin-left:6px;}
+/*step04*/
+.join04 .btnArea{text-align: center;}
+.join04 .btnArea a{width:210px;height: 50px;line-height: 48px;font-size:16px;display: inline-block;}
+.join04 .btnArea .btnBL{margin-left:6px;}
+.join04 .text{text-align: center;margin-top:30px;}
+.join04 .text p{font-size:24px;margin-top:20px;}
+/*아이디비밀번호찾기*/
+.memsearch .tab-content p{font-size:16px;color:#333;line-height: 1.5;margin-bottom:20px;}
+.memsearch .radioBox{margin-bottom:30px;}
+.memsearch .radioBox label{font-size:16px;color: #333;margin-right:20px;}
+.memsearch .tableC{font-size:16px;}
+.memsearch .tableC th{font-weight: 500;}
+.memsearch .tableC td.birth select{width:110px;margin-right: 2px;}
+.memsearch .tableC #tel1, .memsearch .tableC #tel2, .memsearch .tableC #tel3{width:83px;}
+.memsearch .tableC .btnBL{margin-left: 2px;}
+.memsearch .tableC #mail{width:190px;}
+.memsearch .btnArea{text-align: center;}
+.memsearch .btnB{width: 300px;height:50px;line-height: 48px;display: inline-block;}
+.memsearch .mailSearch{display: none;}
+.certifyText{text-align: center;}
+.certifyText p{width:80%;margin:0 auto;}
+/*개인정보처리방침*/
+.indiviInfo .prg{margin-bottom:40px;}
+.indiviInfo .prg p{font-size:20px;margin-bottom:10px;font-weight: 500;}
+.indiviInfo .prg span{font-size:16px;letter-spacing: -0.5px;line-height:1.5;}
+.indiviInfo .tableArea{margin:15px 0;}
+.indiviInfo .tableA{font-size:14px;}
+.indiviInfo .tableA tr{height:42px;}
+.indiviInfo .tableA tbody tr:hover{background:none;}
+.indiviInfo .tableA tr th{border-right:1px solid #ccc;font-weight:500;}
+.indiviInfo .tableA tr td{border-right:1px solid #ccc;text-align:center;padding:0;}
+.indiviInfo .tableA tr th:last-child, .indiviInfo .tableA tr td:last-child{border-right:0;}
+.indiviInfo .tableA tr th::after{display:none;}
+.indiviInfo .prg:nth-child(5) .tableA tr td:nth-child(2){text-align:left;padding-left:15px;}
+.indiviInfo .tableD td span{font-size:14px;}
+.indiviInfo .tableD td .check{color:#0080c1;background:url(/KomipoWwg/images/project_img/common/search.png)left center no-repeat;padding-left:20px;font-weight:500;float:right;}
+
+/*기존공통 및 추가 */
+.icon_new { display:inline-block; margin-left:5px; width:16px; height:16px; background:#df4334 url(/KomipoWwg/images/common/icon_new.png) 50% 50% no-repeat; text-indent:-99999px; position:relative; top:5px; border-radius:50%;}
+/*탭메뉴*/
+.tabmenu2{margin-top:40px;position: relative;}
+.tabmenu2 ul{overflow: hidden;border-bottom:1px solid #0081c2;}
+.tabmenu2 ul li{display:inline-block;width: 24.7%;margin-right: 1px;}
+.tabmenu2 ul li:last-child{margin-right:0;width:25%;}
+.tabmenu2 ul li a{font-size:16px;color:#666;background: #eef1f2;border: 1px solid #ccc;border-bottom:0;height:50px;line-height:48px;display: block;text-align: center;box-sizing: border-box;}
+.tabmenu2 ul li.current a{color:#fff;background: #0081c2;border: 1px solid #0081c2;}
+.tabmenu2 ul li:hover a{color:#0081c2;transition: 0.5s;}
+.tabmenu2 ul li.current:hover a{color:#fff;}
+.tab-content2{padding-top:21px;display: none;}
+.tab-content2.current{display: block;}
+.tabmenu2 .tab_prev{ position: absolute; top: 0; left: -25px; width: 40px; height: 51px; background: -webkit-gradient(linear,left top,right top,color-stop(16.66%,#fff),color-stop(100%,rgba(255,255,255,0)));
+display: none;}
+.tabmenu2 .tab_next{position: absolute; top: 0; right: -15px; width: 40px; height: 51px; background: -webkit-gradient(linear,left top,right top,color-stop(0,rgba(255,255,255,0)),color-stop(60%,#fff));
+display: none;}
+
+.board_caution {background:#eef1f2;margin: 5px;}
+.board_caution > div {margin-bottom:10px;overflow:hidden;padding:30px;}
+.essential:after { display:inline-block; color:#FF0000; content:'*'; margin-left:2px; font-size:18px; position:relative; top:6px; }
+
+/*20190826 추가*/
+.viewList p{white-space:nowrap;word-wrap:normal;}
+.square3List{margin-top:20px;padding-bottom:10px;}
+.square3List ul{overflow: hidden;}
+.square3List ul li{width: 30%;margin-right:4%;box-sizing:border-box;border-radius: 9px;position: relative;padding:14px 20px;}
+.square3List ul li.w40{width: 21%;}
+.square3List ul li.list3{margin-top:4%;}
+.square3List ul li::after{content: '';width:37px;height:11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;right:-45px;top:50%;background-size:100% 11px;}
+.square3List ul li:nth-child(3n-2){background: #f0f8ff;border:2px solid #01abec;}
+.square3List ul li:nth-child(3n-1){background: #f0fff2;border:2px solid #07ec01;}
+.square3List ul li:nth-child(3n){background: #fffbf0;border:2px solid #f09300;}
+.square3List ul li:last-child{margin-right:0;}
+.square3List ul li .inner{text-align: center;}
+.square3List ul li em{font-size:14px;position: absolute;left:15px;top:7px;display: block;font-weight:500;}
+.square3List ul li:nth-child(3n-2) em{color:#014c8f;}
+.square3List ul li:nth-child(3n-1) em{color:#018f0b;}
+.square3List ul li:nth-child(3n) em{color:#e56a0f;}
+.square3List ul li p{font-size:22px;color: #333;font-weight:550;border-bottom:1px dotted #333;margin-bottom:8px;padding-bottom:8px;}
+.square3List ul li span{font-size:18px;color:#333;display: block;}
+.square3List ul li span.leftt{text-align: left;}
+.square3List ul li b{font-size:18px;color: #333;border-top:1px dotted #333;margin-top:8px;padding-top:8px;display: block;}
+.square3List ul li:last-child::after{display:none}
+.red{color:red}
+
+.process{padding-bottom:10px;}
+.process ul{overflow: hidden;}
+.process ul li{width: 15.6%;margin-right:3%;box-sizing:border-box;border-radius: 9px;position: relative;padding:14px 20px;text-align:center;font-size:18px;float:left;}
+.process ul li.w30{width: 27%;}
+.process ul li:first-child{width:7%;;padding:22px 20px;}
+.process ul li:nth-child(3n-2){background: #f0f8ff;border:2px solid #01abec;}
+.process ul li:nth-child(3n-1){background: #f0fff2;border:2px solid #07ec01;}
+.process ul li:nth-child(3n){background: #fffbf0;border:2px solid #f09300;}
+.process ul li em{font-size:14px;position: absolute;left:15px;top:7px;display: block;font-weight:500;}
+.process ul li:nth-child(3n-2) em{color:#014c8f;}
+.process ul li:nth-child(3n-1) em{color:#018f0b;}
+.process ul li:nth-child(3n) em{color:#e56a0f;}
+.process ul li p{color: #333;font-weight:550;border-bottom:1px dotted #333;margin-bottom:8px;padding-bottom:8px;}
+.process ul li span{font-size:18px;color:#333;display: block;}
+.process ul li::after{content: '';width:25px;height:11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;right:-33px;top:50%;background-size:100% 11px;}
+.process ul li:last-child::after{display:none}
+
+.numList ul li.num2 p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 5px no-repeat;}
+.numList ul li em{padding-left:20px;display:block}
+
+.mt40{margin-top:40px}
+.mt20{margin-top:20px}
+.mt10{margin-top:10px}
+.toptit{font-size:16px;margin-bottom:10px}
+.box{border:1px solid #ddd;box-sizing:border-box;padding:15px;margin-bottom:20px;margin-top:5px;}
+
+.numList>ul>li>span.f_left{ float:left; width:48%;}
+
+.prg_result { margin-top:40px;}
+.prg_result ul{overflow: hidden;}
+.prg_result ul li{overflow: hidden;width:100%;margin-bottom:40px;}
+.prg_result ul li:last-child{margin-bottom: 0;}
+.prg_result ul li.f_left, .prg_result ul li.f_right{width:50%;}
+.prg_result ul li img{float: left;width:auto;}
+.prg_result ul li .textArea{padding-left:91px;background: url(/KomipoWwg/images/project_img/sub/dotted_bg.png)left 70px top 5px no-repeat;}
+.prg_result ul li p{font-size:18px;color: #014c8f;font-weight: 500;margin-bottom: 3px;}
+.prg_result ul li span{font-size:16px;background: url(/KomipoWwg/images/project_img/sub/listBg.png)left top 7px no-repeat;padding-left: 12px; display: inline-block;}
+
+.prg_cooperation { margin-top:40px;}
+.prg_cooperation p{font-size: 16px;color: #333;line-height: 1.4; display:inline-block;}
+.prg_cooperation .f_left, .prg_cooperation .f_right{width:50%;}
+.prg_cooperation span { font-size:16px; line-height:1; background:#0080c1; padding:4px 10px 6px; color:#fff; margin-right:5px; display:inline-block; vertical-align:top;}
+
+.social .numList>ul>li>span{margin-top:10px;}
+.social .prg:nth-child(2) .tableArea{margin-bottom:10px;margin-top:0;}
+.social .prg:nth-child(2) .tableC{text-align: center;}
+.social .prg:nth-child(3) .tableC td{text-align: center;}
+.social .prg:nth-child(3) .tableC td:first-child{text-align: left;}
+
+.innovation .numList>ul>li>p{margin-bottom:10px;}
+.purchase .tableArea{margin: 10px 0;}
+.purchase .numList>ul>li>span{margin-top:10px;}
+.purchase .process ul li:nth-child(4), .purchase .process ul li:nth-child(5){margin-right: 3%;}
+.purchase .process ul li:last-child{margin-right:0;}
+.purchase .process ul li::after{display: block;}
+.purchase .process ul li:last-child::after{display: none;}
+
+.imposition .prg:nth-child(5) .numList>ul>li>p{margin-bottom: 10px;}
+.imposition img{width:100%;}
+
+.advice .prg:nth-child(3) .numList>ul>li>p{margin-bottom: 10px;}
+
+.possesion .process ul li::after{top:50px;}
+
+.wel .numList ul li>p{margin-bottom: 10px;}
+
+.payment .numList>ul>li>span{margin-top: 10px;}
+
+.roadmap .numList>ul>li>p{margin-bottom:5px;}
+.roadmap .numList>ul.sup_num>li:nth-child(1)>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 7px no-repeat;}
+.roadmap .numList>ul.sup_num>li:nth-child(2)>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 7px no-repeat;}
+.roadmap .numList>ul.sup_num>li:nth-child(3)>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 7px no-repeat;}
+
+.social .prg:nth-child(2) .tableC th:last-child{border-right:1px solid #ccc}
+.social .prg:nth-child(2) .tableC tr:first-child th:last-child{border-right:0;}
+/***20190911 수정*****//* .social .prg:nth-child(2) .tableC tr td:last-child{border-right:1px solid #ccc} */
+/***20190911 수정*****/.social .tableC tr td:last-child{border-right:0}
+
+.company .tableC tr td:last-child{border-right:1px solid #ccc}
+.company .tableC tr:first-child td:last-child{border-right:0}
+
+.payment .imgBox{background: #eef2f5;overflow: hidden;padding:37px 78px;margin-top:20px;}
+.payment .imgBox>div{float: left;width:50%;box-sizing:border-box;}
+.payment .imgBox .imgArea{padding-left:20px;}
+.payment .textArea>div{margin-top:40px;}
+.payment .textArea>div>p{font-size:18px;color:#333;margin-bottom:10px;}
+.payment .textArea>div>.listbg{background: #fff;padding:14px 18px;}
+.payment .textArea>div>.listbg p{margin-bottom:5px;}
+.payment .textArea>div>.listbg span{padding-left:15px;display:block;margin-bottom:5px;}
+.payment .textArea>div>.listbg span em{display: block;padding: 5px 0 0 50px;}
+.payment .textArea>div>.listbg span em.blue3{display: inline-block;padding:0;}
+/*//20190826 추가*/
+
+/*20190920 수정*/
+.ceo_paradigm{/*background: url(../img/sub/ceo_bg.jpg)left top no-repeat;width:100%;height:75vh;*/position: relative;text-transform: uppercase;background-size:contain;}
+.ceo_paradigm>p{font-size:28px;color:#fff;font-weight:500;text-align: center;position: absolute;left: 7.5%;top: 42%}
+.ceo_paradigm>ul{}
+.ceo_paradigm>ul>li{position: absolute;left: 75.5%;top: 17%}
+.ceo_paradigm>ul>li.paradigm01{}
+.ceo_paradigm>ul>li.paradigm02{top: 36%;}
+.ceo_paradigm>ul>li.paradigm03{top: 55.5%;}
+.ceo_paradigm>ul>li.paradigm04{top:75%;}
+.ceo_paradigm>ul>li>p{color:#fff;font-size:20px;font-weight:500;}
+.ceo_paradigm>ul>li>p.small{font-size:14px;font-weight:400;}
+
+/*****20190930 추가*******/
+.strategy2030 .prg{overflow: hidden;}
+.border_btm{background: url(../img/sub/border_2.jpg)left bottom repeat-x;padding-bottom:30px;}
+.strategy2030 h4{font-size:24px;color:#333;float:left;width:156px;box-sizing: border-box;padding: 25px 0 0 30px;} 
+.inner_box{float: left;width:49%;text-align: center;background: #f2fdf7;border:2px solid #61d992;border-radius:9px;box-sizing:border-box;padding:27px 0;}
+.inner_box:first-child{margin-right:2%;background: #f2fbff;border:2px solid #6fbbdf;}
+.inner_box p{font-size:20px;color:#333;}
+.inner_box p.big{font-size:26px;font-weight:500;width:256px;border-bottom:1px solid #61d991;display:inline-block;padding-bottom:13px;margin-bottom:11px;}
+.inner_box:first-child p.big{border-bottom:1px solid #6dbbe1;}
+.list_back{float:left;text-align: center;width:87%;}
+.strategyList{text-align: center;float:left;width: 33.333%;}
+.strategyList img{width:auto;}
+.strategyList p{font-size:20px;font-weight:500;margin-top: 10px;}
+.strategyList.list01 p{color:#887531}
+.strategyList.list02 p{color:#0079c0}
+.strategyList.list03 p{color:#2e804f;}
+/*****20190930 추가*******/

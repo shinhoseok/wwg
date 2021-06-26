@@ -1,0 +1,1520 @@
+@media screen and (max-width:1200px){
+    /*공통*/
+    .wrap{width:100%;}
+    .menu_open{display: none;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual .visual_slide .slick-list{width: 100%;}
+    .mainVisual .supportInfo ul li{width: 19.2%;margin-right: 1%;}
+    /*메인뉴스,공고*/
+    .mainNews .paradigm{width: 27%;}
+    .mainNews .newsList{width: 73%;padding: 30px 3%;padding-right: 0;}
+    .mainNews .newsList .list{margin-right: 3.8%;}
+    /*메인서비스*/
+    .mainService .cooperService{width: 41%;}
+    .mainService .serviceBanner{width: 26%;margin-left: 3%;}
+    .mainService .commuService{width: 27%;}
+    /*서브*/
+    .sub_strategy .imgArea{width:100%;}
+    .sub_strategy .imgArea img{width:31%;margin-right: 2%;}
+    .tabmenu ul li{margin-right:0.1%;width:33.1%;}
+    /*동반성장전략*/
+    .paradigm .imgArea img{width:32%;}
+    .listImg{width: 32.6%;margin-right: 1%;}
+    /*동반성장 문화확산*/
+    .workshop .imgArea{width:100%;}
+    .workshop .imgArea img {width: 32%;margin-right: 2%;}
+    .best .imgArea{width:100%;}
+    .best .imgArea img {width: 32%;margin-right: 2%;}
+    /*중소기업 지원안내*/
+    .sub_support .imgArea{width:100%;}
+    .sub_support .imgArea img {width: 32%;margin-right: 2%;}
+    .partners .tabmenu ul li{width:16.4%;}
+    .winwin .imgBox .imgArea img{width:431px;}
+    .powerup .imgArea div{width: 32%;margin-right: 2%;}
+    .powerup .imgArea img{width:100%;}
+    /*소통마당*/
+    .market .wrap{width:auto;margin:0 20px;}
+    .market .tabmenu ul li {width: 19.73%;}
+    .market .view .imgArea{width:50%;height: auto;}
+    .market .view .imgInner{padding-bottom: 0;}
+    .market .view .imgArea img{width:100%;}
+    .market .view .productInfo{margin-left: 2%;width: 48%;}
+    .market .view .product_img ul li{padding-bottom:0;width: 24.2%;margin-right: 1%;}
+    .sub_notice .imgArea{width:100%;}
+    .sub_notice .imgArea img {width: 32%;margin-right: 2%;}
+    .productInfo .siteList{width:100%;}
+    .productInfo .siteList li{width: 20%;margin-right:6.5%}
+    .productInfo .siteList li::after{right:-35px}
+    .productInfo .siteList li img{width:100%;}
+    /*회원가입*/
+    .join02 .prg .certify .inner{margin:0 5%;}
+    .memsearch .wrap{width:auto;margin:0 20px;}
+}
+@media screen and (max-width:1180px){
+    /*공통*/
+    .wrap{width: auto;margin: 0 20px;}
+    /*헤더*/
+    header .quick_link ul{display: none;}
+    .utill{float: none;position: absolute;right: -20px;top: -27px;height: auto;}
+    .utill .login{background: none;width: auto;height: auto;border-left: 0;}
+    .utill .join{background: none;width: auto;height: auto;border-left: 0;}
+    .utill .sitemap{display: none;}
+    .utill div a{padding: 0 19px 0 19px;height: auto;position: relative;}
+    .utill .login a:after{content: '';width: 1px;height: 10px;display: block;background: #777;position: absolute;right: 0;top: 3px;}
+    .utill div span{font-size: 13px;}
+    nav{position: absolute;right: -2000px;top:-36px;background: #fff;z-index: 600;padding-top: 46px;width: 500px;height: 100vh;display: none;}
+    nav>ul{overflow-y:auto;}
+    nav>ul>li{float: none;height: auto;border-bottom: 1px solid #e7e7e7;}
+    nav>ul>li>a{line-height: 60px;color: #333;font-size: 19px;margin:0;padding: 0 20px;background: url(/KomipoWwg/images/project_img/common/plus.png)right 20px center no-repeat;background-size: 15px;}
+    nav>ul>li>a::after{display: none;}
+    nav>ul>li>a.on{color: #0068b7;border-bottom: 0;background: url(/KomipoWwg/images/project_img/common/minus.png)right 20px center no-repeat;background-size: 15px;}
+    .depth2{position: relative;top: 0;border-top: 1px solid #e7e7e7;}
+    .depth2>ul{float: none;width:100%;margin-top: 0;}
+    .depth2>ul>li{float: none;width: 100%;margin: 0;height: auto;}
+    .depth2>ul>li>a{line-height:50px;padding-left: 30px;display: block;background: #e2f0fb;}
+    .depth2>ul>li>a.more{background: #e2f0fb url(/KomipoWwg/images/project_img/common/arrow_m.png)right 20px center no-repeat;}
+    .depth2>ul>li>a.on2{background: #b4d4ed;}
+    .depth2>ul>li>a.more.on2{background: #b4d4ed url(/KomipoWwg/images/project_img/common/arrow_m.png)right 20px center no-repeat;}
+    .depth3{display: none;margin-top: 0;}
+    .depth3>li{margin-bottom: 0;height: 45px;}
+    .depth3>li>a{line-height: 45px;padding-left: 50px;display: block;background: #f9f9f9;}
+    .depth3>li>a:before{width: 8px;height:2px;background: #0068b7;left: 35px;top: 22px}
+    .menuBg{display: none;}
+    .menu02>ul>li:last-child, .menu03>ul>li:last-child{margin-top: 0;}
+    .menu04>ul>li:nth-child(4), .menu05>ul>li:nth-child(4){height: auto;margin-top: 0;}
+    .menu_open{display: block;position: absolute;top: 30px;right:2px;}
+    .menu_close{display: none;position: relative;top: -20px;z-index:600;}
+    .siteMap{display: none;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual{height: 548px;}
+    .mainVisual .main_tit p{font-size: 25px;}
+    .mainVisual .main_tit p span{font-size: 37px;margin-top: 2px;}
+    .mainVisual .visual_slide div.item{ height: 548px;}
+    .mainVisual .visual_slide div.item1{background: url(/KomipoWwg/images/project_img/main/main_01.jpg)left center no-repeat;}
+    .mainVisual .visual_slide div.item2{background: url(/KomipoWwg/images/project_img/main/main_02.jpg)left center no-repeat;}
+    .mainVisual .visual_slide div.item3{background: url(/KomipoWwg/images/project_img/main/main_03.jpg)left center no-repeat;}
+    .mainVisual .visual_slide .slick-dots{left: 20px;margin-left: 0;}
+    .mainVisual .supportInfo{top: 361px;}
+    /*메인뉴스,공고*/
+    .mainNews .wrap{margin: 0;}
+    .mainNews .paradigm p{width: 150px;margin: 13px 0 20px 0;}
+    .mainNews .newsList{width: 73%;padding: 30px 2%;}
+    /*메인서비스*/
+    .mainService .wrap{margin: 0;}
+    .mainService .cooperService{width: 43%;padding: 25px 2%;}
+    .mainService .cooperService ul{margin-right: 2%;width: 49%;}
+    .mainService .cooperService ul li{width:100%;}
+    .mainService .cooperService ul li a{font-size: 14px;}
+    .mainService .serviceBanner{margin-left: 1.5%;}
+    .mainService .serviceBanner ul li a{padding: 22px 8%;}
+    .mainService .commuService{width: 28%;padding: 28px 2%;}
+    .mainService .commuService div{width: 44%;}
+    .mainService .commuService .service01{padding-right:5%;}
+    .mainService .commuService .service02{padding-left:5%;}
+    .mainService .commuService div a{font-size: 13px;}
+    .mainService .serviceBanner .slick-dots{left: 8%;}
+    /*서브*/
+    .lnbArea .wrap{margin:0;}
+    .noticeView .tableA th p{width: auto;}
+    .attach_list .attachFile{width:330px;}
+    /*동반성장 문화확산*/
+    .picSlide ul{margin-left:0;}
+    .picSlide .slick-prev{left:-40px;}
+    .picSlide img{width:100%;}
+    .sharing .imgBox>div img{width: 80%;margin: 0 10%;}
+    /*소통마당*/
+    .stepList ul li:nth-child(1){background-size: 100% 70px;}
+    .stepList ul li:nth-child(2){background-size: 100% 70px;}
+    .stepList ul li:nth-child(3){background-size: 100% 70px;}
+    .stepList ul li:nth-child(4){background-size: 100% 70px;}
+    .stepList ul li:nth-child(5){background-size: 100% 70px;}
+    /*지원시스템*/
+    .sub_system .imgArea img{width:100%;}
+    .sub_system .textArea{width: 45%;margin-left: 5%;}
+    /*회원가입*/
+    .login .loginInput>div{padding:0 30px;}
+    .login .memJoin .joinTitle p{font-size:20px;}
+    .login .memJoin .joinTitle p strong{font-size:24px;}
+    .join02 .prg .certify{width: 32.6%;margin-right: 1%;}
+    .memsearch .tableC .btnBL{margin-left:0;margin-top:5px;}
+    /*개인정보처리방침*/
+    .indiviInfo .tableD td{text-align: center;}
+    .indiviInfo .tableD td span{display: block;}
+    .indiviInfo .tableD td .check{float: none;}
+}
+@media screen and (max-width:1140px){
+    /*중소기업 지원안내*/
+    .power .numList>ul>li:nth-child(4){height:54px;}
+    .winwin .imgBox{padding:30px 5%;}
+    .winwin .imgBox .imgArea{padding:0 20px;}
+    .winwin .imgBox .imgArea img{width:100%;}
+    .winwin .textArea>div{margin-top:5%;}
+}
+@media screen and (max-width:1100px){
+    /*중소기업 지원안내*/
+    .partners .tabmenu ul li{width:16.35%;}
+    /*소통마당*/
+    .tableAreaL, .tableAreaR{width:49.7%;}
+    .idea .listImg p{height:50px;}
+    .receiptList span{height:40px;margin-bottom: 20px;}
+    .receiptList>div:nth-child(1){background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt01.png)left 8% center no-repeat;}
+    .receiptList>div:nth-child(2){background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt02.png)left 8% center no-repeat;}
+}
+@media screen and (max-width:1020px){
+    /*중소기업 지원안내*/
+    .squareList ul li::after{width: 25px;right: -35px;}
+    .squareList ul li:nth-child(5)::before, .squareList ul li:nth-child(9)::before{top:-27%;width: 25px;}
+    .squareList ul li p{font-size:18px;}
+    .squareList ul li span{font-size:14px;}
+    .loan .squareList ul li::after{width:40px;right:-45px;}
+    /*소통마당*/
+    .market .tabmenu ul li {width: 19.69%;}
+}
+@media screen and (max-width:1019px){
+    /*중소기업 지원안내*/
+    .export01 .numList>ul>li:nth-child(2){height:106px;}
+}
+@media screen and (max-width:1000px){
+    /*공통*/
+    /*푸터*/
+    footer .footer_b address{font-size: 11px;}
+    footer .footer_b .certifymark{font-size: 11px;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual .supportInfo ul li a{padding: 34px 0 0 45%;}
+    .mainVisual .supportInfo ul li:nth-child(1) a{background: url(/KomipoWwg/images/project_img/main/innovation.png)left 18% center no-repeat;}
+    .mainVisual .supportInfo ul li:nth-child(2) a{background: url(/KomipoWwg/images/project_img/main/develop.png)left 18% center no-repeat;}
+    .mainVisual .supportInfo ul li:nth-child(3) a{background: url(/KomipoWwg/images/project_img/main/enlarge.png)left 20% center no-repeat;}
+    .mainVisual .supportInfo ul li:nth-child(4) a{background: url(/KomipoWwg/images/project_img/main/finance.png)left 18% center no-repeat;}
+    .mainVisual .supportInfo ul li:nth-child(5) a{background: url(/KomipoWwg/images/project_img/main/business.png)left 21% center no-repeat;}
+    /*메인뉴스,공고*/
+    .mainNews{height: 234px;}
+    .mainNews .paradigm{height: 234px;}
+    .mainNews .paradigm a{padding: 20px 23px;}
+    .mainNews .paradigm h3{font-size: 18px;}
+    .mainNews .paradigm span{font-size: 13px;}
+    .mainNews .newsList{height: 234px;}
+    .mainNews .newsList .list{height: 175px;}
+    .mainNews .newsList .list a{padding: 40px 19px;height: 175px;}
+    /*메인서비스*/
+    .mainService{ margin: 22px 0 46px 0;}
+    .mainService h3{font-size: 16px;font-weight: 500;}
+    .mainService .cooperService{padding: 23px 2%;height: 198px;}
+    .mainService .cooperService ul li a {font-size: 12px;}
+    .mainService .serviceBanner{height: 198px;}
+    .mainService .serviceBanner ul li{height: 198px;}
+    .mainService .serviceBanner ul li h4{font-size: 16px;}
+    .mainService .serviceBanner ul li p{font-size: 12px;width: 100%;}
+    .mainService .commuService{height: 198px;padding: 23px 2%;}
+    .mainService .commuService div a{font-size: 12px;}
+    /*서브*/
+    .lnb>li>a{width: 230px;font-size: 14px;}
+    .lnb_more>ul>li>a{font-size: 13px;}
+    .attach_list{height: auto;}
+    .attach_list .attachFile{display:block;margin-bottom:5px;width:100%;}
+    .attach_list .attachFile:last-child{margin-bottom:0;}
+    .lnb>li:nth-child(2)>a{width: 180px;}
+    .lnb>li:nth-child(3)>a{width: 255px;}
+    .lnb>li.last_depth>a{width: 255px;}
+    /*동반성장전략*/
+    .listImg p{font-size:16px;}
+    /*중소기업 지원안내*/
+    .winwin .textArea>div.topText{margin-top:0;}
+    .squareList ul li{padding: 8px 20px;}
+    /*소통마당*/
+    .market_list .product{width: 24.2%;margin: 0 1% 1% 0;height: 260px;}
+    .market_list .product a{height: 260px;}
+    .market_list .product>a>div{height:160px;}
+    .market_list .product .circle{width:160px;height:160px;margin-left:-80px;}
+    .market_list .product .circle img{width:210px;}
+    .slideTab ul li{width:20%;margin-bottom:10px;}
+    .slideTab ul li:nth-child(7), .slideTab ul li:nth-child(8), .slideTab ul li:nth-child(9), .slideTab ul li:nth-child(10){margin-bottom:10px;}
+    .idea .listImg p{height:auto;}
+    /*지원시스템*/
+    .sub_system .textArea {width: 47%; margin-left: 3%;}
+    /*회원가입*/
+    .join_tab ul li p{padding: 13px 10px 13px 41px;}
+    .join_tab ul li:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01.jpg)left 10px center no-repeat;}
+    .join_tab ul li:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02.png)left 10px center no-repeat;}
+    .join_tab ul li:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03.png)left 10px center no-repeat;}
+    .join_tab ul li:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04.png)left 10px center no-repeat;}
+    .join_tab ul li.tab:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01_tab.jpg)left 10px center no-repeat;}
+    .join_tab ul li.tab:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02_tab.png)left 10px center no-repeat;}
+    .join_tab ul li.tab:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03_tab.png)left 10px center no-repeat;}
+    .join_tab ul li.tab:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04_tab.png)left 10px center no-repeat;}
+}
+@media screen and (max-width:970px){
+    /*서브*/
+    .tabmenu ul li{width: 33%;}
+    /*소통마당*/
+    .stepList ul li:nth-child(1), .stepList ul li:nth-child(2), .stepList ul li:nth-child(3), .stepList ul li:nth-child(4), .stepList ul li:nth-child(5){background-size: 100% 60px;}
+    .stepList ul li::after{background-size:20px 9px;right: -55px;top:40%;}
+    .stepList ul li p{font-size:18px;height:60px;line-height:60px;}
+    .receiptList p{font-size:20px;}
+    .receiptList span{font-size:15px;}
+    .receiptList a{font-size:14px; width: 100px;height: 35px;line-height: 32px;}
+    .receiptList>div:nth-child(1), .receiptList>div:nth-child(2){background-size:120px;}
+}
+@media screen and (max-width:930px){
+    /*소통마당*/
+    .idea .listImg p{height:44px;}
+}
+@media screen and (max-width:900px){
+    /*공통*/
+    /*푸터*/
+    .logo_f{display: none;}
+    footer .footer_b address{margin-left: 0;}
+    footer .footer_b .mark>a{margin-right:0;}
+    footer .footer_b .mark>a img{width: 50px;}
+    footer .footer_b .certifymark img{width: 32px;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual .supportInfo h3{font-size: 16px; width: 154px;}
+    .mainVisual .supportInfo ul li{height: 82px;}
+    .mainVisual .supportInfo ul li a{font-size: 16px;height: 82px;padding: 30px 0 0 45%;}
+    .mainVisual .supportInfo ul li:nth-child(1) a{background-size: 40px;}
+    .mainVisual .supportInfo ul li:nth-child(2) a{background-size: 40px;}
+    .mainVisual .supportInfo ul li:nth-child(3) a{background-size: 30px;}
+    .mainVisual .supportInfo ul li:nth-child(4) a{background-size: 40px;}
+    .mainVisual .supportInfo ul li:nth-child(5) a{background-size: 24px;}
+    /*메인뉴스,공고*/
+    .mainNews{height: 216px;}
+    .mainNews .paradigm{background: url(/KomipoWwg/images/project_img/main/para_bg.jpg)right -30px top no-repeat;width: 30%;height: 216px;}
+    .mainNews .paradigm h3{font-size: 18px;padding-bottom: 20px;    width: 100%;}
+    .mainNews .paradigm p{font-size: 13px;margin: 20px 0 20px 0;}
+    .mainNews .paradigm span{font-size: 13px;}
+    .mainNews .newsList {padding: 20px 2%;width: 70%;height: 216px;}
+    .mainNews .newsList .list{width: 32.6%;margin-right: 1%;}
+    /*메인서비스*/
+    .mainService .cooperService{width: 45%;}
+    .mainService .serviceBanner{margin-left: 0;}
+    .mainService .commuService{float: left;width: 29%;}
+    /*서브*/
+    .inputArea{height:auto;padding:15px;line-height: 1.3;box-sizing:border-box;}
+    .sub_notice .inputArea select{width:20%}
+    .sub_notice .inputArea input{width:60%;}
+    .sub_notice .inputArea .blueBtn{box-sizing: border-box;width:12%;padding:0;}
+    .contents{margin: 30px 0 87px 0;}
+    .cts_mid{margin-top: 30px;}
+    .cts_title h3{font-size:28px;padding-bottom: 33px;}
+    .inputArea .areaInner{width: 100%;}
+    .inputArea select{width: 20%;}
+    .inputArea input{width: 50%;}
+    .shareMenu .printShare{display: none;}
+    .tableA{font-size:14px;}
+    .pagingArea{margin-top: 20px;}
+    .viewList a{font-size:13px;height:40px;line-height:40px;}
+    .viewList span::after{top:15px;}
+    .titleB{font-size: 22px;}
+    .prg{margin-top:30px;}
+    .prg p{font-size: 14px;}
+    .sub_strategy img{width:100%;}
+    .tabmenu ul li a{font-size:14px;height: 40px;line-height: 38px;}
+    .titleM2{font-size:17px;margin-bottom:8px;}
+    .titleAlert{font-size:17px;margin-bottom:8px;}
+    /*동반성장전략*/
+    .sub_strategy .tableC{font-size:14px;}
+    .paradigm .prg ul li.f_left, .paradigm ul li.f_right{float: none;width:100%;}
+    .paradigm .prg ul li{margin-bottom:20px;}
+    .paradigm .prg ul li p{font-size:16px;}
+    .paradigm .prg ul li span{font-size:14px;}
+    .listImg .inner img{width: 180px;}
+    .listImg:after{height: 171px;}
+    .listImg .inner>div{margin: 0 20px 0 20px;}
+    .listImg p{font-size:15px;}
+    .listImg p br{display: none;}
+    .organization .tableC td div span{font-size:13px;}
+    .prg p.address, .prg p.telNum{font-size:14px;}
+    .prg p.address span, .prg p.telNum span{font-size:16px;}
+    .prg p.address span::after, .prg p.telNum span::after{top:7px;}
+    .location .traffic>div{padding:30px 20px;}
+    .location .traffic>div.car{background-size: 90px;}
+    .location .traffic>div.bus{background-size: 90px;}
+    .location .traffic>div.train{background-size: 90px;}
+    .location .traffic>div h5{font-size:22px;}
+    .location .traffic>div .listbg{padding-left:28%;}
+    .location .traffic>div .listbg::before{left:25%;}
+    /*동반성장 문화확산*/
+    .sub_culture .tableC{font-size:14px;}
+    .numList>ul>li>p{font-size:14px; margin-bottom: 5px;}
+    .numList>ul>li:nth-child(1)>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 2px no-repeat;}
+    .numList>ul>li:nth-child(2)>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 2px no-repeat;}
+    .numList>ul>li:nth-child(3)>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 2px no-repeat;}
+    .numList>ul>li:nth-child(4)>p{background: url(/KomipoWwg/images/project_img/sub/num4.jpg)left top 2px no-repeat;}
+    .numList>ul>li:nth-child(5)>p{background: url(/KomipoWwg/images/project_img/sub/num5.jpg)left top 2px no-repeat;}
+    .numList>ul>li:nth-child(6)>p{background: url(/KomipoWwg/images/project_img/sub/num6.jpg)left top 2px no-repeat;}
+        /****20190911 추가****/
+    .numList>ul>li:nth-child(7)>p{background: url(../img/sub/num7.jpg)left top 2px no-repeat;}
+    .numList>ul>li>span{font-size:13px;margin-bottom:5px;}
+    .executive .numList>ul>li:last-child>span, .executive .numList>ul>li:nth-last-child(2)>span{margin-top:5px;}
+    .picSlide ul li p{font-size:14px;}
+    .sharing .numList>ul>li:last-child>p, .sharing .numList>ul>li:nth-last-child(2)>p{margin-bottom:5px;}
+    .sharing .listbg p {margin: 2px 0;}
+    .sharing .imgBox>div p{font-size:14px;}
+    .sharing .prg>.listbg p{font-size:13px;}
+    .sharing .listbg p::before{top:7px;}
+    /*중소기업 지원안내*/
+    .quality .prg:nth-child(4) li:first-child {height: 66px;}
+    .quality .numList>ul>li:last-child>p{margin-bottom:5px;}
+    .haeuso .prg p{margin-bottom:5px;}
+    .haeuso .numList>ul>li:last-child>p{margin-bottom:5px;}
+    /****20190911수정****/
+    .blue1{font-size:13px;}
+    /* .haeuso .blue1{font-size:13px;} */
+    .sub_support .tableC{font-size:14px;}
+    .squareList ul li p{font-size:16px;}
+    .squareList ul li{width:30%;margin-right: 5%;}
+    .squareList ul li:nth-child(5), .squareList ul li:nth-child(12){margin-right: 5%;}
+    .squareList ul li:nth-child(3), .squareList ul li:nth-child(9), .squareList ul li:nth-child(10){margin-right:0;}
+    .squareList ul li:nth-child(4){float: right;margin-top:4%;}
+    .squareList ul li:nth-child(7), .squareList ul li:nth-child(8){float: left;}
+    .squareList ul li:nth-child(9), .squareList ul li:nth-child(10), .squareList ul li:nth-child(11){float: right;}
+    .squareList ul li:nth-child(5)::before, .squareList ul li:nth-child(9)::before{display: none;}
+    .squareList ul li:nth-child(4)::before, .squareList ul li:nth-child(7)::before, .squareList ul li:nth-child(10)::before{content: '';width:25px;height:11px;display: block;transform: rotate(90deg);background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;left:50%;top:-28%;margin-left:-18px;background-size: 100% 11px;}
+    .squareList ul li:nth-child(5)::after, .squareList ul li:nth-child(12)::after{content: '';width:25px;height:11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;right:-35px;top:50%;background-size: 100% 11px;}
+    .squareList ul li:nth-child(3)::after, .squareList ul li:nth-child(9)::after, .squareList ul li:nth-child(10)::after{display: none;}
+    .purchase .squareList ul li:nth-child(8)::after{display: none;}
+    .export01 .numList>ul>li:nth-last-child(2)>p, .export01 .numList>ul>li:last-child>p{margin-bottom: 5px;}
+    .export01 .numList>ul>li:nth-child(2){height: 82px;}
+    .export01 .numList>ul>li:nth-child(4){height:66px;}
+    .loan .squareList ul li span{font-size:14px;}
+    .loan .squareList ul li::after{width:30px;right: -38px;top: 40%;}
+    .partners .tabmenu{margin-top:20px;}
+    .winwin .tableC{margin: 10px 0 5px 0;}
+    .winwin .numList>ul>li:last-child>p, .winwin .numList>ul>li:nth-child(2)>p, .winwin .numList ul li:nth-last-child(2)>p{margin-bottom:5px;}
+    .winwin .textArea{margin-left:5%;}
+    .winwin .textArea>div>p{font-size:16px;margin-bottom:5px;}
+    .winwin .textArea .listbg p::before{top:8px;}
+    .winwin .textArea>div>.listbg span{font-size:13px;}
+    .winwin .imgBox .imgArea{position: relative;width:45%;height: 430px;}
+    .winwin .imgBox .imgArea img{width:90%;position:absolute;top:25%;left:50%;margin-top:-25%;margin-left:-145px;}
+    .powerup .btn_p{font-size:17px;}
+    .powerup .numList>ul>li>span{font-size:14px;}
+    .powerup .numList ul li:nth-last-child(2)>p{margin-bottom:5px;}
+    .imgList ul li span, .powerup .imgArea div span{font-size:14px;}
+    /*소통마당*/
+    .market .tabmenu ul li {width: 19.63%;}
+    .market .view .product_img ul li a img{height: 82px;}
+    .market_list .product p{font-size:14px;}
+    .market .view .productInfo h5{font-size:20px;padding: 15px 20px;}
+    .market .view .tableArea{margin-top:0;}
+    .market .view .productInfo .tableB{font-size:14px;}
+    .market .view .productInfo .tableB tr{height:40px;}
+    .market .view .tableC tr{font-size:14px;height:40px;}
+    .qna_write .tableC{font-size:14px;}
+    .qna_view .reply p{font-size:14px;}
+    .productInfo .tableC{font-size:14px;}
+    .productInfo .siteList .textArea span{font-size:14px;margin:0;}
+    .productInfo .siteList .textArea em{font-size:13px;}
+    .productInfo .siteList li::after {right: -30px;}
+    .tableAreaL, .tableAreaR{float: none;width:100%;}
+    .tableAreaR .tableC{border-top:0;}
+    .tableAreaR .tableC thead{display: none;}
+    .idea .listImg:after {height: 170px;}
+    .stepList ul li{width:22%;}
+    .stepList ul li::after{right:-52px;}
+    .stepList ul li:nth-child(4)::after{display: none;}
+    .stepList ul li:nth-child(5){margin-left:3%}
+    .stepList ul li:nth-child(5)::after{display: block;right:0;left: -25px;}
+    .receiptList>div{height:180px;}
+    .receiptList>div .textArea{padding: 25px 0 0 40%;}
+    .receiptList p{font-size:18px;}
+    .receiptList span{font-size:14px;margin-bottom: 15px;}
+    .receiptList a {font-size: 13px;height: 30px;line-height: 28px;}
+    /*지원시스템*/
+    .sub_system .titleM{margin: 38px 0 5px 20px;}
+    .sub_system .textArea p{font-size: 14px;}
+    .sub_system .btnB{font-size: 14px;}
+    /*회원가입*/
+    .titleBox p{font-size:18px;margin-top:5px;}
+    .login .memJoin .joinTitle p{font-size:18px;}
+    .login .memJoin .joinTitle p strong{font-size:20px;}
+    .login .loginInput>div{height:200px;}
+    .login .memLogin .inputArea{padding:0;}
+    .login .loginInput .memLogin .btnArea{margin-top:30px;}
+    .login .btnArea a{font-size:13px;height: 40px; line-height: 38px;}
+    .join_tab ul li{height:41px;}
+    .join_tab ul li p{font-size:14px;padding: 10px 10px 10px 41px;}
+    .join_tab ul li:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01.jpg)left 10px center no-repeat;background-size: 18px;}
+    .join_tab ul li:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02.png)left 10px center no-repeat;background-size: 19px;}
+    .join_tab ul li:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03.png)left 10px center no-repeat;background-size: 22px;}
+    .join_tab ul li:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04.png)left 10px center no-repeat;background-size: 18px;}
+    .join_tab ul li.tab:nth-child(1) p{background: url(/KomipoWwg/images/project_img/common/join01_tab.jpg)left 10px center no-repeat;background-size: 18px;}
+    .join_tab ul li.tab:nth-child(2) p{background: url(/KomipoWwg/images/project_img/common/join02_tab.png)left 10px center no-repeat;background-size: 19px;}
+    .join_tab ul li.tab:nth-child(3) p{background: url(/KomipoWwg/images/project_img/common/join03_tab.png)left 10px center no-repeat;background-size: 22px;}
+    .join_tab ul li.tab:nth-child(4) p{background: url(/KomipoWwg/images/project_img/common/join04_tab.png)left 10px center no-repeat;background-size: 18px;}
+    .titleM{font-size:18px;background-size: 18px 4px;}
+    .join .textArea{font-size:13px;}
+    .agree .radioBox{font-size:14px;}
+    .join02 .prg .certify img{width: 180px;}
+    .join02 .prg .certify:after{height:240px;}
+    .join02 .prg .certify p{font-size:16px;height:auto;}
+    .join .btnArea a{font-size:14px;width: 150px;height: 45px; line-height: 42px;}
+    .join03 .top .tableC colgroup{display: none;}
+    .join03 .top .tableC th{width:20%;}
+    .join03 .top .tableC td{width:30%;}
+    .join03 .tableC td input{width:200px;}
+    .join03 #mail{width:150px;}
+    .join04 .text img{width:250px;}
+    .join04 .text p{font-size:18px;}
+    .memsearch .tab-content p{font-size:14px;}
+    .memsearch .radioBox label{font-size:14px;}
+    .memsearch .tableC{font-size:14px;}
+    .memsearch .btnB{font-size:14px;width: 200px;height: 40px;line-height: 38px;}
+    .memsearch .tableC td.birth select{width:50px;}
+    .memsearch .tableC .btnBL{font-size:12px;}
+    .memsearch .tableC #mail{width:100px;}
+    /*개인정보처리방침*/
+    .indiviInfo .prg p{font-size:17px;}
+    .indiviInfo .prg span{font-size:14px;}
+    .indiviInfo .tableA tr {height: auto;}
+    .indiviInfo .tableA tr th, .indiviInfo .tableA tr td{padding:8px 10px;}
+    .tableD td{padding:8px;}
+}
+@media screen and (max-width:880px){
+    /*중소기업 지원안내*/
+    .partners .tabmenu ul li {width: 16.29%;}
+}
+@media screen and (max-width:810px){
+    /*소통마당*/
+    .slideTab ul li{width:25%;}
+    .slideTab ul li:nth-child(9), .slideTab ul li:nth-child(10){margin-bottom:0;}
+}
+@media screen and (max-width:800px){
+    /*공통*/
+    /*푸터*/
+    footer .footer_b .certifymark .text{display: none;}
+    /*서브*/
+    .lnb>li.home{display: block;}
+    .lnb>li{display: none;}
+    .lnb>li.last_depth{display: block;}
+    /*동반성장 문화확산*/
+    .picSlide{padding: 32px 48px 34px 48px;}
+    /*중소기업 지원안내*/
+    .winwin .imgBox .imgArea img{width:95%;margin-left: -140px;}
+    /*소통마당*/
+    .market_list .product{width:32.6%;}
+    .market_list .product:nth-child(4n){margin-right:1%;}
+    .market_list .product:nth-child(3n){margin-right:0;}
+    .stepList ul li {width: 29%;height: auto;margin-bottom:10px;margin-right:4%}
+    .stepList ul li:nth-child(3)::after{display: none;}
+    .stepList ul li:nth-child(4){margin-left:3%}
+    .stepList ul li:nth-child(4)::after{display: block;right:0;left: -25px;}
+    .stepList ul li:nth-child(5){margin-left:0;}
+    .receiptList>div:nth-child(1), .receiptList>div:nth-child(2) {background-size: 90px;}
+    /*지원시스템*/
+    .sub_system .titleM {margin: 18px 0 5px 20px;}
+}
+@media screen and (max-width:773px){
+    /*동반성장 문화확산*/
+    .best .numList>ul>li:nth-child(2)>p{height:38px}
+    /*중소기업 지원안내*/
+    .squareList ul li::after, .squareList ul li:nth-child(5)::after, .squareList ul li:nth-child(12)::after{right: -15%;}
+    .squareList ul li:nth-child(4)::before, .squareList ul li:nth-child(7)::before, .squareList ul li:nth-child(10)::before{width:22px;top:-24%;}
+}
+@media screen and (max-width:730px){
+    /*서브*/
+    .tabmenu .tabinner{overflow-x:auto;overflow-y: hidden;}
+    .tabmenu .tab_prev, .tabmenu .tab_next{display: block;}
+    /*동반성장전략*/
+    .location .traffic>div h5{padding:0 0 0 19%;}
+    .location .traffic>div .listbg{padding-left:35%;}
+    .location .traffic>div .listbg::before{left: 32%;}
+    /*중소기업 지원안내*/
+    .export01 .numList>ul>li:nth-child(4){height:82px;}
+    .winwin .imgBox .imgArea img{margin-left: -45%;}
+    /*소통마당*/
+    .market .tabmenu ul{width:700px;}
+    /*회원가입*/
+    .join_tab ul li p {padding: 10px 10px 10px 35px;}
+    .join_tab ul li span{display: none;}
+    .join03 .tableC td input { width: 150px;padding: 5px;}
+    .tableC td span{font-size:12px;}
+}
+@media screen and (max-width:700px){
+    /*공통*/
+    input[type="text"], input[type="password"], select{height:25px;}
+    .tableArea{overflow-x: auto;width:100%;}
+    input[type="checkbox"] + label{background: url(/KomipoWwg/images/project_img/common/check_default.jpg)left top 2px no-repeat;}
+    input[type="checkbox"] + label{font-size:12px;padding-top: 1px;}
+    /*헤더*/
+    nav{width: 90%;}
+    .mobile_top{height: 42px;}
+    .mobile_top>ul>li>a{font-size:13px;line-height:42px;}
+    .mobile_top>ul>li>a::after{height: 12px;top: 15px;}
+    nav>ul>li>a{font-size: 16px;line-height: 50px;}
+    .depth2>ul>li>a{font-size: 14px;line-height: 45px;}
+    .depth2>ul>li>a.more{background-size: 6px;}
+    .depth2>ul>li>a.more.on2{background-size: 6px;}
+    .depth3>li{height: 35px;}
+    .depth3>li>a{font-size:12px;line-height: 35px;}
+    .depth3>li>a:before{top: 17px;}
+    /*푸터*/
+    footer .footer_t{height: 41px;}
+    footer .footer_t ul>li>a{font-size:12px;line-height: 41px;}
+    footer .footer_t .familySite a{font-size:12px;line-height: 41px;}
+    footer .footer_b{padding: 15px 0 24px 0;}
+    footer .footer_t .familySite>ul{bottom:41px;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual .supportInfo ul li{margin-right: 0;width: 20%;}
+    /*메인뉴스,공고*/
+    .mainNews{height: auto; background: url(/KomipoWwg/images/project_img/main/news_bgM.jpg)center top no-repeat;}
+    .mainNews .wrap{position: relative;height: 336px;margin:0 20px;}
+    .mainNews .paradigm{float: none;width: 110%;height:120px;position: absolute;left:-20px;top: 216px;background:#b4d4ed url(/KomipoWwg/images/project_img/main/para_bg.jpg)right 0 bottom -40px no-repeat;box-shadow: none;}
+    .mainNews .paradigm h3{border-bottom: 0;font-size: 20px;}
+    .mainNews .paradigm h3 br{display: none;}
+    .mainNews .paradigm p{display: none;}
+    .mainNews .paradigm a{padding: 28px 23px;}
+    .mainNews .newsList{float: none;width: 100%;padding: 20px 0;}
+    /*메인서비스*/
+    .mainService{margin: 0;}
+    .mainService h3{font-size: 18px;}
+    .mainService .cooperService{float: none;width: 100%;padding: 23px 20px;}
+    .mainService .serviceBanner{width: 55%}
+    .mainService .serviceBanner ul li h4{font-size: 18px;}
+    .mainService .serviceBanner ul li a{padding: 22px 8% 22px 20px;}
+    .mainService .serviceBanner .slick-dots{left: 20px;}
+    .mainService .commuService{width: 45%;padding: 23px 20px;border:0;}
+    .mainService .serviceBanner ul li{background: url(/KomipoWwg/images/project_img/main/banner01_m.jpg)right top no-repeat;}
+    /*서브*/
+    .subVisual{height: 118px;}
+    .sub_strategy .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_strategyBg.jpg)right -390px top no-repeat;background-size: auto 118px;}
+    .sub_culture .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_cultureBg.jpg)right -400px top no-repeat;background-size: auto 118px;}
+    .sub_support .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_supportBg.jpg)right -350px top no-repeat;background-size: auto 118px;}
+    .sub_notice .subVisual {background: url(/KomipoWwg/images/project_img/sub/sub_noticeBg.jpg)right -450px top no-repeat;background-size: auto 118px;}
+    .sub_system .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_systemBg.jpg)right -350px top no-repeat;background-size: auto 118px;}
+    .member .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_memberBg.jpg)right -350px top no-repeat;background-size: auto 118px;}
+    .subTitle h2{text-align: center;}
+    .subTitle p{display: none;}
+    .inputArea select{height: 32px;padding: 0 20px 0 13px;font-size:13px;}
+    .inputArea input{height: 32px;}
+    .btnArea{margin-top:10px;}
+    .blueBtn{height: 32px;line-height: 31px;padding: 0 20px;font-size: 13px;}
+    .info_list .tableA colgroup{display: none;}
+    .info_list .tableA tr th:nth-child(1), .info_list .tableA tr th:nth-child(3), .info_list .tableA tr th:nth-child(5){display: none;}
+    .info_list .tableA tr th:nth-child(4)::after{display: none;}
+    .info_list .tableA tr td:nth-child(1), .info_list .tableA tr td:nth-child(3), .info_list .tableA tr td:nth-child(5){display: none;}
+    .info_list .tableA tr td:nth-child(2){padding-left:20px;}
+    .noticeView .tableA thead tr:nth-child(1) th:first-child{width:100%;padding-left: 20px;}
+    .noticeView .tableA thead tr:nth-child(1) th:nth-child(2), .noticeView .tableA thead tr:nth-child(1) th:nth-child(3){display: none;}
+    .noticeView .tableA tr:nth-child(1) td:nth-child(2), .noticeView .tableA tr:nth-child(1) td:nth-child(3){display: none;}
+    .attach_list{margin:0;}
+    .attach_list span{width:13%;}
+    .attach_list div{width:76%;}
+    .attach_list .attachFile{background-size:10px;padding-left: 15px;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;display: block;width:80%;}
+    .noticeView .tableA td{padding: 0px 10px 20px 10px;}
+    .sub_notice .inputArea input, .sub_notice .inputArea select{height:32px;line-height:30px;vertical-align: bottom;}
+    .viewList span{width:30%;}
+    .viewList p{width:50%;}
+    .checkBox span{font-size:12px;}
+    /*동반성장전략*/
+    .listImg .inner img{width: 120px;}
+    .listImg p{font-size:14px;}
+    .listImg:after {height: 141px;}
+    /*동반성장 문화확산*/
+    .numList>ul>li.f_left, .numList>ul>li.f_right{float: none;width:100%;}
+    .numList>ul>li:nth-last-child(2)>p{margin-bottom:5px;}
+    .executive.numList>ul>li:nth-last-child(2)>span:last-child{margin-bottom:5px;}
+    .picSlide {padding: 32px 48px 27px 48px;}
+    .forum .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:5px;}
+    .workshop .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:5px;}
+    .best .numList>ul>li:nth-child(2)>p{height:auto;}
+    .sharing .imgBox{padding: 22px 0 25px 0;}
+    /*중소기업 지원안내*/
+    .best100 .numList>ul>li:nth-last-child(2)>p{margin-bottom:5px;}
+    .quality .prg:nth-child(4) li:first-child {height: auto;}
+    .export01 .numList>ul>li:nth-child(2), .export01 .numList>ul>li:nth-child(4), .power .numList>ul>li:nth-child(4){height:auto;}
+    .partners .tabmenu .tab_prev, .tabmenu .tab_next{display: block;}
+    .partners .tabmenu .tabinner {overflow-x: auto; overflow-y: hidden;}
+    .partners .tabmenu ul {width: 700px;}
+    .winwin .imgBox{height:100%;box-sizing: border-box;text-align: center;}
+    .winwin .imgBox>div{float: none;width:100%;height:50%;}
+    .winwin .imgBox .imgArea{width:auto;margin:0 auto;padding:0;text-align: center;display: inline-block;height: 320px;}
+    .winwin .imgBox .imgArea img{position: relative;left:0;top:0;margin:0;height:100%;width:auto;}
+    .winwin .textArea{margin-left:0;overflow: hidden;text-align: left;margin-top:10px;}
+    .winwin .textArea>div{float: left;width:49%;margin-top:0;margin-right:2%;}
+    .winwin .textArea>.btmText{margin-right:0;}
+    .winwin .textArea>div>.listbg{padding:8px;height:223px;box-sizing: border-box;}
+    .loan .squareList ul li::after{width: 25px;right: -30px;}    
+    /*소통마당*/
+    .market .view .product_img ul li a img{height:61px;}
+    .qna .tableA colgroup{display: none;}
+    .qna .tableA tr th:nth-child(1), .qna .tableA tr td:nth-child(1){display: none;}
+    .qna .tableA tr td:nth-child(2){padding-left:20px;width:70%;}
+    .qna .tableC colgroup{display: none;}
+    .qna .tableC tr th:nth-child(1), .qna .tableA tr th:nth-child(4), .qna .tableA tr th:nth-child(5){display: none;}
+    .qna .tableC tr td:nth-child(1), .qna .tableA tr td:nth-child(4), .qna .tableA tr td:nth-child(5){display: none;}
+    .qna .tableC tr td:nth-child(2){padding-left:15px;}
+    .qna .tableC tr th:nth-child(3){width:13%;}
+    .qna .tableC tr th:nth-child(6){width:20%;}
+    .qna .tableC tr td input{width:100%;}
+    .qna_write .btnBL{height: 32px;line-height: 31px; padding: 0 20px;font-size: 13px;margin-left: 0;}
+    .AFin, .AWait{font-size:12px;width: 65px;}
+    .qna_view .tableA td.reply{padding:10px 0;}
+    .qna_view .reply>div{padding:10px 15px;}
+    .productInfo .siteList li{width:47%;margin-right:5%;text-align: center;margin-bottom:30px;}
+    .productInfo .siteList li:nth-child(2){margin-right:0;}
+    .productInfo .siteList li:nth-child(3), .productInfo .siteList li:nth-child(4){margin-bottom:0}
+    .productInfo .siteList li img{width:160px;}
+    .productInfo .siteList li::after{right:-5%;height:70%;}
+    .productInfo .siteList li:nth-child(2n)::after{display: none;}
+    .slideTab ul li{width:33%;margin-bottom:5px;}
+    .slideTab ul li:nth-child(7), .slideTab ul li:nth-child(8), .slideTab ul li:nth-child(9){margin-bottom:5px;}
+    .idea .listImg{padding-bottom:20px;}
+    .idea .listImg:after {height: 140px;}
+    .idea .listImg p{height:auto;}
+    /*지원시스템*/
+    .sub_system .textArea{margin-top: 1%;width: 45%; margin-left: 5%;}
+    /*회원가입*/
+    .login .loginInput{margin:0 10%;margin-top:30px;}
+    .login .loginInput>div{float: none;width:100%;margin:0;padding:30px 0;height: auto;}
+    .login .memLogin{border-right:0;border-bottom: 1px dotted #333;}
+    .login .loginInput .memLogin .btnArea{margin-top:15px;}
+    .login .loginInput .memJoin .btnArea{position: relative;margin-top:15px;}
+    .login .loginInput .memJoin .btnArea a{width:100%;}
+    .login .memcheck .memsearch a{font-size:12px;}
+    .login .memcheck .memsearch a:nth-child(1):after{top:2px;}
+    .login .titleB{word-break: normal;}
+    .join02 .prg .certify .inner {margin: 0 12%;}
+    .join02 .prg .certify:after {height: 200px;}
+    .join02 .prg .certify img {width: 120px;}
+    .join02 .prg .certify p{height:44px;}
+    .join02 .prg .certify .btnArea{padding-bottom: 18px;margin-top:30px;}
+    .join .btnArea a{width:100%;}
+    .emphasis{font-size:12px;}
+    .tableC td select{height:25px;}
+    .join03 .tableC{width:710px;}
+    .join03 .titleM{margin-bottom:10px;}
+    .join03 .tableC td button{height:25px;line-height:23px;vertical-align: top;font-size:12px;}
+    .join03 .btnArea a{width:150px;}
+    .join04 .btnArea a{width:150px;}
+    .memsearch .tableC tr{border-bottom:0;}
+    .memsearch .tableC th, .memsearch .tableC td{display: block;width:100%;box-sizing: border-box;padding:10px;border-bottom:1px solid #ccc;border-right:0;}
+    .memsearch .tableC td:last-child{border-bottom:0;}
+    .memsearch .tableC #tel1, .memsearch .tableC #tel2, .memsearch .tableC #tel3{vertical-align: middle}
+    .memsearch .tableC .btnBL{height:25px;line-height: 23px;margin-top:0;vertical-align: top}
+}
+@media screen and (max-width:630px){
+    /*서브*/
+    .tabmenu ul li{margin-right:0;}
+    /*중소기업 지원안내*/
+    .roadshow .tableC{width:650px;}
+    /*소통마당*/
+    .receiptList>div:nth-child(1){background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt01.png)left 5% center no-repeat;background-size: 90px;}
+    .receiptList>div:nth-child(2) {background: #eef1f2 url(/KomipoWwg/images/project_img/sub/receipt02.png)left 5% center no-repeat;background-size: 90px;}
+    .receiptList>div{float: none;width:100%;margin-right:0;height:auto;}
+    .receiptList>div:nth-child(1){margin-bottom:10px;}
+    .receiptList>div .textArea {padding: 20px 0 20px 25%;}
+    .receiptList span{height: auto;}
+}
+@media screen and (max-width:600px){
+    /*공통*/
+    /*푸터*/
+    footer .footer_b address{width: 70%}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual{height: 388px;}
+    .mainVisual .main_tit{top: 88px;}
+    .mainVisual .visual_slide div.item{height: 388px;}
+    .mainVisual .visual_slide .slick-dots{top: 191px;}
+    .mainVisual .supportInfo{top: 261px;}
+    .mainVisual .supportInfo h3{font-size:14px;width: 134px;height: 33px;line-height: 33px;}
+    .mainVisual .supportInfo ul{padding-top: 0;border-top:0;}
+    .mainVisual .supportInfo ul li{height: 72px;}
+    .mainVisual .supportInfo ul li a{height: 72px;font-size: 13px;padding:46px 0 0 0;text-align: center;}
+    .mainVisual .supportInfo ul li:nth-child(1) a{background: url(/KomipoWwg/images/project_img/main/innovation.png)center top 8px no-repeat;background-size: 30px;}
+    .mainVisual .supportInfo ul li:nth-child(2) a{background: url(/KomipoWwg/images/project_img/main/develop.png)center top 8px no-repeat;background-size: 30px;}
+    .mainVisual .supportInfo ul li:nth-child(3) a{background: url(/KomipoWwg/images/project_img/main/enlarge.png)center top 10px no-repeat;background-size: 22px;}
+    .mainVisual .supportInfo ul li:nth-child(4) a{background: url(/KomipoWwg/images/project_img/main/finance.png)center top 11px no-repeat;background-size: 30px;}
+    .mainVisual .supportInfo ul li:nth-child(5) a{background: url(/KomipoWwg/images/project_img/main/business.png)center top 8px no-repeat;background-size: 16px;}
+    /*서브*/
+    .tableD{font-size:13px;}
+    /*동반성장전략*/
+    .listImg{float: none;width: 100%;margin-right: 0;margin-bottom: 5px;padding:0;height:auto;}
+    .listImg:last-child{margin-bottom:0;}
+    .listImg .inner{text-align: left;overflow: hidden;height: 100%;}
+    .listImg:after{display: none;}
+    .listImg .inner img{display: none;}
+    .listImg .inner{text-align: center;}
+    .listImg .inner .none{display: block;font-size:17px;font-weight:400;padding:5px 0;}
+    .listImg:nth-child(1) .inner{border:1px solid #014c8f;}
+    .listImg:nth-child(2) .inner{border:1px solid #018f0b;}
+    .listImg:nth-child(3) .inner{border:1px solid #e56a0f;}
+    .listImg:nth-child(1) .inner .none{background:#014c8f;color: #fff;}
+    .listImg:nth-child(2) .inner .none{background:#018f0b;color: #fff;}
+    .listImg:nth-child(3) .inner .none{background:#e56a0f;color: #fff;}
+    .listImg .inner>div{padding: 5px 0;margin:0;}
+    .listImg p{font-size:14px;height:auto;}
+    .strategy2030 .tableC th, .strategy2030 .tableC td{display: block;width:100%;border-bottom:1px solid #ccc;box-sizing:border-box;border-right:0;}
+    .strategy2030 .tableC td:last-child{border-bottom:0;}
+    .strategy2030 .tableC td div p{margin-bottom:2px;}
+    .organization img{display: none;}
+    .organization .chart{width:auto;height:auto;font-size:16px;line-height:1.3;}
+    .organization .chart ul li{width:100%;text-align: center;margin-bottom:5px;}
+    .organization .chart ul li p{font-size:18px;color: #fff;padding: 5px 0;}
+    .organization .chart ul li span{padding: 5px 0;display: block;}
+    .organization .chart ul li.chart01{border:1px solid #0052a0;box-sizing:border-box;}
+    .organization .chart ul li.chart01 p{background: #0052a0;}
+    .organization .chart ul li.chart02{border:1px solid #0080c1;box-sizing:border-box;}
+    .organization .chart ul li.chart02 p{background: #0080c1;}
+    .organization .chart ul li.chart03{border:1px solid #31bb6c;box-sizing:border-box;}
+    .organization .chart ul li.chart03 p{background: #31bb6c;}
+    .organization .chart ul li.chart04{border:1px solid #f09300;box-sizing:border-box;}
+    .organization .chart ul li.chart04 p{background: #f09300;}
+    .location .traffic>div{padding:10px;}
+    .location .traffic>div .listbg p{font-size:14px;margin-bottom: 3px;}
+    .location .traffic>div.car{background-size:60px;}
+    .location .traffic>div.bus{background-size:60px;}
+    .location .traffic>div.train{background-size:60px;}
+    .location .traffic>div h5{font-size:18px;padding: 0 0 0 16%;}
+    .location .traffic>div .listbg::before{height:59px;margin-top:-28px;}
+    /*동반성장 문화확산*/
+    .sub_culture .tableC th{padding:10px 0;}
+    .sub_culture .tableC td{padding:10px;}
+    /*중소기업 지원안내*/
+    .sub_support .tableC th{padding:10px 0;}
+    .sub_support .tableC td{padding:10px;}
+    .squareList ul li{margin-right:10%;width:45%;padding:10px;}
+    .squareList ul li:nth-child(2), .squareList ul li:nth-child(6), .squareList ul li:nth-child(7), .squareList ul li:nth-child(11){margin-right:0;}
+    .squareList ul li:nth-child(4), .squareList ul li:nth-child(8){margin-right:10%;}
+    .squareList ul li:nth-child(3), .squareList ul li:nth-child(7){float: right;}
+    .squareList ul li:nth-child(5), .squareList ul li:nth-child(9){float: left;}
+    .squareList ul li:nth-child(3){margin-top:4%}
+    .squareList ul li::after{right: -50%;margin-right: 32%;}
+    .squareList ul li:nth-child(5)::after, .squareList ul li:nth-child(12)::after{right: -50%;margin-right: 32%;}
+    .squareList ul li:nth-child(4)::after, .squareList ul li:nth-child(9)::after{content: '';width: 25px;height: 11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat; position: absolute; right: -50%;margin-right: 32%; top: 50%;background-size: 100% 11px;}
+    .squareList ul li:nth-child(4)::before, .squareList ul li:nth-child(10)::before{display: none;}
+    .squareList ul li:nth-child(3)::before, .squareList ul li:nth-child(5)::before, .squareList ul li:nth-child(9)::before, .squareList ul li:nth-child(11)::before{content: '';width: 20px; height: 11px;display: block;transform: rotate(90deg);background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute;left: 50%;top: -18px;margin-left: -18px;background-size: 100% 11px;}
+    .squareList ul li:nth-child(4)::before, .squareList ul li:nth-child(7)::before, .squareList ul li:nth-child(10)::before{width: 20px;top: -18px;}
+    .purchase .squareList ul li:nth-child(8)::after{content: '';width: 25px;height: 11px;display: block;background: url(/KomipoWwg/images/project_img/common/listArrow.png)left top no-repeat;position: absolute; right: -50%;margin-right: 32%;top: 50%;background-size: 100% 11px;}
+    .charge .tableC colgroup{display:none;}
+    .charge .tableC th:nth-child(1){width:20%;}
+    .loan .squareList ul li:nth-child(3)::before{display: none;}
+    .loan .squareList ul li:last-child{margin-top:0;}
+    .loan .squareList ul li::after{margin-right:0}
+    .winwin .textArea>div>.listbg p{font-size:13px;margin-bottom:2px;}
+    .winwin .textArea>div>.listbg span{font-size:12px;margin-bottom:2px;}
+    .winwin .textArea>div>.listbg span em{padding: 2px 0 0 40px;}
+    /*소통마당*/
+    .market .inputArea {margin-top: 28px;}
+    .market_list .product{width: 49.5%;height: 230px;}
+    .market_list .product:nth-child(3n){margin-right:1%;}
+    .market_list .product:nth-child(2n){margin-right:0;}
+    .market_list .product:nth-child(9), .market_list .product:nth-child(10){margin-bottom:1%;}
+    .market_list .product a{padding-top:10px;height: 230px;}
+    .market .view .product_img ul li a img{height:111px;}
+    .market .view .prg:first-child{position: relative;}
+    .market .view .imgArea{float: none;width:100%;margin-bottom: 10px;}
+    .market .view .productInfo{float: none;width:100%;margin-left:0;}
+    .market .view .mobileImg{display: block;margin-top:10px;}
+    .market .view .productInfo .product_img{display: none;}
+    .market .view .productInfo h5{padding:15px 0;}
+    .market .view .btnArea button, .market .view .btnArea .leftBtn .btnBL, .market .view .btnArea .btnB{font-size:14px;width:90px;height: 35px; line-height: 32px;margin:0;}
+
+    .qna_write .tableC tr th{width:100%;display:block;padding:8px;box-sizing: border-box;border-right:0;}
+    .qna_write .tableC tr:first-child td:nth-child(2){border-bottom:1px solid #ccc;}
+    .qna_write .tableC tr td{width:100%;display:block;padding:8px;box-sizing: border-box;border-right:0;overflow: hidden;}
+    .qna_write .tableC tr td input{width:100%;}
+    .qna_write .tableC tr td input.inputFile{width:50%;}
+    .slideTab{padding:10px;}
+    .slideTab ul li a{font-size:13px;}
+    .manager .tableC colgroup col:nth-child(1){width:23%;}
+    .manager .tableC colgroup col:nth-child(3){width:17%;}
+    .manager .tableC colgroup col:nth-child(4){width:25%;}
+    .idea .listImg{padding-bottom: 0;}
+    .idea .listImg:nth-child(2) .inner{border: 1px solid #014c8f;}
+    .idea .listImg:nth-child(3) .inner{border: 1px solid #018f0b;}
+    .idea .listImg:nth-child(4) .inner{border: 1px solid #e56a0f;}
+    .idea .listImg:nth-child(2) .inner .none{background:#014c8f;}
+    .idea .listImg:nth-child(3) .inner .none{background:#018f0b}
+    .idea .listImg:nth-child(4) .inner .none{background:#e56a0f;color:#fff;}
+    .idea .listImg .inner>div{padding: 5px 0;}
+    .stepList ul li{width:30%;}
+    .stepList ul li:nth-child(1), .stepList ul li:nth-child(2), .stepList ul li:nth-child(3), .stepList ul li:nth-child(4), .stepList ul li:nth-child(5){background-size: 100% 50px;}
+    .stepList ul li p{font-size:16px;height:50px;line-height:50px;}
+    .stepList ul li:nth-child(4)::after{left:-15px;}
+    .stepList ul li:nth-child(3){margin-right:0;}
+    /*지원시스템*/
+    .sub_system .cts_mid{text-align: center;}
+    .sub_system .imgArea{float: none;width:100%;text-align: center;}
+    .sub_system .imgArea img{width: 50%;}
+    .sub_system .textArea{float: none;width:100%;margin-left:0;width:80%;display: inline-block}
+    .sub_system .btnB{display: inline-block;margin:15px 0 0 0;text-align: center;}
+    .sub_system .titleB{text-align: center;}
+    .sub_system .titleM, .sub_system .textArea p{margin-left:0;}
+    /*개인정보처리방침*/
+    .indiviInfo .prg:nth-child(5) .tableA colgroup{display: none;}
+    .indiviInfo .tableA{font-size:13px;}
+}
+
+@media screen and (max-width:530px){
+    /*중소기업 지원안내*/
+    .loan .squareList ul li{float: none;width:100%;margin-right:0;margin-bottom:5%;}
+    .loan .squareList ul li:last-child{margin-bottom:0;}
+    .loan .squareList ul li::after{margin-right:0;right:0;top:85px;left:50%;margin-left:-10px;transform: rotate(90deg);width:20px;}
+}
+@media screen and (max-width:520px){
+    /*동반성장전략*/
+    .prg p.address{margin:0 0 5px 0;float: none;}
+}
+@media screen and (max-width:500px){
+    /*공통*/
+    /*헤더*/
+    .logo{width: 200px;background: url(/KomipoWwg/images/project_img/common/logo.jpg)left top 18px no-repeat;background-size:100%;height:60px;line-height: 60px;}
+    header .header_b{height: 60px;}
+    .menu_open{top: 22px;}
+    .mobile_top>ul>li>a{padding:0 10px;}
+    /*푸터*/
+    footer{position: relative;}
+    footer .footer_t .familySite{display: none;}
+    footer .footer_t ul>li{margin-right: 10px;}
+    footer .footer_b .mark{position: absolute;right: 20px;top: 0;}
+    footer .footer_b .mark>a img {width: 35px;}
+    footer .footer_b .certifymark img {width: 25px;}
+    footer .footer_b address{width: 100%;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual .main_tit p{font-size: 20px;}
+    .mainVisual .main_tit p span{font-size: 30px;}
+    /*서브*/
+    .lnbArea{height: 40px;}
+    .lnb>li>a{line-height:40px;height:40px;}
+    .lnb>li.last_depth{background: url(/KomipoWwg/images/project_img/common/arrow04.png)right 19px top 17px no-repeat;}
+    .lnb>li.last_depth.on {background: url(/KomipoWwg/images/project_img/common/arrow04_up.png)right 19px top 17px no-repeat;}
+    .lnb>li.home{display: none;}
+    .lnb_more{top:40px;}
+    .lnb_more>ul>li{height:40px;}
+    .lnb_more>ul>li>a{line-height:40px;}
+    .shareMenu div a{width:40px;height:40px;}
+    .snsList{top:40px;}
+    .snsList button{width:40px;height:40px;}
+    .noticeView .tableA colgroup{display: none;}
+    .tableA{font-size:12px;}
+    .tableA tr{height: 40px;}
+    .tableA tr th::after{top:12px;}
+    .tableA tr td:nth-child(2){padding: 10px;}
+    .tableA tr td:nth-child(2) a{width:80%;}
+    .viewList span{font-size:12px;}
+    .viewList p{font-size:12px;}
+    .tabmenu ul li {width: 32.9%;}
+    .attach{height: 14px;width: 14px;background-size: 14px;}
+    /*동반성장전략*/
+    .paradigm .prg ul li img{width: 35px;}
+    .paradigm .prg ul li .textArea{padding-left:60px;background: none;}
+    .paradigm .tableC colgroup{display: none;}
+    .paradigm .tableC th:last-child{width:25%;}
+    .paradigm .prg ul li p{margin-bottom:0;}
+    .support .tableC colgroup{display: none;}
+    .support .tableC th:first-child{width:30%;}
+    .location .traffic>div h5{float: none;line-height:1.3;padding: 2px 0 0 40px;}
+    .location .traffic>div.car{background: #eef1f2 url(/KomipoWwg/images/project_img/sub/car.png)left 3% top 10px no-repeat;background-size: 30px;}
+    .location .traffic>div.bus{background: #eef1f2 url(/KomipoWwg/images/project_img/sub/bus.png)left 3% top 10px no-repeat;background-size: 30px;}
+    .location .traffic>div.train{background: #eef1f2 url(/KomipoWwg/images/project_img/sub/train.png)left 3% top 10px no-repeat;background-size: 30px;}
+    .location .traffic>div .listbg{padding:0;margin-top:8px;}
+    .location .traffic>div .listbg p{margin-bottom:0;}
+    .location .traffic>div .listbg::before{display: none;}
+    /*동반성장 문화확산*/
+    .sharing .tableC colgroup{display: none;}
+    .sharing .prg:nth-child(3) .tableC th:nth-child(1){width:25%;}
+    .sharing .prg:nth-child(4) .tableC{width:500px}
+    .sharing .prg:nth-child(4) .tableC th:nth-child(1){width:15%;}
+    .sharing .prg:nth-child(9) .tableC{width:500px;}
+    .sharing .prg:nth-child(9) .tableC th:nth-child(1){width:5%;}
+    .sharing .prg:nth-child(9) .tableC th:nth-child(2){width:7%;}
+    /*중소기업 지원안내*/
+    .winwin .imgBox{margin-top:10px;}
+    .winwin .imgBox .imgArea{height:300px;}
+    .winwin .textArea>div{float: none;width:100%;margin-right:0;}
+    .winwin .textArea>div>.listbg{height:auto;}
+    .winwin .textArea>.btmText{margin-top:5px;}
+    /*소통마당*/
+    .market .view .productInfo .tableB td{padding: 5px 8px;}
+    .market .view .tableC colgroup{display: none;}
+    .market .view .tableC th{width:18%;}
+    .market .view .tableC td{width:32%;padding: 5px 8px;}
+    .AFin, .AWait{font-size:10px;width: 55px;height: 20px;line-height: 19px;}
+    .qna .lock{background: url(/KomipoWwg/images/project_img/sub/lock_b.png)right 5px center no-repeat;background-size:9px;}
+    .qna .tableA tr td:nth-child(2){width:80%;}
+    .qna .tableA tr th:nth-child(3), .qna .tableA tr td:nth-child(3){display: none;}
+    .qna_write .tableC p{font-size:13px;}    
+    .qna_view .reply p{font-size:12px;}
+    .slideTab ul li{width:50%;}
+    .slideTab ul li:nth-child(10){margin-bottom:5px;}
+    .manager .tableC{font-size:13px;}
+    .stepList ul li{width:48%;}
+    .stepList ul li:nth-child(2n){margin-right:0;margin-left:0;}
+    .stepList ul li:nth-child(1){background: url(/KomipoWwg/images/project_img/sub/stepM01.png)left top no-repeat;background-size: 100% 60px;}
+    .stepList ul li:nth-child(2){background: url(/KomipoWwg/images/project_img/sub/stepM02.png)left top no-repeat;background-size: 100% 60px;}
+    .stepList ul li:nth-child(3){margin-right:4%;background: url(/KomipoWwg/images/project_img/sub/stepM03.png)left top no-repeat;background-size: 100% 60px;}
+    .stepList ul li:nth-child(4){background: url(/KomipoWwg/images/project_img/sub/stepM04.png)left top no-repeat;background-size: 100% 60px;}
+    .stepList ul li:nth-child(5){background: url(/KomipoWwg/images/project_img/sub/stepM05.png)left top no-repeat;background-size: 100% 60px;}
+    .stepList ul li::after, .stepList ul li:nth-child(4)::after{display: none;}
+    .stepList ul li p{height:60px;line-height:60px;}
+    .receiptList>div .textArea {padding: 20px 0 20px 30%;}
+    /*회원가입*/
+    .join_tab ul li p {padding:10px 0;text-align: center;}
+    .join_tab ul li:nth-child(1) p{background: none;}
+    .join_tab ul li:nth-child(2) p{background: none;}
+    .join_tab ul li:nth-child(3) p{background: none;}
+    .join_tab ul li:nth-child(4) p{background: none;}
+    .join_tab ul li.tab:nth-child(1) p{background: none;}
+    .join_tab ul li.tab:nth-child(2) p{background: none;}
+    .join_tab ul li.tab:nth-child(3) p{background: none;}
+    .join_tab ul li.tab:nth-child(4) p{background: none;}
+    .join .btnArea{margin-top:20px;}
+    .join .btnArea a{font-size:14px; width: 150px; height: 40px; line-height: 38px;}
+    .join02 .prg .certify{float: none;width:100%;margin-right:0;margin-bottom:2%;height: 140px;}
+    .join02 .prg .certify .inner{margin:0;text-align: left;overflow: hidden;height:100%;}
+    .join02 .prg .certify:after {height: 100%;left: 0;top:0;}
+    .join02 .prg .certify .inner>div{padding:20px;text-align: center;}
+    .join02 .prg .certify .btnArea{padding:0;text-align: left;display: inline-block;margin-top: 40px;}
+    .join02 .prg .certify img{float: left;position: relative;top: 12px;left:5%;}
+    .join02 .prg .certify p{height:auto;}
+    .memsearch .tab-content p{width:100%;}
+    /*개인정보처리방침*/
+    .indiviInfo .tableD td span{font-size:12px;}
+    .indiviInfo .tableD td .check{font-size:11px;background-size: 10px;padding-left: 15px;}
+}
+@media screen and (max-width:430px){
+    /*서브*/
+    .memsearch .tableC .btnBL{width:86px;}
+    /*소통마당*/
+    .productInfo .siteList li img {width: 120px;}
+    .productInfo .siteList li::after{height:60%;}
+    .manager .tableC{width:430px;}
+    .receiptList>div:nth-child(1), .receiptList>div:nth-child(2){background-size:70px;}
+    /*지원시스템*/
+    .sub_system .titleB{font-size:19px;}
+    .sub_system .titleM{font-size:17px;}
+}
+@media screen and (max-width:414px){
+    /*공통*/
+    select{background:#fff url(/KomipoWwg/images/project_img/common/select_bg.png)right 6px center no-repeat;background-size: 6px;padding: 0 12px 0 8px;}
+    .tableC td select{padding: 0 12px 0 5px;}
+    input[type="text"], input[type="password"]{padding:5px;}
+    /*헤더*/
+    .logo{width: 157px;height: 44px;line-height: 44px;background: url(/KomipoWwg/images/project_img/common/logo.jpg)left top 12px no-repeat;background-size:100%;}
+    header .header_t{height: 25px;}
+    header .header_b{height: 44px;}
+    .utill{top: -20px;right: -10px;}
+    .utill div a{padding: 0 10px;}
+    .utill div span{font-size: 10px;}
+    .menu_open{top: 15px;}
+    .mobile_top>ul>li>a{font-size:11px;}
+    .menu_close{top: -10px;}
+    nav{top: -26px;}
+    nav>ul>li>a{font-size: 14px;}
+    .depth2>ul>li>a{font-size:12px;}
+    .depth3>li>a{font-size:11px;}
+    /*푸터*/
+    footer .footer_t ul>li>a{font-size: 11px;}
+    /*메인*/
+    /*메인비주얼*/
+    .mainVisual{height: 242px;background: url(/KomipoWwg/images/project_img/main/mainM_01.jpg)left top no-repeat}
+    .mainVisual .visual_slide div.item{height: 242px;}
+    .mainVisual .visual_slide div.item1{background: none;}
+    .mainVisual .visual_slide div.item2{background: none;}
+    .mainVisual .visual_slide div.item3{background: none;}
+    .mainVisual .visual_slide .slick-dots{top: 110px;left: 50%;margin-left: -40px;}
+    .mainVisual .main_tit{top: 60px; left: 0; margin-left: 0; width: 100%; text-align: center;}
+    .mainVisual .main_tit p{font-size: 13px;}
+    .mainVisual .main_tit p span{font-size: 19px;}
+    .mainVisual .supportInfo{top: auto;bottom:0;}
+    .mainVisual .supportInfo .wrap{margin: 0;}
+    .mainVisual .supportInfo h3{display: none;}
+    /*메인뉴스,공고*/
+    .mainNews .wrap{height: 404px;}
+    .mainNews .paradigm{top: 310px;background: #b4d4ed url(/KomipoWwg/images/project_img/main/para_bgM.jpg)right 0 bottom 0 no-repeat;width: 125%;height: 94px;}
+    .mainNews .paradigm a{padding: 25px 20px 0 20px;}
+    .mainNews .paradigm h3{font-size: 16px;font-weight: 500;padding-bottom: 8px;}
+    .mainNews .newsList{height: auto;}
+    .mainNews .newsList .list{width: 100%;margin-right: 0;float: none;height: auto;position: relative;margin-bottom: 15px;}
+    .mainNews .newsList .list:last-child{margin-bottom: 0;}
+    .mainNews .newsList .list .news_tit{font-size: 12px;height: 23px;line-height: 21px;}
+    .mainNews .newsList .list a{height: auto;padding: 33px 19px 13px 19px;}
+    .mainNews .newsList .list h4{font-size: 13px;height: 18px;-webkit-line-clamp: 1;}
+    .mainNews .newsList .list p{font-size: 10px; height: 16px;-webkit-line-clamp: 1;margin: 0;}
+    .mainNews .newsList .list .rightTime{position: absolute;right: 10px;top: 8px;}
+    /*메인서비스*/
+    .mainService h3{font-size: 16px;}
+    .mainService .cooperService{float: none;width: 100%;}
+    .mainService .serviceBanner{width: 67%;}
+    .mainService .serviceBanner ul li h4{font-size: 16px;}
+    .mainService .commuService{width:33%;padding: 15px;}
+    .mainService .commuService h3{display: none;}
+    .mainService .commuService div{float: none;width: 100%;}
+    .mainService .commuService div a{padding: 57px 0 10px 0;}
+    .mainService .commuService .service01{border-right: 0;border-bottom: 1px solid #dedede;padding-right: 0;}
+    .mainService .commuService .service02{padding-left: 0;}
+    .mainService .commuService .service01 a{background-size: 31px;}
+    .mainService .commuService .service02 a{background: url(/KomipoWwg/images/project_img/main/commuservice02.png)center top 20px no-repeat;background-size: 31px;padding: 60px 0 10px 0;}
+    /*서브*/
+    .subVisual{height: 98px;}
+    .sub_strategy .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_strategyBg.jpg)right -350px top no-repeat;background-size: auto 98px;}
+    .sub_notice .subVisual {background-size: auto 98px;}
+    .member .subVisual{background: url(/KomipoWwg/images/project_img/sub/sub_memberBg.jpg)right -380px top no-repeat;background-size: auto 98px;}
+    .btnArea{margin-top: 15px;}
+    .subTitle h2{font-size:20px;}
+    .cts_title h3{font-size:20px;padding-bottom: 20px;}
+    .inputArea{height:auto;line-height: 1.3;}
+    .inputArea select{width: 100%;display: block;margin-bottom: 10px;}
+    .inputArea input{width:100%;display: block;margin-bottom: 10px;}
+    .blueBtn{font-size: 12px; width: 70px; height: 30px; line-height: 28px;padding:0;}
+    .attach_list{padding: 8px;}
+    .attach_list span{margin-top:-2px;}
+    .attach_list span::after{height:10px;}
+    .attach_list .attachFile{font-size:12px;}
+    .noticeView .tableA th p{text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;overflow: hidden;width:80%;}
+    .noticeView .tableA thead tr:nth-child(1) th:first-child{width: 100%;padding-left:10px;box-sizing:border-box;}
+    .noticeView .tableA thead tr:nth-child(2){display: none;}
+    .noticeView .tableA td{padding: 20px 10px 20px 10px;}
+    .notice .tableA tr th:nth-child(4){width:18%;}
+    .sub_notice .inputArea select, .sub_notice .inputArea input{width:100%;margin-bottom:5px;}
+    .sub_notice .inputArea .blueBtn{width:100%;}
+    .info_list .tableA tr td:nth-child(2){padding-left:10px;}
+    .titleB{font-size:15px;}
+    .tableC{font-size:12px;}
+    .tableC td input{font-size:12px;}
+    .tableC td select{font-size:12px;}
+    .tableC td span{font-size:11px;}
+    .prg{margin-top: 15px;}
+    .prg p{font-size:12px;}
+    .viewList p{padding-left:11px;}
+    .viewList span::after{left:12%;}
+    input[type="radio"] + label:before{top:2px;}
+    .titleBox p{font-size:13px;margin-top:0;}
+    .tab-content{padding-top:11px;}
+    .tabmenu{margin-top:20px;}
+    .tabmenu ul li{width: 32.7%;}
+    .tabmenu ul li a {font-size: 12px; height: 35px;line-height: 32px;}
+    .memsearch .tab-content p{font-size:13px; margin-bottom: 15px;}
+    .memsearch .radioBox {margin-bottom: 15px;}
+    .memsearch .radioBox label{font-size:13px;}
+    .listbg p{padding-left:10px;}
+    .listbg p::before{top:6px;}
+    .titleM2{font-size:15px;margin-bottom:8px;}
+    .titleAlert{font-size:15px;margin-bottom:8px;background-size: 15px;padding-left: 18px;}
+    /*동반성장전략*/
+        /*20190911 수정*/
+    .sub_strategy .tableC th{padding:10px;}
+    /* .sub_strategy .tableC th{padding:10px 0;} */
+    .sub_strategy .tableC td{padding:10px;}
+    .sub_strategy .tableC{font-size:13px;}
+    .paradigm .prg ul li p{font-size:13px;}
+    .paradigm .prg ul li span{font-size:12px;background: url(/KomipoWwg/images/project_img/sub/listBg.png)left top 4px no-repeat;}
+    .paradigm .prg ul li .textArea{padding-left:15%}
+    .listImg .inner .none{font-size:15px;}
+    .listImg p{font-size:13px;}
+    .listImg .inner>div{font-size:13px;}
+    .organization .chart{font-size:13px;}
+    .organization .chart ul li p{font-size:14px;color: #fff;padding: 5px 0;}
+    .organization .tableC colgroup{display: none;}
+    .organization .tableC th:first-child{width:25%;}
+    .organization .tableC td div p{margin-bottom:3px;}
+    .organization .tableC td div span{font-size:11px;margin-bottom:3px;}
+    .prg p.address span, .prg p.telNum span{font-size:14px;background-size:12px;padding: 0 16px;}
+    .prg p.address, .prg p.telNum{font-size:12px;}
+    .prg p.address span::after, .prg p.telNum span::after{top:5px;right: 7px;}
+    .location .traffic>div h5{font-size:16px;padding: 5px 0 0 40px;}
+    .location .traffic>div .listbg p{font-size:13px;}
+    .listImg .inner img{left:2%;}
+    /*동반성장 문화확산*/
+    .numList>ul>li>p{font-size:13px;margin-bottom: 2px;}
+    .numList>ul>li:nth-last-child(2)>p{margin-bottom:2px;}
+    .numList>ul>li>span{font-size:12px;margin-bottom:2px;}
+    .executive .numList>ul>li:last-child>span, .executive .numList>ul>li:nth-last-child(2)>span{margin-top:2px;}
+    .executive .numList>ul>li:nth-last-child(2)>span:last-child{margin-bottom:2px;}
+    .numList>ul>li>span::after{top:5px;}
+    .picSlide .slick-arrow{width: 18px;height: 30px;margin-top: -20px;}
+    .picSlide .slick-prev{background: url(/KomipoWwg/images/project_img/sub/pic_prev.png)left top no-repeat;background-size: 18px 30px;}
+    .picSlide .slick-next{background: url(/KomipoWwg/images/project_img/sub/pic_next.png)left top no-repeat;background-size: 18px 30px;}
+    .forum .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:2px;}
+    .workshop .prg:nth-child(3) .numList>ul>li:nth-last-child(2)>p{margin-bottom:2px;}
+    .sharing .imgBox{padding:0;}
+    .sharing .imgBox>div{float: none;width:90%;padding:5% 0;margin:0 5%;}
+    .sharing .imgBox>div:first-child{border-right:0;border-bottom:1px dotted #333;}
+    .sharing .imgBox>div p{font-size:13px;}
+    .sub_culture .tableC{font-size:13px;}
+    .sharing .prg>.listbg p{font-size:12px;}
+    /*중소기업 지원안내*/
+    .best100 .numList>ul>li:nth-last-child(2)>p{margin-bottom:2px;}
+    .haeuso .prg p{margin-bottom:2px;}
+    .haeuso .blue1{font-size:12px;}
+    .possesion .btnBL{font-size:12px;}
+    .sharing .numList>ul>li:last-child>p, .sharing .numList>ul>li:nth-last-child(2)>p{margin-bottom:2px;}
+    .sub_support .tableC{font-size:13px;}
+    .squareList ul li{float: none !important;width:100%;margin-right:0 !important;padding:5px 20px;margin-top:2% !important;}
+    .squareList ul li p{font-size:13px;margin-bottom:3px;padding-bottom:3px;}
+    .squareList ul li span{font-size:11px;}
+    .squareList ul li::after, .squareList ul li:nth-child(4)::before, .squareList ul li:nth-child(7)::before, .squareList ul li:nth-child(10)::before{display: none;}
+    .squareList ul li:nth-child(3)::before, .squareList ul li:nth-child(5)::before, .squareList ul li:nth-child(9)::before, .squareList ul li:nth-child(11)::before{display: none;}
+    .squareList ul li em{font-size:12px;}
+    .export01 .numList>ul>li:nth-last-child(2)>p, .export01 .numList>ul>li:last-child>p{margin-bottom: 2px;}
+    .loan .squareList{padding:0;}
+    .loan .squareList ul li{margin-bottom:2%;}
+    .roadmap .tableC{width:450px;}
+    .roadmap .subP{margin:5px 0;}
+    .partners .tabmenu{margin-top:10px;}
+    .partners .tabmenu ul {width: 510px;}
+    .partners .tabmenu ul li {width: 16.2%;}
+    .winwin .numList>ul>li:last-child>p, .winwin .numList>ul>li:nth-child(2)>p, .winwin .numList ul li:nth-last-child(2)>p{margin-bottom:2px;}
+    .winwin .textArea>div>p{font-size:15px;}
+    .winwin .textArea>.btmText{margin-top:10px;}
+    .powerup .prg>p.blue2{margin-bottom:8px;}
+    .powerup .prg>p{margin-bottom:5px;}
+    .powerup .numList>ul>li>span{font-size:13px;}
+    .powerup .numList>ul>li>span::after {top: 5px;}
+    .imgList ul li span, .powerup .imgArea div span{font-size:12px;margin-top:0;}
+    .imgList ul li{margin-top:10px;}
+    .powerup .btn_p{font-size:15px;margin-top:15px}
+    .powerup .btnBL{font-size:12px;margin-top:10px;}
+    .powerup .numList ul li:nth-last-child(2)>p{margin-bottom:2px;}
+    .roadmap .prg:nth-child(3) .tableC{margin:0;}
+    /*소통마당*/
+    .market .inputArea{margin-top:18px;}
+    .market .tabmenu ul {width: 623px;}
+    .market_list{margin-top:5px;}
+    .market_list .product {height: 180px;}
+    .market_list .product a{height: 180px;}
+    .market_list .product>a>div {height: 120px;}
+    .market_list .product .circle {width: 120px;height: 120px; margin-left: -60px;}
+    .market_list .product .circle img {width: 170px;}
+    .market_list .product p{font-size:13px;}
+    .market .view .product_img ul li{height: 79px;}
+    .market .view .product_img ul li a img{height:71px;}
+    .market .view .prg {margin-top: 20px;}
+    .market .view .productInfo h5{font-size:16px;padding: 10px 0;}
+    .market .view .productInfo .tableB{font-size:12px;}
+    .market .view .productInfo .tableB tr {height: 35px;}
+    .market .view .productInfo .tableB td {padding: 2px 5px;}
+    .market .view .tableC tr{font-size:12px;height: 35px;}
+    .market .view .tableC td{padding: 2px 5px;}
+    table.tableC.colTable{width:450px;}
+    .market .view .btnArea button, .market .view .btnArea .leftBtn .btnBL, .market .view .btnArea .btnB {font-size: 12px; width: 70px; height: 30px; line-height: 28px;}
+    .qna .tableA tr td:nth-child(2){padding:10px;}
+    .qna .tableC tr td:nth-child(2){padding:10px 8px;}
+    .qna .tableC tr th:nth-child(3), .qna .tableC tr td:nth-child(3){display: none;}
+    .qna_write .btnBL{font-size: 12px; width: 70px; height: 30px; line-height: 28px; padding: 0;}
+    .qna_write .tableC tr td input.inputFile{width:70%;}
+    .productInfo .tableC{font-size:13px;}
+    .productInfo .tableC td p{font-size:13px;}
+    .productInfo .tableC th{padding:10px 0;}
+    .productInfo .tableC td{padding:10px;}
+    .stepList ul li{margin-bottom:5px;}
+    .stepList ul li:nth-child(1){background: url(/KomipoWwg/images/project_img/sub/stepM01.png)left top no-repeat;background-size: 100% 50px;}
+    .stepList ul li:nth-child(2){background: url(/KomipoWwg/images/project_img/sub/stepM02.png)left top no-repeat;background-size: 100% 50px;}
+    .stepList ul li:nth-child(3){margin-right:4%;background: url(/KomipoWwg/images/project_img/sub/stepM03.png)left top no-repeat;background-size: 100% 50px;}
+    .stepList ul li:nth-child(4){background: url(/KomipoWwg/images/project_img/sub/stepM04.png)left top no-repeat;background-size: 100% 50px;}
+    .stepList ul li:nth-child(5){background: url(/KomipoWwg/images/project_img/sub/stepM05.png)left top no-repeat;background-size: 100% 50px;}
+    .stepList ul li::after, .stepList ul li:nth-child(4)::after{display: none;}
+    .stepList ul li p{height:50px;line-height:50px;font-size:14px;}
+    .receiptList p{font-size:16px;}
+    .receiptList span{font-size:13px;margin: 5px 0 8px 0;}
+    .receiptList a{font-size: 12px;width: 80px;height: 26px;line-height: 24px;}
+    .receiptList>div .textArea {padding: 15px 0 15px 30%;}
+    .idea .firstPrg{margin-top:8px;}
+    /*지원시스템*/
+    .sub_system .titleM{font-size:16px;}
+    .sub_system .textArea p{font-size:13px;}
+    .sub_system .btnB{font-size: 12px; height: 35px; line-height: 32px; width: 100px;}
+    /*회원가입*/
+    .login .loginInput{margin:0;margin-top:20px;}
+    .login .loginInput>div{padding:20px 0;}
+    .login .memLogin .inputArea{margin-bottom: 0;}
+    .login .memLogin .inputArea .inputtxt{font-size:12px;padding: 8px 11px 8px 41px;height: 40px;}
+    .login .memLogin .inputArea label{top:10px;}
+    .login .memJoin .joinTitle p{font-size:14px;}
+    .login .memJoin .joinTitle p strong{font-size:16px;}
+    .login .memJoin .joinTitle{background-size: 60px;padding-top: 44px;}
+    .login .btnArea a{height:35px;line-height: 33px;}
+    .join .prg{margin-top:20px;}
+    .join_tab ul li{height: 32px;}
+    .join_tab ul li p {font-size:12px;}
+    .titleM {font-size: 16px;padding-bottom: 10px;margin-bottom: 15px;}
+    .join .textArea{padding:10px;font-size:12px;height:180px;line-height:18px;}
+    .join .txtNotice{font-size:12px;}
+    .join .tableB{font-size:12px;}
+    .agree .radioBox{font-size:13px;}
+    .agree .radioBox label {margin-left: 10px;}
+    .join .btnArea a{font-size:12px; width: 90px; height: 35px; line-height: 33px;}
+    .join02 .prg .certify{height:auto;}
+    .join02 .prg .certify img {width: 70px;top: 7px;}
+    .join02 .prg .certify .inner>div{padding:10px 15px;}
+    .join02 .prg .certify p {font-size: 13px;}
+    .join02 .prg .certify .btnArea{margin-top:12px;}    
+    .join .btnArea a{height: 30px;line-height: 28px;}
+    .join04 .text p{font-size:14px;}
+    .memsearch .tableC{font-size:13px;}
+    .memsearch .tableC th, .memsearch .tableC td{padding:8px;}
+    .memsearch .tableC .btnBL {width: 96px;margin-top:5px;}
+    /*개인정보처리방침*/
+    .indiviInfo .prg {margin-bottom: 20px;}
+    .indiviInfo .prg span {font-size: 12px;}
+    .indiviInfo .prg p{font-size:15px;}
+    .indiviInfo .tableA{font-size:12px;}
+    .indiviInfo .tableD td{padding:5px;}
+}
+@media screen and (max-width:390px){
+    /*메인서비스*/
+    .mainService .cooperService{height: auto;}
+    .mainService .cooperService ul{float: none;width: 100%;margin:0;}
+    .mainService .cooperService ul:last-child{margin-top: 8px;}
+}
+@media screen and (max-width:380px){
+    /*소통마당*/
+    .receiptList>div .textArea {padding: 15px 0 15px 32%;}
+    /*회원가입*/
+    .memsearch .tableC #mail{width:80px;}
+}
+
+/*20180826 추가*/
+@media screen and (max-width:1200px){
+    .payment .imgBox .imgArea img{width:431px;}
+}
+@media screen and (max-width:1180px){
+    .mainVisual .visual_slide div.item1{background: url(/KomipoWwg/images/project_img/main/main_n01.jpg)left 60% top no-repeat;}
+    .mainVisual .visual_slide div.item2{background: url(/KomipoWwg/images/project_img/main/main_n02.jpg)left 60% top no-repeat;}
+    .mainVisual .visual_slide div.item3{background: url(/KomipoWwg/images/project_img/main/main_n03.jpg)left 60% top no-repeat;}
+    .purchase .process ul li p{font-size:18px;}
+    .purchase .process ul li span{font-size:16px;}
+}
+@media screen and (max-width:1140px){
+    .payment .imgBox{padding:30px 5%;}
+    .payment .imgBox .imgArea{padding:0 20px;}
+    .payment .imgBox .imgArea img{width:100%;}
+    .payment .textArea>div{margin-top:5%;}
+}
+@media screen and (max-width:1085px){
+    .onetwo .numList>ul>li>span.f_left{width: 45%;}
+}
+@media screen and (max-width:1020px){
+    .process ul li:first-child{font-size: 15px;padding: 2% 0;margin-right: 5%;}
+    .process ul li.w30{ width: 25%;margin-right: 5%;}
+    .process ul li::after{right:-40px;}
+    .process ul li.w30:last-child{margin-right: 0;}
+    .purchase .process ul li:first-child{margin-right: 3%;}
+    .purchase .process ul li::after {right: -30px;}
+    .square3List ul li b{font-size:16px;}
+    .possesion .process ul li::after{top: 40px;}
+}
+@media screen and (max-width:1010px){
+    .share .numList>ul>li>span.f_left{float: none;width: auto;}
+    .payment .textArea>div.topText{margin-top:0;}
+}
+@media screen and (max-width:900px){
+    .tableArea{margin-top:10px;}
+    .tableC td p em{font-size:12px;}
+    .numList>ul>li.num1>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 2px no-repeat;}
+    .numList>ul>li.num2>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 2px no-repeat;}
+    .numList>ul>li.num3>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 2px no-repeat;}
+    .numList>ul>li.num4>p{background: url(/KomipoWwg/images/project_img/sub/num4.jpg)left top 2px no-repeat;}
+    .numList>ul>li.num5>p{background: url(/KomipoWwg/images/project_img/sub/num5.jpg)left top 2px no-repeat;}
+    .numList>ul>li.num6>p{background: url(/KomipoWwg/images/project_img/sub/num6.jpg)left top 2px no-repeat;}  
+    .prg_cooperation p{font-size: 14px;display: block; margin-top: 8px;}
+    .prg_result ul li p{font-size: 16px;}
+    .prg_result ul li span{font-size: 14px;}
+    .social .numList>ul>li>span{margin-top: 5px;}
+    .social .numList ul li:nth-last-child(2)>p{margin-bottom: 5px;}
+    .social .prg:nth-child(2) .tableArea{margin: 5px 0;}
+    .onetwo .numList>ul>li>span.f_left{width: 100%;float: none;margin-top: 5px;}
+    .onetwo .numList ul li:nth-last-child(2)>p{margin-bottom: 5px;}
+    .payment .numList ul li:nth-last-child(2)>p{margin-bottom: 5px;}
+    .payment .numList>ul>li>span{margin-top: 5px;}
+    .innovation .numList>ul>li>p{margin-bottom: 5px;}
+    .innovation .process ul li.w30{float: left;margin-top:0;}
+    .innovation .process ul li::before{display: none;}
+    .innovation .process.squareList ul li::after{display: block;top: 45%;right: -35px}
+    .innovation .process ul li.w30:last-child::after{display: none;}
+    .purchase .process ul li p{font-size:16px;}
+    .purchase .process ul li span{font-size:14px;}
+    .purchase .numList ul li:nth-last-child(2)>p{margin-bottom: 5px;}
+    .purchase .numList>ul>li>span{margin-top: 5px;}
+    .purchase .process ul li:first-child{float: none;width: 80px;padding: 5px 0;margin-bottom: 10px;}
+    .purchase .process ul li:first-child br{display: none;}
+    .purchase .process ul li:first-child::after{display: none;}
+    .purchase .process ul li::after{right: -35px;}
+    .purchase .squareList ul li:nth-child(3){margin-right:5%;}
+    .purchase .squareList ul li:nth-child(3)::after{display: block;}
+    .purchase .squareList ul li:nth-child(4){margin-top:0;margin-right:0;float: left;}
+    .purchase .squareList ul li:nth-child(4)::before, .purchase .squareList ul li:nth-child(4)::after{display: none;}
+    .purchase .squareList ul li:nth-child(5), .purchase .squareList ul li:nth-child(6){margin-top:2%;margin-right: 5%;}
+    .purchase .squareList ul li:nth-child(5){margin-left:5%;}
+    .purchase .squareList ul li:nth-child(5)::before{display: block;transform: none;top: 50%;right: auto; left: 0; margin-left: -15%;}
+    .research .numList ul li em{font-size: 13px;}
+    .imposition .prg:nth-child(5) .numList>ul>li>p { margin-bottom: 5px;}
+    .advice .prg:nth-child(3) .numList>ul>li>p{margin-bottom: 5px;}
+    .possesion .process.squareList ul li::after{top:32px;}
+    .wel .numList ul li>p{margin-bottom: 5px;}
+    .wel .squareList ul li{margin-right: 5.3%}
+    .wel .squareList ul li:last-child{margin-right: 0}
+    .wel .squareList ul li::after{right: -35px;top: 45px;}
+    .wel .squareList ul li:nth-child(3):after{display: block;}
+    .wel .squareList ul li:nth-child(4){margin-top:0;}
+    .box{font-size:13px;}
+    .payment .textArea{margin-left:5%;}
+    .payment .textArea>div>p{font-size:16px;margin-bottom:5px;}
+    .payment .textArea .listbg p::before{top:8px;}
+    .payment .textArea>div>.listbg span{font-size:13px;}
+    .payment .imgBox .imgArea{position: relative;width:45%;height: 430px;}
+    .payment .imgBox .imgArea img{width:90%;position:absolute;top:25%;left:50%;margin-top:-25%;margin-left:-145px;}
+}
+@media screen and (max-width:800px){
+    .payment .imgBox .imgArea img{width:95%;margin-left: -140px;}
+}
+@media screen and (max-width:730px){
+    .payment .imgBox .imgArea img{margin-left: -45%;}
+}
+@media screen and (max-width:700px){
+    .innovation .process ul li:first-child{float: none;width: 80px;padding: 5px 0;margin-bottom: 10px;}
+    .innovation .process ul li:first-child br{display: none;}
+    .innovation .process ul li:first-child::after{display: none;}
+    .innovation .process ul li:nth-child(4)::before{display:none;}
+    .innovation .process ul li.w30{width:26%;margin-right: 7%}
+    .payment .imgBox{height:100%;box-sizing: border-box;text-align: center;}
+    .payment .imgBox>div{float: none;width:100%;height:50%;}
+    .payment .imgBox .imgArea{width:auto;margin:0 auto;padding:0;text-align: center;display: inline-block;height: 320px;}
+    .payment .imgBox .imgArea img{position: relative;left:0;top:0;margin:0;height:100%;width:auto;}
+    .payment .textArea{margin-left:0;overflow: hidden;text-align: left;margin-top:10px;}
+    .payment .textArea>div{float: left;width:49%;margin-top:0;margin-right:2%;}
+    .payment .textArea>.btmText{margin-right:0;}
+    .payment .textArea>div>.listbg{padding:8px;height:223px;box-sizing: border-box;}
+        /*****20190911 추가*****/
+    .social .prg:nth-child(2) .tableArea{overflow: hidden;}
+            /*****20190911 추가*****/
+    .numList>ul>li>p.mb10{margin-bottom:5px !important;}
+}
+@media screen and (max-width:680px){
+    .sub_strategy.roadmap .tableC{width: 650px;}
+}
+@media screen and (max-width:600px){
+    .mainVisual .visual_slide div.item1{background: url(/KomipoWwg/images/project_img/main/main_n01.jpg)left 50% top no-repeat;background-size: auto 388px;}
+    .mainVisual .visual_slide div.item2{background: url(/KomipoWwg/images/project_img/main/main_n02.jpg)left 50% top no-repeat;background-size: auto 388px;}
+    .mainVisual .visual_slide div.item3{background: url(/KomipoWwg/images/project_img/main/main_n03.jpg)left 50% top no-repeat;background-size: auto 388px;}
+    .prg_result ul li.f_left, .prg_result ul li.f_right{width: 100%;float: none;margin-bottom: 10px;}
+    .prg_result ul li.f_right{margin-bottom: 0;}
+    .square3List ul li:nth-child(3){float: left;margin-left: 10%;}
+    .square3List ul li:nth-child(3)::before{transform: none;left:-10%;top: 50%;width: 25px;}
+    .square3List ul li::after{width: 25px;}
+    .innovation .process ul li:nth-child(3):before{display: none;}
+    .innovation .process.squareList ul li::after{margin-right: 0;}
+    .innovation .process ul li.w30{width:46%;}
+    .innovation .process ul li.w30:nth-child(3){margin-right:0;}
+    .innovation .process ul li.w30:last-child{margin-left: 7%;margin-top: 2%}
+    .innovation .process.squareList ul li:nth-child(3)::after{display: none;}
+    .innovation .process ul li.w30:last-child::after{display: block;right: auto; left: 0;margin-left: -14%;}
+    .purchase .squareList ul li:nth-child(2n+1){margin-right:0;margin-left:0;}
+    .purchase .squareList ul li:nth-child(3){margin-top:0;}
+    .purchase .squareList ul li:nth-child(4), .purchase .squareList ul li:nth-child(5), .purchase .squareList ul li:nth-child(6){margin-top: 22px;}
+    .purchase .squareList ul li:nth-child(4){float:right;}
+    .purchase .process ul li::after{margin-right:0;right: -40px;}
+    .purchase .squareList ul li:nth-child(3):before, .purchase .squareList ul li:nth-child(3):after{display: none;}
+    .purchase .squareList ul li:nth-child(5):after{transform: rotate(180deg)}
+    .purchase .squareList ul li:nth-child(4):before{display: block;}
+    .purchase .squareList ul li:nth-child(5):before{left: 50%;bottom: 0;top: auto;transform: rotate(90deg); margin-bottom: -19px; margin-left: -10px;}
+    .wel .squareList ul li{width:45%;margin-right:10%;}
+    .wel .squareList ul li:nth-child(2n){margin-right:0;}
+    .wel .squareList ul li:nth-child(3){margin-right:0;float: right;margin-top:20px;}
+    .wel .squareList ul li:nth-child(4){margin-top:4%;}
+    .wel .squareList ul li::after{ margin-right: 0;right: -40px;}
+    .wel .square3List ul li:nth-child(3)::before{transform: rotate(90deg);left: 50%;top: -16%;background-size: 20px 11px;}
+    .wel .squareList ul li:nth-child(4)::after{transform: rotate(180deg)}
+    .roadmap .numList>ul.sup_num>li:nth-child(1)>p{background: url(/KomipoWwg/images/project_img/sub/num1.jpg)left top 5px no-repeat;}
+    .roadmap .numList>ul.sup_num>li:nth-child(2)>p{background: url(/KomipoWwg/images/project_img/sub/num2.jpg)left top 5px no-repeat;}
+    .roadmap .numList>ul.sup_num>li:nth-child(3)>p{background: url(/KomipoWwg/images/project_img/sub/num3.jpg)left top 5px no-repeat;}
+    .payment .textArea>div>.listbg p{font-size:13px;margin-bottom:2px;}
+    .payment .textArea>div>.listbg span{font-size:12px;margin-bottom:2px;}
+    .payment .textArea>div>.listbg span em{padding: 2px 0 0 40px;}
+        /*****20190911 추가*****/
+    .sub_strategy .tableC th br{display: none;}
+}
+@media screen and (max-width:500px){
+    .prg_result ul li .textArea{background: none;padding-left: 60px;}
+    .prg_result ul li img{width:35px;}
+    .innovation .process.squareList ul li::after{right: -30px;}
+    .innovation .process ul li.w30:last-child::after{margin-left: -16%}
+    .imposition .tableC td{text-align: left;}
+    .wel .squareList ul li::after {right: -35px;}
+    .payment .imgBox{margin-top:10px;}
+    .payment .imgBox .imgArea{height:300px;}
+    .payment .textArea>div{float: none;width:100%;margin-right:0;}
+    .payment .textArea>div>.listbg{height:auto;}
+    .payment .textArea>.btmText{margin-top:5px;}
+}
+@media screen and (max-width:414px){
+    .mainVisual .visual_slide div.item1{background: url(/KomipoWwg/images/project_img/main/main_n01.jpg)left 50% top no-repeat;background-size: auto 242px;}
+    .mainVisual .visual_slide div.item2{background: url(/KomipoWwg/images/project_img/main/main_n02.jpg)left 50% top no-repeat;background-size: auto 242px;}
+    .mainVisual .visual_slide div.item3{background: url(/KomipoWwg/images/project_img/main/main_n03.jpg)left 50% top no-repeat;background-size: auto 242px;}
+    .mainNews .newsList .list h4, .mainNews .newsList .list p{white-space:nowrap;word-wrap:normal;}
+    .tableC td p em{font-size:11px;}
+    .advice .listbg p{margin-top: 5px;}
+    .prg_cooperation span{font-size: 14px;}
+    .prg_cooperation p{font-size: 12px;margin-top: 5px;}
+    .prg_result ul li .textArea{padding-left: 15%;}
+    .prg_result ul li p{font-size: 13px;}
+    .prg_result ul li span{font-size: 12px;background: url(/KomipoWwg/images/project_img/sub/listBg.png)left top 4px no-repeat;}
+    .social .numList>ul>li>span{margin-top: 2px;}
+    /********20190911수정********//* .social .prg:nth-child(2) .tableArea{margin-bottom: 2px 0;} */
+    .social .prg:nth-child(2) .tableArea{margin-bottom: 2px 0;}
+    .square3List{margin-top:5px;}
+    .square3List ul li:nth-child(3){margin-left:0;}
+    .onetwo .numList>ul>li>span.f_left{margin-top: 2px;}
+    .onetwo .numList ul li:nth-last-child(2)>p{margin-bottom: 2px;}
+    .innovation .numList>ul>li>p{margin-bottom: 2px;}
+    .innovation .process{margin-top:10px;}
+    .innovation .process ul li:first-child{font-size:13px;}
+    .innovation .process ul li.w30{width: 100%;float: none;margin-right:0}
+    .innovation .process ul li.w30:last-child{margin-left:0;}
+    .purchase .process{margin-top:10px;}
+    .purchase .process ul li p{font-size:13px;}
+    .purchase .process ul li span{font-size:11px;}
+    .purchase .numList ul li:nth-last-child(2)>p{margin-bottom: 2px;}
+    .purchase .numList>ul>li>span{margin-top: 2px;}
+    .purchase .squareList ul li:nth-child(4):before, .purchase .squareList ul li:nth-child(5):before{display: none;}
+    .purchase .process ul li:first-child{font-size:13px;}
+    .research .numList ul li em{font-size: 12px;}
+    .imposition .prg:nth-child(5) .numList>ul>li>p { margin-bottom: 2px;}
+    .advice .prg:nth-child(3) .numList>ul>li>p{margin-bottom: 2px;}
+    .wel .numList ul li>p{margin-bottom: 2px;}
+    .wel .squareList ul li{width: 100%;float:none;}
+    .box{font-size:12px;}
+    .square3List ul li b{font-size: 13px;}
+    .payment .numList ul li:nth-last-child(2)>p{margin-bottom: 2px;}
+    .payment .numList>ul>li>span{margin-top: 2px;}
+    .payment .textArea>div>p{font-size:15px;}
+    .payment .textArea>.btmText{margin-top:10px;}
+        /*****20190911 추가*****/
+    .numList>ul>li>p.mb10{margin-bottom:2px !important;}
+}
+/*//20180826 추가*/
+
+
+/*******20190920 추가************/
+@media screen and (max-width:1200px){
+    .ceo_paradigm>p{font-size:2.3vw}
+    .ceo_paradigm>ul>li>p{font-size:1.6vw}
+    .ceo_paradigm>ul>li>p.small{font-size: 1.2vw;}
+}
+@media screen and (max-width:800px){
+    .sub_strategy img{display: none}
+    .ceo_paradigm>p{position: relative;left:0;top:0;width:100%;background: #005fb2;font-size:20px;padding:10px;box-sizing: border-box;margin-bottom:5px;}
+    .ceo_paradigm>p br{display:none;}
+    .ceo_paradigm>ul>li{position: relative;left:0;top:0;width: 100%;text-align: center;margin-bottom:5px;}
+    .ceo_paradigm>ul>li.paradigm01{background: #89ce1c;box-sizing: border-box;border:1px solid #89ce1c}
+    .ceo_paradigm>ul>li.paradigm02{background: #41ca73;box-sizing: border-box;border:1px solid #41ca73}
+    .ceo_paradigm>ul>li.paradigm03{background: #4fa1d7;box-sizing: border-box;border:1px solid #4fa1d7}
+    .ceo_paradigm>ul>li.paradigm04{background: #f5c125;box-sizing: border-box;border:1px solid #f5c125}
+    .ceo_paradigm>ul>li>p{font-size:20px;padding:5px 0;}
+    .ceo_paradigm>ul>li>p.small{font-size:16px;color: #333;background: #fff;}
+}
+@media screen and (max-width:520px){
+    .ceo_paradigm>p{font-size:18px;}
+    .ceo_paradigm>ul>li>p{font-size:18px}
+    .ceo_paradigm>ul>li>p.small{font-size:14px}
+}
+@media screen and (max-width:414px){
+    .ceo_paradigm>p{font-size:16px;}
+    .ceo_paradigm>ul>li>p{font-size:16px}
+    .ceo_paradigm>ul>li>p.small{font-size:12px}

@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CmApm">
+ <!--  ########### CmApmDAO 시작 ########################### -->
+ 
+ 	<select id="cmDAO.selectSequence" parameterClass="java.lang.String" resultClass="int">
+		SELECT MAKE_SEQ_FU01(#tableName#) FROM DUAL
+	</select>
+	
+ 	<select id="cmDAO.getSequence" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT MAKE_SEQ_FU01(#tablename#) FROM DUAL
+	</select>
+ 
+	
+ 	<select id="cmApmDAO.selListManagerPop" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT TA.USER_SEQNO
+			 , TA.USER_ID
+			 , TA.USER_NM
+			 , TA.ORG_CD													<!-- 조직코드 -->
+			 , (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=TA.ORG_CD) ORG_NM	<!-- 조직명 -->
+		     , TA.GRD_CD													<!-- 직급코드 -->
+		     , TA.GRD_NM													<!-- 직급명 -->
+			 , TA.NAESUN
+			 , TA.MOBLPHON
+			 , TA.EMAIL
+			 , TA.DEL_YN
+		FROM JIT9120 TA
+		ORDER BY TA.USER_ID ASC
+	</select>	
+	
+
+	
+    <select id="cmApmDAO.getAprvReq" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  
+			 REAL_STAT_SEQNO <!-- 결재상태 일련번호 -->
+			,APRV_JOB_CL_CD  <!-- 결재업무 메뉴코드 -->
+			,APRV_REQ_JOB_NO <!-- 결재요청업무번호 -->
+			,APRV_REQ_NM	 <!--결재요청명 -->
+			,APRV_STAT_CD	 <!--결재상태코드 -->
+			,TO_CHAR(T.APRV_REQ_YMD,'YYYYMMDD')	APRV_REQ_YMD <!--결재 요청 일자  -->
+			,APPR_STAT_DESC	 <!--결재 상태 비고 -->
+			,TO_CHAR(T.REG_DT,'YYYYMMDD') REG_DT<!-- 등록일자 -->
+			,REG_ID	 		<!-- 등록자 직원 ID -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REGST_EMP_NM	<!-- 등록자 직원 성명 -->
+			,NVL((SELECT EMAIL FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REGST_EMP_EMAIL	<!-- 등록자 직원 이메일 -->
+			FROM JIT9142 T
+			WHERE 1=1
+				AND T.DEL_YN = 'N'
+				AND NOT T.APRV_STAT_CD='30'
+				AND T.APRV_JOB_CL_CD = #aprv_job_cl_cd#
+				AND T.APRV_REQ_JOB_NO = #ikey_datas#
+
+	</select>	
+
+ 	<!-- 결재상태 마스터 저장(JIT9142) -->
+ 	<insert id="cmApmDAO.InsertAprvReq">
+		INSERT INTO JIT9142 
+			(	
+			 REAL_STAT_SEQNO	<!-- 결재상태 일련번호 -->
+			,APRV_JOB_CL_CD		<!-- 결재업무관리 메뉴코드 -->
+			,APRV_REQ_JOB_NO	<!-- 결재요청업무번호 -->
+			,JOB_PSTATE			<!-- 업무화면상태 -->
+			,JOB_PARAM_NM		<!-- 업무화면파라메터명 -->
+						
+			,APRV_REQ_NM		<!-- 결재요청명 -->
+			,APRV_STAT_CD		<!-- 결재상태코드  -->
+			,APRV_REQ_YMD		<!-- 결재 요청 일자 -->
+			,APPR_STAT_DESC		<!-- 결재 상태 비고 -->
+			,REG_DT				<!-- 등록일자 -->
+			,REG_ID				<!-- 등록자 직원 ID -->
+			,DEL_YN				<!-- 삭제여부 -->
+
+			)VALUES(
+			  #ireal_stat_seqno#
+			, #iaprv_job_cl_cd#
+			, #ikey_datas#
+			, #aprv_reqpstate#
+			, #aprv_param_nm#
+			
+			, #iaprv_req_nm#
+			, #iaprv_stat_cd#
+			, SYSDATE
+			, #appr_stat_desc#
+			, SYSDATE
+			, #user_id#
+			, 'N'
+			)	
+	</insert>
+ 
+ 	<!-- 결재업무관리 일련번호 조회(JIT9140) -->
+    <select id="cmApmDAO.getAprvReqChkNokey" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			TO_CHAR(0) CHKCNT
+			, (SELECT APRV_JOB_CL_CD FROM JIT9140 WHERE APRV_JOB_CL_CD=#aprv_pcode#) APRV_JOB_CL_CD
+			FROM DUAL
+	</select>
+
+ 	<!-- 결재상태 마스터 등록조회(JIT9142) -->
+    <select id="cmApmDAO.getAprvReqChk" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			TO_CHAR(COUNT(*)) CHKCNT
+			, (SELECT APRV_JOB_CL_CD FROM JIT9140 WHERE APRV_JOB_CL_CD=#aprv_pcode#) APRV_JOB_CL_CD
+			, T.APRV_STAT_CD	<!--결재상태코드  -->
+			, NVL(STD_NM_FU04('M00013', T.APRV_STAT_CD),'') APRV_STAT_CD_NM
+			, NVL(T.APRV_REQ_NM,'') APRV_REQ_NM
+			FROM JIT9142 T
+			WHERE 1=1
+				AND T.DEL_YN = 'N'
+				AND T.APRV_JOB_CL_CD
+						= (SELECT APRV_JOB_CL_CD FROM JIT9140 WHERE APRV_JOB_CL_CD=#aprv_pcode#)
+				AND T.REAL_STAT_SEQNO = #aprv_key#
+			GROUP BY T.APRV_JOB_CL_CD  ,T.APRV_STAT_CD ,T.APRV_REQ_NM
+		       
+	</select>
+
+ 	<!-- 기본결재선 조회(JIT9144) -->
+	<select id="cmApmDAO.selectListAprvB" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			ROWNUM AS ROW_SEQ
+			,TO_CHAR(T.BS_APRV_LN_SEQNO) BS_APRV_LN_SEQNO	<!-- 결재선 일련번호 -->
+
+			,T.REG_ID	<!-- 결재자 직원 ID -->
+			,NVL((SELECT ORG_CD FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS APRV_EMP_NM
+			
+			,NVL((SELECT ORG_CD FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS APRV_NOW_JOBGRD_CD_NM
+
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS APRV_ORG_NM	<!-- 결재자 성명 -->
+			, '' APRV_STAT_CD	<!-- 결재상태코드 -->
+			, '' APRV_STAT_CD_NM
+			, '' APRV_REQ_YMD <!-- 결재 요청 일자 -->
+			, '' APRV_EXE_YMD <!-- 결재 처리 일자 -->			
+			
+			,T.BASE_APRV_LINE_DESC	<!-- 기본 결재선 비고 -->
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT
+			,REG_ID
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REG_NM
+
+		FROM JIT9144 T
+		WHERE 1=1
+			AND T.DEL_YN = 'N'
+
+		    <!-- 정상적인 값이 아닐경우 가져오지 않는다 -->
+		    <isEmpty property="aprv_pcode">
+		    	AND T.BS_APRV_LN_SEQNO IS NULL
+		    </isEmpty>
+		    <isNotEmpty property="sess_id">
+		    	AND REG_ID = #sess_id#
+		    </isNotEmpty>
+		
+		ORDER BY BS_APRV_LN_SEQNO DESC
+		
+	</select>
+	
+	<!-- 결재선지정 저장된 기본결재선 조회 -->
+    <select id="cmApmDAO.getselectAprvDefault" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			 T.BS_APRV_LN_SEQNO	<!-- 결재선 일련번호 -->
+			,NVL((SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=(SELECT ORG_CD FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID)),'') AS APRV_ORG_NM <!--결재자 부서명  -->
+			,NVL(STD_NM_FU03('M00007',(SELECT GRD_CD FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID)),'') AS APRV_NOW_JOBGRD_CD_NM <!-- 결재자 직급명 -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_EMP_NM   <!-- 결재자 명 -->
+			,CASE WHEN 
+					  (SELECT COUNT(*) FROM JIT9145 
+						WHERE DEL_YN = 'N' 
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ < ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 이전결재자가 없을경우 요청자이다 */
+					  )=0 THEN
+					'요청'
+				WHEN
+					  (SELECT COUNT(*) FROM JIT9145 
+						WHERE DEL_YN = 'N' 
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 있을경우 검토자 */
+					  ) <![CDATA[ > ]]> 0
+					  THEN
+					'검토'
+				WHEN
+					  (SELECT COUNT(*) FROM JIT9145 
+						WHERE DEL_YN = 'N' 
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 없을경우 승인자 */
+					  ) = 0
+					  THEN
+					 '승인'
+				END APRV_AUTH_NM /* 결재 권한 요청자, 검토자, 승인자 */  <!-- 결재권한 -->
+			
+			,T.APRV_EMP_ID
+			,T.APRV_SEQNO	<!-- 결재순번 -->
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT <!-- 등록일 -->
+			,T.REG_ID
+			,TO_CHAR(T.MOD_DT,'YYYY-MM-DD') MOD_DT
+			,T.DEL_YN
+
+		FROM JIT9145 T, JIT9144 B
+		WHERE T.BS_APRV_LN_SEQNO = B.BS_APRV_LN_SEQNO
+		AND T.REG_ID = #user_id#
+		AND B.BS_APRV_LN_SEQNO=#bs_aprv_ln_seqno#
+
+
+		ORDER BY T.APRV_SEQNO ASC
+	</select>
+	
+	<!-- 결재선지정 기본 본인조회 -->
+    <select id="cmApmDAO.getselectAprvLine" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  	
+			 (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=A.ORG_CD) AS sosok_han
+			,A.POS_NM AS zzjikmu_txt
+			,A.USER_ID 	AS aprv_emp_id
+		    ,A.USER_NM 	AS aprv_emp_nm
+		    ,'1' 		AS aprv_seqno
+		    ,'요청' 	AS aprv_auth_nm
+		    ,A.ORG_NM AS aprv_org_nm
+            ,A.GRD_NM AS aprv_now_jobgrd_cd_nm
+        FROM JIT9120 A
+        WHERE A.USER_ID=#user_id#
+
+	</select>
+
+	<!-- 결재업무관리 메뉴코드와 메뉴상태코드 중복 체크 -->
+    <select id="cmApmDAO.getAprvJobChk" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  
+			TO_CHAR(COUNT(*)) CHKCNT
+			FROM JIT9140 T
+			WHERE 1=1
+				AND T.DEL_YN = 'N'
+				AND T.APRV_JOB_CL_CD = #menu_cd#
+	</select>
+
+	<!-- 결재상태관리 상세입력(JIT9143) -->
+	<insert id="cmApmDAO.InsertAprvReqDetail">
+
+		INSERT INTO JIT9143 
+			(	
+			 REAL_STAT_SEQNO<!-- 결재 상태 일련번호 -->
+			,APRV_EMP_ID	<!-- 결재자 직원 ID -->
+			,APRV_ORG_NM	<!-- 결재자 부서 -->
+			,APRV_SEQNO		<!-- 결재 순번 -->
+			<isNotEmpty property="iaprv_stat_cd">
+			,APRV_STAT_CD	<!-- 결재상태코드 -->
+			</isNotEmpty>
+			<isNotEmpty property="iaprv_req_ymd">
+			,APRV_REQ_YMD	<!-- 결재 요청 일자 -->
+			</isNotEmpty>
+			<isNotEmpty property="iaprv_exe_ymd">	
+			,APRV_EXE_YMD	<!-- 결재 처리 일자 -->	
+			</isNotEmpty>
+			
+			,APPR_STAT_DESC	<!-- 결재 상태 비고 -->
+			,REG_DT		<!-- 등록일자 -->	
+			,REG_ID		<!-- 등록자 직원 ID -->	
+			,DEL_YN
+			,ABSENCE
+
+			)VALUES(
+			
+			 #ireal_stat_seqno#
+			, #aprv_emp_id#
+			, #aprv_org_nm#
+			<!-- 결재반송인경우 순번은 삭제된데이터 포함해서 순번을 증가 시킨다 -->
+			<isEqual property="cur_aprv_stat_cd" compareValue="30">	
+				,(SELECT COUNT(*)+1 FROM JIT9143 WHERE REAL_STAT_SEQNO=#ireal_stat_seqno#)
+			</isEqual>
+				
+			<isNotEqual property="cur_aprv_stat_cd" compareValue="30">
+				<isNotEmpty property="iaprv_seqno">
+				, #iaprv_seqno#
+				</isNotEmpty>			
+			</isNotEqual>		
+			
+			<isNotEmpty property="iaprv_stat_cd">
+			, #iaprv_stat_cd#
+			</isNotEmpty>
+
+			<isNotEmpty property="iaprv_req_ymd">
+			, SYSDATE
+			</isNotEmpty>
+			<isNotEmpty property="iaprv_exe_ymd">
+			, SYSDATE
+			</isNotEmpty>			
+			, #appr_stat_desc#
+			,SYSDATE
+			,#user_id#
+			,'N'
+			,#absence#
+			)
+	</insert>	
+	
+	<!-- 수정페이지 결재현황조회 -->
+    <select id="cmApmDAO.selectListAprvR" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			ROWNUM AS ROW_SEQ
+			,T.REAL_STAT_SEQNO <!-- 결재 상태 일련번호 -->
+			,TO_CHAR(T.APRV_SEQNO) APRV_SEQNO	<!-- 결재 순번 -->
+            ,NVL((SELECT APRV_JOB_CL_CD FROM JIT9140 WHERE APRV_JOB_CL_CD=#aprv_pcode#),'') APRV_JOB_CL_CD	<!-- 결재업무 일련번호 -->
+            
+            ,NVL((SELECT APRV_JOB_NM FROM JIT9140 WHERE APRV_JOB_CL_CD=#aprv_pcode#),'') APRV_JOB_NM <!-- 결재업무명 -->
+			,NVL((SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=#aprv_pcode#),'') MENU_NM
+			
+			,T.APRV_ORG_NM	<!--결재자 부서  -->
+			,NVL((SELECT GRD_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_NOW_JOBGRD_CD_NM	<!-- 결재자 직급명 -->
+			,T.APRV_EMP_ID	<!-- 결재자 직원 ID -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_EMP_NM	<!-- 결재자 직원명 -->
+			
+			, CASE WHEN (SELECT COUNT(*) FROM JIT9143 
+						WHERE DEL_YN = 'N' 
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ < ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 이전결재자가 없을경우 요청자이다 */
+					  )=0 THEN
+					'요청'
+				WHEN 
+					  (SELECT COUNT(*) FROM JIT9143
+						WHERE DEL_YN = 'N'
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 있을경우 검토자 */
+					  ) <![CDATA[ > ]]> 0
+					  THEN
+					'검토'
+				WHEN (SELECT COUNT(*) FROM JIT9143 
+						WHERE DEL_YN = 'N' 
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 없을경우 승인자 */
+					  ) = 0
+					  THEN
+					 '승인'
+				END APRV_AUTH_NM /* 결재구분 요청, 검토, 승인 */
+
+			, T.APRV_STAT_CD	<!-- 결재상태코드 -->
+			, NVL(STD_NM_FU04('M00013', T.APRV_STAT_CD),'') APRV_STAT_CD_NM	<!-- 결재상태명 -->
+			, TO_CHAR(T.APRV_REQ_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_REQ_YMD <!-- 결재 요청 일자 -->
+			, TO_CHAR(T.APRV_EXE_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_EXE_YMD <!-- 결재 처리 일자-->
+			
+			
+			, T.APPR_STAT_DESC	<!-- 결재 상태 비고 -->
+			, TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT <!--등록일자-->
+			, T.REG_ID
+			, NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REG_NM <!-- 등록자 직원 ID -->
+			, NVL(T.ABSENCE,'')	AS ABSENCE<!-- 부재사유코드 -->
+
+		FROM JIT9143 T
+		WHERE 1=1
+			AND T.DEL_YN = 'N'
+            AND T.REAL_STAT_SEQNO=#aprv_key#
+
+		    <!-- 정상적인 값이 아닐경우 가져오지 않는다 -->
+		    <isEmpty property="aprv_pcode">	
+		    	AND T.REAL_STAT_SEQNO IS NULL
+		    </isEmpty>	
+		    <isEmpty property="aprv_key">	
+		    	AND T.REAL_STAT_SEQNO IS NULL
+		    </isEmpty>		    			    	
+		    
+		ORDER BY  T.APRV_SEQNO ASC  
+		       
+	</select>
+	
+	<!-- 결재상태 조회 팝업(JIT9143) -->
+    <select id="cmApmDAO.selectListAprvStat" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			ROWNUM AS ROW_SEQ
+			,TO_CHAR(T.REAL_STAT_SEQNO) REAL_STAT_SEQNO /* 결재 상태 일련번호 */
+		
+			,T.APRV_EMP_ID	/* 결재자 직원 ID */
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_EMP_NM <!-- 결재자명 -->
+				
+			,NVL((SELECT GRD_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_NOW_JOBGRD_CD_NM <!-- 결재자 직급명 -->
+			
+			,T.APRV_ORG_NM	<!--결재자 부서  -->
+			
+			,TO_CHAR(T.APRV_SEQNO)	APRV_SEQNO	<!-- 결재 순번 -->	
+
+			, T.APRV_STAT_CD	<!-- 결재상태코드 -->
+			, NVL(STD_NM_FU04('M00013',T.APRV_STAT_CD),'') APRV_STAT_CD_NM <!-- 결재상태명 -->
+			, TO_CHAR(T.APRV_REQ_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_REQ_YMD <!-- 결재 요청 일자 -->
+			, TO_CHAR(T.APRV_EXE_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_EXE_YMD <!-- 결재 처리 일자-->
+			
+			, DECODE(T.APPR_STAT_DESC,NULL,DECODE(T.ABSENCE,NULL,' ','부재 : '||STD_NM_FU03('M00030',T.ABSENCE)),T.APPR_STAT_DESC) APPR_STAT_DESC	<!-- 결재 상태 비고 -->
+			, TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT <!--등록일자-->
+			, T.REG_ID
+			, NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REG_NM <!-- 등록자 직원 ID -->
+
+			, CASE WHEN (SELECT COUNT(*) FROM JIT9143 
+						WHERE DEL_YN = 'N' 
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ < ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 이전결재자가 없을경우 요청자이다 */
+					  )=0 THEN
+					'요청'
+				WHEN 
+					  (SELECT COUNT(*) FROM JIT9143
+						WHERE DEL_YN = 'N'
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 있을경우 검토자 */
+					  ) <![CDATA[ > ]]> 0
+					  THEN
+					'검토'
+				WHEN (SELECT COUNT(*) FROM JIT9143 
+						WHERE DEL_YN = 'N' 
+						AND REAL_STAT_SEQNO = T.REAL_STAT_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 없을경우 승인자 */
+					  ) = 0
+					  THEN
+					 '승인'
+				END APRV_AUTH_NM /* 결재구분 요청, 검토, 승인 */
+		FROM JIT9143 T
+		WHERE 1=1
+			AND T.DEL_YN = 'N'
+			AND T.REAL_STAT_SEQNO = #real_stat_seqno#  
+			<!-- 관리자일경우는 모두 보여주고 관리자가 아닐경우는 해당 최상위조직하위의 결재선만 보여준다-->  			    	
+		
+		ORDER BY T.APRV_SEQNO ASC  
+		
+	</select>
+	
+	<!-- 결재목록조회(JIT9143) -->
+    <select id="cmApmDAO.selectListAprvGrid" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 		SELECT
+			 TO_CHAR(T.REAL_STAT_SEQNO) REAL_STAT_SEQNO	<!-- 결재 상태 일련번호 -->
+			,TO_CHAR(T2.APRV_JOB_CL_CD)	APRV_JOB_CL_CD <!-- 결재업무 일련번호 -->
+			<!-- 대상메뉴 -->
+			,T2.APRV_JOB_CL_CD
+			,NVL((SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=T2.APRV_JOB_CL_CD),'') MENU_NM
+			
+			<!-- 요청자 -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=(SELECT APRV_EMP_ID FROM JIT9143 WHERE REAL_STAT_SEQNO=T.REAL_STAT_SEQNO AND APRV_SEQNO=1)),'') F_EMP_NM
+
+			<!-- 현결재자 명-->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=(SELECT APRV_EMP_ID FROM JIT9143 WHERE REAL_STAT_SEQNO=T.REAL_STAT_SEQNO AND (APRV_REQ_YMD IS NOT NULL AND APRV_EXE_YMD IS NULL))),' - ') AS APRV_EMP_NM 			
+
+			<!-- 최종결재자 명-->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=(SELECT APRV_EMP_ID FROM JIT9143 WHERE REAL_STAT_SEQNO=T.REAL_STAT_SEQNO AND APRV_SEQNO=(SELECT MAX(APRV_SEQNO) FROM JIT9143 WHERE REAL_STAT_SEQNO=T.REAL_STAT_SEQNO))),'') AS APRV_EMP_NM_LAST
+			
+			,T.APRV_REQ_JOB_NO <!-- 결재요청업무번호 -->
+			,T.APRV_REQ_NM	<!--결재요청명  -->
+			,T.APRV_STAT_CD	<!--결재상태코드  -->
+			,NVL(STD_NM_FU04('M00013', T.APRV_STAT_CD),'') APRV_STAT_CD_NM
+			
+			,TO_CHAR(T.APRV_REQ_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_REQ_YMD <!--결재 요청 일자  -->
+			,TO_CHAR(T.APRV_EXE_YMD,'YYYY-MM-DD HH24:MI:SS') APRV_EXE_YMD <!--결재 처리 일자  -->
+			,T.APPR_STAT_DESC	<!--결재 상태 비고  -->
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT<!-- 등록일자 -->
+			,T.REG_ID	<!-- 등록자 직원 ID	 -->
+			,DECODE((SELECT USER_ID FROM JIT9120 WHERE USER_ID=(SELECT APRV_EMP_ID FROM JIT9143 WHERE REAL_STAT_SEQNO=T.REAL_STAT_SEQNO AND (APRV_REQ_YMD IS NOT NULL AND APRV_EXE_YMD IS NULL))),#sess_id#,1,2) AS ORDER_NO
+			,T.JOB_PSTATE				/* VARCHAR2(10 BYTE)	Yes		13	업무화면상태 */
+			,T.JOB_PARAM_NM				/* VARCHAR2(100 BYTE)	Yes		14	업무화면파라메터명	*/
+			,T2.RTN_PSTATE
+			,T2.RTN_PARAM_NM
+			,T2.RTN_MENU_CD
+			
+			FROM JIT9142 T
+				,JIT9140 T2
+				,(SELECT 
+					REAL_STAT_SEQNO
+					,APRV_EMP_ID
+					,APRV_ORG_NM
+					,APRV_SEQNO
+				  FROM JIT9143
+
+				) T3
+				
+			WHERE 1=1
+				AND T.APRV_JOB_CL_CD = T2.APRV_JOB_CL_CD
+				AND T.REAL_STAT_SEQNO = T3.REAL_STAT_SEQNO
+				AND T.DEL_YN = 'N'
+				AND T3.APRV_EMP_ID = #sess_id#	<!-- 결재상태에 본인이 포함된것만 조회 -->
+				
+				<isNotEmpty property="s_menu_cd"><!-- 대상업무 -->
+					AND T2.APRV_JOB_CL_CD=#s_menu_cd#
+				</isNotEmpty>
+				<isNotEmpty property="s_aprv_stat_cd"><!-- 결재상태 -->
+					AND T.APRV_STAT_CD=#s_aprv_stat_cd#
+				</isNotEmpty>
+				<isNotEmpty property="sst_aprv_req_ymd"><!-- 시작일자가 있으면 -->	
+					AND TO_CHAR(T.APRV_REQ_YMD,'YYYY-MM-DD')   <![CDATA[ >= ]]>   #sst_aprv_req_ymd#
+				</isNotEmpty>
+				<isNotEmpty property="sed_aprv_req_ymd"><!-- 종료일자가 있으면 -->
+					AND TO_CHAR(T.APRV_REQ_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>   #sed_aprv_req_ymd#
+				</isNotEmpty>
+				<isNotEmpty property="stext"><!-- 결재제목 -->
+					AND UPPER(T.APRV_REQ_NM) LIKE '%' || UPPER(#stext#) || '%' 
+				</isNotEmpty>
+				<isNotEmpty property="sf_emp_id"><!-- 요청자 -->
+					AND T.REAL_STAT_SEQNO
+					IN(SELECT REAL_STAT_SEQNO FROM JIT9143
+						WHERE 1=1
+						AND REG_ID=#sf_emp_id#
+						AND APRV_SEQNO=1
+					)
+				</isNotEmpty>
+			
+			ORDER BY ORDER_NO ASC, T.APRV_REQ_YMD DESC							
+		    
+	</select>
+	
+	<!-- 결재승인, 반송시 결재마스터 업데이트-->
+	<update id="cmApmDAO.updateAprvReq">
+
+		UPDATE JIT9142
+		SET	
+			 APRV_STAT_CD =#iaprv_stat_cd#	<!-- 결재상태코드 -->
+			 <isEqual property="iaprv_stat_cd" compareValue="30">	
+			 ,DEL_YN='Y'
+			 </isEqual>
+			,APRV_EXE_YMD =SYSDATE
+			,MOD_DT = SYSDATE
+			,MOD_ID = #user_id#			
+		WHERE 	
+		REAL_STAT_SEQNO = #cur_real_stat_seqno#
+
+	</update>	
+	
+	<!-- 결재승인, 반송시 결재상세 업데이트 -->
+	<update id="cmApmDAO.updateAprvReqDetail">
+	
+		UPDATE JIT9143 
+		SET	
+			 APRV_STAT_CD =#iaprv_stat_cd#	<!-- 결재상태코드 -->
+			,APRV_EXE_YMD =SYSDATE
+			,APPR_STAT_DESC =#iappr_stat_desc#
+			,MOD_DT = SYSDATE
+			,MOD_ID = #user_id#
+		WHERE 	
+		REAL_STAT_SEQNO = #cur_real_stat_seqno#
+		AND APRV_SEQNO = #cur_aprv_seqno#
+	  			
+	</update>
+	
+	<!-- 다음결재자의 결재요청일 업데이트 -->
+	<update id="cmApmDAO.updateNextAprvReqDetail">
+	
+		UPDATE JIT9143 
+		SET	
+			APRV_REQ_YMD =SYSDATE
+			,MOD_DT = SYSDATE
+			,MOD_ID = #user_id#			
+		WHERE 	
+		REAL_STAT_SEQNO = #cur_real_stat_seqno#
+		AND APRV_SEQNO = #cur_aprv_seqno#
+	  			
+	</update>	
+	
+	<!-- 반송시 해당 결재 순번 이후의 결재자를 삭제처리 -->
+	<update id="cmApmDAO.updateAR30AprvReqDetail">
+	
+		UPDATE JIT9143 
+		SET	
+			 DEL_DT = SYSDATE
+			,DEL_ID =#user_id#
+			,DEL_YN = 'Y'
+			
+		WHERE 	 
+		REAL_STAT_SEQNO = #cur_real_stat_seqno#
+		AND APRV_SEQNO <![CDATA[>]]> #cur_aprv_seqno#
+	  			
+	</update>
+	
+ 	<!-- 결재업무관리 조회 -->
+    <select id="cmApmDAO.selectListAprvJob" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  
+			 T.APRV_JOB_SEQNO
+			,T.APRV_JOB_CL_CD
+			,T.APRV_JOB_NM
+			,T.APRV_JOB_NM AS APRV_JOB_CL_NM <!-- 대상메뉴명 -->
+			,T.APRV_JOB_DESC
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT
+			,REG_ID
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REG_NM
+			,T.RTN_PSTATE			<!-- VARCHAR2(10 BYTE)	Yes		18	결재쪽에서 호출될 업무화면 화면상태값 -->
+			,T.RTN_PARAM_NM			<!-- VARCHAR2(20 BYTE)	Yes		19	결재쪽에서 호출될 업무화면 파라메터명 -->
+			,T.RTN_MENU_CD			<!-- VARCHAR2(6 BYTE)	Yes		20	결재쪽에서 호출될 메뉴코드 -->
+			,NVL((SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=T.RTN_MENU_CD),'') RTN_MENU_CD_NM
+			FROM JIT9140 T
+			WHERE 1=1
+			<isEmpty property="cod_yn">
+				AND T.DEL_YN = 'N'
+			</isEmpty>
+		    
+		    <isNotEmpty property="s_menu_cd">
+				AND T.APRV_JOB_CL_CD = #s_menu_cd#   
+		    </isNotEmpty>
+		    
+			<isNotEmpty property="stext">
+				AND UPPER(T.APRV_JOB_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			</isNotEmpty>		    
+		     
+		     ORDER BY APRV_JOB_CL_CD ASC
+	</select>
+	
+	<!-- 결재선관리 마스터 조회(JIT9144) -->
+    <select id="cmApmDAO.selectListBaseAprvLineGridX" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			 T.BS_APRV_LN_SEQNO	<!-- 기본 결재선 일련번호 -->
+			,T.BS_APRV_LN_NM 	<!-- 결재선 명 -->
+			,T.DEFAULT_APRV		<!-- 기본결재선 여부 -->
+			,T.BASE_APRV_LINE_DESC	<!-- 기본 결재선 비고 -->
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT <!-- 등록일 -->
+			,T.REG_ID
+			,TO_CHAR(T.MOD_DT,'YYYY-MM-DD') MOD_DT
+			,T.DEL_YN
+					
+		FROM JIT9144 T
+		WHERE 1=1
+			<isEmpty property="cod_yn">
+				AND T.DEL_YN = 'N'
+			</isEmpty>
+			
+			<isNotEmpty property="stext">
+				AND UPPER(T.BS_APRV_LN_NM) LIKE '%' || UPPER(#stext#) || '%' 
+			</isNotEmpty>
+
+			<isNotEmpty property="bs_aprv_ln_seqno">
+				AND BS_APRV_LN_SEQNO = #bs_aprv_ln_seqno#
+			</isNotEmpty>
+
+			AND REG_ID=#user_id#	<!-- 본인 결재선만 조회 -->
+			
+		ORDER BY T.DEFAULT_APRV ASC, T.BS_APRV_LN_SEQNO DESC
+		       
+	</select>	
+	
+	<!-- 결재선관리 수정페이지 마스터조회(JIT9145) -->
+    <select id="cmApmDAO.selectListAprvDetail" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			 ROWNUM AS ROW_SEQ
+			,T.BS_APRV_LN_SEQNO	<!-- 결재선 일련번호 -->
+			,NVL((SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=(SELECT ORG_CD FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID)),'') AS APRV_ORG_NM <!--결재자 부서명  -->
+			,NVL((SELECT GRD_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_NOW_JOBGRD_CD_NM <!-- 결재자 직급명 -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_EMP_NM   <!-- 결재자 명 -->
+			,CASE WHEN
+					  (SELECT COUNT(*) FROM JIT9145
+						WHERE DEL_YN = 'N'
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ < ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 이전결재자가 없을경우 요청자이다 */
+					  )=0 THEN
+					'요청'
+				WHEN
+					  (SELECT COUNT(*) FROM JIT9145
+						WHERE DEL_YN = 'N'
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 있을경우 검토자 */
+					  ) <![CDATA[ > ]]> 0
+					  THEN
+					'검토'
+				WHEN
+					  (SELECT COUNT(*) FROM JIT9145
+						WHERE DEL_YN = 'N'
+						AND BS_APRV_LN_SEQNO = T.BS_APRV_LN_SEQNO
+						AND APRV_SEQNO <![CDATA[ > ]]> T.APRV_SEQNO /* 현결재에서 현재결재그룹에서 결재자보다 나중결재자가 없을경우 승인자 */
+					  ) = 0
+					  THEN
+					 '승인'
+				END APRV_AUTH_NM  <!-- 결재구분 요청, 검토, 승인 --> <!-- 결재구분 -->
+			,T.APRV_EMP_ID
+			,T.APRV_SEQNO	<!-- 결재순번 -->
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT <!-- 등록일 -->
+			,T.REG_ID
+			,TO_CHAR(T.MOD_DT,'YYYY-MM-DD') MOD_DT
+			,T.DEL_YN
+		FROM JIT9145 T
+		WHERE 1=1
+		AND BS_APRV_LN_SEQNO=#bs_aprv_ln_seqno#
+		ORDER BY T.APRV_SEQNO ASC
+		       
+	</select>	
+	
+	<!-- 결재선관리 수정페이지 조회(JIT9144) -->
+    <select id="cmApmDAO.selectListBaseAprvLineGrid" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			ROWNUM AS ROW_SEQ
+			,TO_CHAR(T.BS_APRV_LN_SEQNO) BS_APRV_LN_SEQNO <!-- 기본 결재선 일련번호 -->
+			
+			,NVL((SELECT ORG_CD FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_ORG_NM <!--결재자 부서  -->
+			,NVL((SELECT GRD_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_NOW_JOBGRD_CD_NM <!-- 결재자 직급 -->
+			
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_EMP_NM   <!-- 결재자 명 -->
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS APRV_AUTH_NM  <!-- 결재권한 -->
+			
+			,TO_CHAR(T.REG_DT,'YYYY-MM-DD') REG_DT
+			,T.REG_ID	  <!-- 결재자 사번 -->
+			,T.DEL_YN
+			
+		FROM JIT9145 T
+		WHERE 1=1
+			
+			AND T.DEL_YN = 'N'
+		    AND T.BS_APRV_LN_SEQNO=#bs_aprv_ln_seqno#
+		    
+			<isNotEmpty property="s_aprv_line_owner_id">
+				AND T.REG_ID = #s_aprv_line_owner_id#
+		    </isNotEmpty>
+		
+		ORDER BY T.BS_APRV_LN_SEQNO DESC
+		
+	</select>
+	
+	<!-- 결재선 마스터 등록(JIT9144) -->
+	<insert id="cmApmDAO.insertAprvMaster">
+		INSERT INTO JIT9144
+			(
+				BS_APRV_LN_SEQNO	 <!-- 결재선 일련번호 -->
+				,BS_APRV_LN_NM		 <!-- 결재선 명 -->
+				,DEFAULT_APRV		 <!-- 기본결재선 -->
+				,BASE_APRV_LINE_DESC <!-- 기본 결재선 비고 -->
+				,REG_DT
+				,REG_ID
+				,DEL_YN
+				
+			)VALUES(
+				#bs_aprv_ln_seqno#
+				, #bs_aprv_ln_nm#
+				, #default_aprv#
+				, #base_aprv_line_desc#
+				, SYSDATE
+				, #user_id#
+				, 'N'
+				
+			)
+
+	</insert>
+	
+	<!-- 결재선 마스터 기본결재선 전체해제(JIT9144) -->
+	<update id="cmApmDAO.updateDefaultAprv">
+		UPDATE JIT9144 SET DEFAULT_APRV=''
+			WHERE REG_ID=#user_id#
+
+	</update>	
+	
+	<!-- 결재선 상세 등록(JIT9145) -->
+	<insert id="cmApmDAO.insertAprvDetail">
+		INSERT INTO JIT9145
+			(
+				 BS_APRV_LN_SEQNO	<!-- 결재선 일련번호 -->
+				,APRV_EMP_ID		<!-- 결재자 사번 -->
+				,APRV_SEQNO			<!-- 결재순번 -->
+				,REG_DT
+				,REG_ID
+				,DEL_YN
+				
+			)VALUES(
+				 #bs_aprv_ln_seqno#
+				, #aprv_emp_id#
+				, #aprv_seqno#
+				, SYSDATE
+				, #user_id#
+				, 'N'
+			)
+	</insert>
+	
+	<!-- 결재선 마스터 삭제(JIT9144) -->
+	<update id="cmApmDAO.deleteAprvMaster">
+		UPDATE JIT9144 SET
+				 MOD_DT = SYSDATE	<!-- 삭제일자 -->
+				,DEL_YN = 'Y'		
+		WHERE BS_APRV_LN_SEQNO = #bs_aprv_ln_seqno#
+	</update>
+	
+	<!-- 결재선 상세 삭제(JIT9145) -->
+	<update id="cmApmDAO.deleteAprvDetail">
+		UPDATE JIT9145 SET
+				 MOD_DT = SYSDATE	<!-- 삭제일자 -->
+				,DEL_YN = 'Y'		
+		WHERE BS_APRV_LN_SEQNO = #bs_aprv_ln_seqno#
+	</update>
+	
+	<!-- 최종결재자인지 확인 -->
+    <select id="cmApmDAO.chkAprvReqGroupEnd" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+			APRV_EMP_ID
+			,(SELECT TO_CHAR(COUNT(*)) FROM JIT9143
+				WHERE DEL_YN='N'
+			  	AND REAL_STAT_SEQNO=#cur_real_stat_seqno#
+			  ) NEXT_YN
+		FROM JIT9143
+		WHERE DEL_YN='N'
+		AND REAL_STAT_SEQNO=#cur_real_stat_seqno#
+		AND APRV_SEQNO=(SELECT MAX(APRV_SEQNO) FROM JIT9143
+		                WHERE DEL_YN='N'
+		                AND REAL_STAT_SEQNO=#cur_real_stat_seqno#
+		                )
+		       
+	</select>	
+	
+	<!-- 다음결재자 부재중 체크 -->
+	<select id="cmApmDAO.chkAprvNextAbsense" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT
+		      ABSENCE
+		    , APRV_EMP_ID
+			, NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS NEXT_EMP_NM	<!-- 등록자 직원 성명 -->
+			, NVL((SELECT EMAIL FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS NEXT_EMP_EMAIL	<!-- 등록자 직원 이메일 -->
+		FROM JIT9143 T
+		WHERE REAL_STAT_SEQNO = #cur_real_stat_seqno#
+		  AND APRV_SEQNO = #cur_aprv_seqno#
+	</select>	
+	
+	
+	<select id="cmApmDAO.chkAprvNextId" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			 APRV_EMP_ID
+			,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS NEXT_EMP_NM	<!-- 등록자 직원 성명 -->
+			,NVL((SELECT EMAIL FROM JIT9120 WHERE USER_ID=T.APRV_EMP_ID),'') AS NEXT_EMP_EMAIL	<!-- 등록자 직원 이메일 -->		
+		FROM JIT9143 T
+		WHERE REAL_STAT_SEQNO = #cur_real_stat_seqno#
+		AND APRV_SEQNO = #cur_aprv_seqno#
+	</select>	
+	
+	
+	<!-- 결재업무관리 등록 -->
+	<insert id="cmApmDAO.insertAprvJob">
+	
+		INSERT INTO JIT9140 
+		(	
+			 APRV_JOB_SEQNO		<!-- 결재업무 일련번호 -->
+			,MENU_CD
+			,MENU_STAT_CD
+			,APRV_JOB_NM		<!-- 결재업무명 -->
+			,APRV_JOB_CL_CD		<!-- 결재업무메뉴코드 -->
+			,APRV_JOB_DESC		<!-- 결재업무 비고 -->
+			,RTN_PSTATE			 <!-- VARCHAR2(10 BYTE)	Yes		18	결재쪽에서 호출될 업무화면 화면상태값 --> 
+			,RTN_PARAM_NM		 <!-- VARCHAR2(20 BYTE)	Yes		19	결재쪽에서 호출될 업무화면 파라메터명 --> 
+			,RTN_MENU_CD		 <!-- VARCHAR2(6 BYTE)	Yes		20	결재쪽에서 호출될 메뉴코드 -->	
+			,REG_DT
+			,REG_ID
+			,DEL_YN 
+	 
+		)
+		VALUES(
+			 #aprv_job_seqno#		<!-- 결재업무 일련번호 -->
+			,#aprv_job_cl_cd#
+			,'AP1'
+			,#aprv_job_cl_nm#		<!-- 결재업무명 -->
+			,#aprv_job_cl_cd#		<!-- 결재업무메뉴코드 -->
+			,#aprv_job_desc#		<!-- 결재업무 비고 -->	
+			,#rtn_pstate#
+			,#rtn_param_nm#
+			,#aprv_job_cl_cd#	
+			,SYSDATE
+			,#user_id#
+			, 'N'
+
+		)	
+	  			
+	</insert>	
+	
+	<!--  -->
+	<update id="cmApmDAO.updateAprvJob">
+	
+		UPDATE JIT9140 
+		SET	
+			 APRV_JOB_CL_CD = #aprv_job_cl_cd#
+			,MENU_CD = #aprv_job_cl_cd#
+			,MENU_STAT_CD = 'AP1'
+			,APRV_JOB_NM = #aprv_job_cl_nm#
+			,APRV_JOB_DESC = #aprv_job_desc#
+			,RTN_PSTATE	= #rtn_pstate#			 <!-- VARCHAR2(10 BYTE)	Yes		18	결재쪽에서 호출될 업무화면 화면상태값 -->
+			,RTN_PARAM_NM = #rtn_param_nm#		 <!-- VARCHAR2(20 BYTE)	Yes		19	결재쪽에서 호출될 업무화면 파라메터명 -->
+			,RTN_MENU_CD = #rtn_menu_cd#		 <!-- VARCHAR2(6 BYTE)	Yes		20	결재쪽에서 호출될 메뉴코드 -->
+			,MOD_DT = SYSDATE
+			,MOD_ID = #user_id#
+
+		WHERE APRV_JOB_SEQNO = #aprv_job_seqno#
+	  			
+	</update>	
+	
+	<update id="cmApmDAO.deleteAprvJob">
+		UPDATE JIT9140 SET
+				DEL_DT = SYSDATE		<!-- 삭제일자 -->
+				,DEL_ID = #user_id#		<!--삭제자 ID -->
+				,DEL_YN = 'Y'		
+		WHERE DEL_YN = 'N'
+		<isNotEmpty property="delkey"> 
+			AND APRV_JOB_SEQNO IN
+		    <iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				#delkey_sp[]#
+	     	</iterate>		
+		</isNotEmpty>
+
+	</update>
+	
+	<!-- 기본결재선 등록(JIT9144) 사용안함-->
+	<insert id="cmApmDAO.insertBaseAprvLine">
+		INSERT INTO JIT9144 
+		(
+			BS_APRV_LN_SEQNO		<!-- 기본 결재선 일련번호 -->
+			,APRV_EMP_ID			<!-- 결재자 직원 ID -->
+			,APRV_ORG_NM			<!-- 결재자 부서 -->
+			,DEFAULT_APRV			<!-- 기본결재선 -->
+			,BASE_APRV_LINE_DESC	<!-- 기본 결재선 비고 -->
+			,REG_DT					<!-- 등록일자 -->
+			,REG_ID					<!-- 등록자 직원 ID -->
+			,DEL_YN
+		)
+		VALUES(
+			#bs_aprv_ln_seqno#		<!-- 기본 결재선 일련번호 -->
+			,#aprv_emp_id#			<!-- 결재자 직원 id -->
+			,#aprv_org_nm#			<!-- 결재자 부서 -->
+			,#default_aprv#			<!-- 기본결재선 -->
+			,#base_aprv_line_desc#	<!-- 기본 결재선 비고 -->		
+			,SYSDATE
+			,#user_id#
+			,'N'
+		)
+	</insert>
+	
+	
+	<!-- 기존 테스트 (사용안함)-->
+	<insert id="cmApmDAO.insertJIT9142">
+
+		INSERT INTO JIT9142 
+			(	
+				 REAL_STAT_NO
+				,APRV_JOB_NO
+				,APRV_REQ_JOB_NO	
+				,APRV_REQ_NM
+				,APRV_STAT_CD
+				,APRV_REQ_YMD
+				,APPR_STAT_DESC
+				,REG_DT
+				,REG_ID
+			)
+			VALUES(#real_stat_no#, #aprv_job_no#, #apr_key#, #aprv_req_nm#, 'A', sysdate, #appr_stat_desc#, sysdate ,#user_id#)	
+  			
+	</insert>
+	
+	<insert id="cmApmDAO.insertJIT9143">
+	
+		INSERT INTO JIT9143
+			(	 REAL_STAT_NO
+				,APRV_EMP_ID
+				,APRV_SEQNO
+				,APRV_STAT_CD
+				,APRV_REQ_YMD
+			)
+			VALUES(#real_stat_no#, #aprv_emp_id#,#aprv_seqno#,'A',sysdate)	
+	</insert>
+	
+	<update id="CmApmDAO.deleteJIT4133">
+		UPDATE JIT4133 
+		SET DEL_DT=sysdate
+		   ,DEL_ID =#user_id#
+		 WHERE RINVS_LOSS_NO=#rinvs_loss_no#
+	</update>	
+	
+</sqlMap>

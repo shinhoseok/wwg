@@ -1,0 +1,1461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmCms">
+ <!--  ########### jrcms 시작 ########################### -->
+ 
+     <resultMap class="java.util.HashMap" id="selectMailLogCLOB">
+    	<result column="RNUM" property="RNUM" />
+    	<result column="PAGE_NUM" property="PAGE_NUM" />
+    	<result column="PROD_SEQ" property="PROD_SEQ" />
+    	<result column="PROD_NM" property="PROD_NM" />
+    	<result column="PROD_DIVN" property="PROD_DIVN" />
+    	<result column="PROD_ATCH_FILE_ID" property="PROD_ATCH_FILE_ID" />
+    	<result column="PROD_FUNT" property="PROD_FUNT" />
+    	<result column="TECH_STND" property="TECH_STND" />
+    	<result column="OPRT_PRCP" property="OPRT_PRCP" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="DLVRY_RCD" property="DLVRY_RCD" />
+    	<result column="CT_ATCH_FILE_ID" property="CT_ATCH_FILE_ID" />
+    	<result column="SECRET_NO" property="SECRET_NO" />
+		<result column="CORP_NM" property="CORP_NM" />
+    	<result column="CORP_LINK" property="CORP_LINK" />
+    	<result column="MANAGER_TEL_NO" property="MANAGER_TEL_NO" />
+    	<result column="CORP_EMAIL" property="CORP_EMAIL" />
+    	<result column="CORP_ADDR" property="CORP_ADDR" />
+    	<result column="CORP_REPE_NM" property="CORP_REPE_NM" />
+    	<result column="CORP_EST_DT" property="CORP_EST_DT" />
+    	<result column="CORP_TTL_CNT" property="CORP_TTL_CNT" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="CORP_HIST" property="CORP_HIST" />
+    	<result column="CORP_MAIN_PROD" property="CORP_MAIN_PROD" />
+    	<result column="CORP_NO" property="CORP_NO" />
+    	<result column="CORP_TEL_NO_1" property="CORP_TEL_NO_1" />
+    	<result column="CORP_FAX_NO" property="CORP_FAX_NO" />
+    	<result column="CORP_DIVN" property="CORP_DIVN" />
+    	<result column="CERT_PROD" property="CERT_PROD" />
+    	<result column="CERT_DIVN" property="CERT_DIVN" />
+    	<result column="CERT_DT" property="CERT_DT" />
+    	<result column="CERT_NO" property="CERT_NO" />
+    	<result column="CERT_EXPR_DT" property="CERT_EXPR_DT" />
+    	<result column="REG_ID" property="REG_ID" />
+    	<result column="REG_DATE" property="REG_DATE" />
+    	<result column="DEL_YN" property="DEL_YN" />
+    	<result column="IPIN_NO" property="IPIN_NO" />
+    	<result column="DUPL_INFO" property="DUPL_INFO" />
+    	<result column="AUTH_TYPE" property="AUTH_TYPE" />
+    	<result column="CORP_TEL_NO_2" property="CORP_TEL_NO_2" />
+    	<result column="CORP_TEL_NO_3" property="CORP_TEL_NO_3" />
+    	<result column="CORP_TEL_NO" property="CORP_TEL_NO" />
+    	<result column="CORP_FAC_DIVN" property="CORP_FAC_DIVN" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	
+    	<result column="CORP_MEM_DIVN_NM" property="CORP_MEM_DIVN_NM" />
+    	<result column="PROD_DIVN_NM" property="PROD_DIVN_NM" />
+    	<result column="CERT_DIVN_NM" property="CERT_DIVN_NM" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	
+    	<result column="CORP_DIVN_1" property="CORP_DIVN_1" />
+    	<result column="CORP_DIVN_2" property="CORP_DIVN_2" />
+    	<result column="CORP_DIVN_3" property="CORP_DIVN_3" />
+    	<result column="CORP_DIVN_4" property="CORP_DIVN_4" />
+    	
+    	<result column="CORP_FAC_DIVN_1" property="CORP_FAC_DIVN_1" />
+    	<result column="CORP_FAC_DIVN_2" property="CORP_FAC_DIVN_2" />
+    	<result column="CORP_FAC_DIVN_3" property="CORP_FAC_DIVN_3" />
+    	<result column="CORP_FAC_DIVN_4" property="CORP_FAC_DIVN_4" />
+    	<result column="CORP_FAC_DIVN_5" property="CORP_FAC_DIVN_5" />
+    	
+    	<result column="FILE1_NMS" property="FILE1_NMS" />
+    	<result column="FILE1_SEQ" property="FILE1_SEQ" />
+    	<result column="FILE2_NMS" property="FILE2_NMS" />
+    	<result column="FILE2_SEQ" property="FILE2_SEQ" />
+    	
+    	<result column="USER_NM" property="USER_NM" />
+    	
+    	<result column="CORP_DIVN_CD_NM" property="CORP_DIVN_CD_NM" />
+    	<result column="CORP_FAC_DIVN_CD_NM" property="CORP_FAC_DIVN_CD_NM" />
+    	 	
+ 	
+    </resultMap>
+
+    <select id="JiCmCms.getAdminLogin" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  TA.USER_SEQNO		<!-- 일련번호 -->
+		      , TA.USER_ID			<!-- 아이디(사번) -->
+		      , TA.USER_NM			<!-- 성명 -->
+		      , TA.LOGIN_IPNS
+		      , TA.ORG_CD			<!-- 조직코드 -->
+		      , (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=TA.ORG_CD) ORG_NM	<!-- 조직명 -->
+		      , TA.GRD_CD			<!-- 직급코드 -->
+		      , NVL(TA.GRD_NM,'') GRD_NM				<!-- 직급명 -->
+		      , TA.EMAIL			<!-- 이메일 -->
+		      , TA.MOBLPHON			<!-- 휴대폰번호 -->
+			  , TA.NAESUN			<!-- 내선번호 -->
+		      , TA.STATE_CD			<!-- 상태코드 -->
+		      , TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT	<!-- 사용시작일 -->
+		      , TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 	<!-- 사용종료일 -->
+		      , TA.IPNS_INIT_YN										<!-- 비밀번호 초기화여부 -->
+		      , TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	<!-- 비밀번호 변경일자 -->
+		      , TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				<!-- 로그인 실패 횟수 -->
+		      , TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT	<!-- 등록일 -->
+		      , TA.REG_ID									<!-- 등록자ID -->
+		      , TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT   <!-- 수정일 -->
+		      , TA.MOD_ID									<!-- 수정자ID -->
+		      , TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT	<!-- 삭제일 -->
+		      , TA.DEL_ID									<!-- 삭제자ID -->
+		      , TA.DEL_YN									<!-- 삭제여부 -->
+			  , TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(TA.IPNS_CHG_YMD, 'YYYYMMDD'), 'YYYYMMDD')) CHG_DT_CNT	<!-- 비밀번호변경일 체크 -->
+		      , CASE WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD='000001' 
+		      						AND (CASE WHEN REGEXP_LIKE(#id#,'^[A-Za-z]') THEN
+                							DECODE(USER_ID,#id#,'Y','N')
+                						WHEN REGEXP_LIKE(#id#,'^[0-9]') THEN
+                							DECODE(USER_ID,#id#,'Y','N')
+            							ELSE
+                							DECODE(SUBSTR(USER_ID,3,LENGTH(TA.USER_ID)),#id#,'Y','N')
+            							END) = 'Y') <![CDATA[ > ]]> 0 THEN<!--전체관리자이면 -->
+		      		'1'
+		      		WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD!='000001' 
+		      						AND (CASE WHEN REGEXP_LIKE(#id#,'^[A-Za-z]') THEN
+                							DECODE(USER_ID,#id#,'Y','N')
+            							ELSE
+                							DECODE(USER_ID,#id#,'Y','N')
+            							END) = 'Y') <![CDATA[ > ]]> 0 THEN<!--부분관리자이면 -->
+		      		'5'
+		      		ELSE<!--일반사용자이면 -->
+		      		'9'
+		      		END AS ADMIN_LEVEL
+		      		
+		  FROM JIT9120 TA
+	      WHERE 1=1
+		  AND (CASE WHEN REGEXP_LIKE(#id#,'^[A-Za-z]') THEN
+                DECODE(TA.USER_ID,#id#,'Y','N')
+            ELSE
+                DECODE(TA.USER_ID,#id#,'Y','N')
+            END) = 'Y'	      
+        <isEqual property="devMode" compareValue="R">
+	      AND LOGIN_IPNS=damo.HASH_STR_DATA(#PassWord#)
+	    </isEqual>
+	    <isNotEqual property="devMode" compareValue="R">
+	      AND LOGIN_IPNS=#PassWord#
+	    </isNotEqual>
+	</select>	
+	
+	
+    <select id="JiCmCms.getAdmInfo" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  TA.USER_SEQNO		<!-- 일련번호 -->
+		      , TA.USER_ID			<!-- 아이디(사번) -->
+		      , TA.USER_NM			<!-- 성명 -->
+		      , TA.LOGIN_IPNS
+		      , TA.ORG_CD			<!-- 조직코드 -->
+		      , (SELECT ORG_NM FROM JIT9110 WHERE ORG_CD=TA.ORG_CD) ORG_NM	<!-- 조직명 -->
+		      , TA.GRD_CD			<!-- 직급코드 -->
+		      , NVL(TA.GRD_NM,'') GRD_NM				<!-- 직급명 -->
+		      , TA.EMAIL			<!-- 이메일 -->
+		      , TA.MOBLPHON			<!-- 휴대폰번호 -->
+			  , TA.NAESUN			<!-- 내선번호 -->
+		      , TA.STATE_CD			<!-- 상태코드 -->
+		      , TO_CHAR(TA.USE_ST_DT,'YYYY-MM-DD') AS USE_ST_DT	<!-- 사용시작일 -->
+		      , TO_CHAR(TA.USE_END_DT,'YYYY-MM-DD') AS USE_END_DT 	<!-- 사용종료일 -->
+		      , TA.IPNS_INIT_YN										<!-- 비밀번호 초기화여부 -->
+		      , TO_CHAR(TA.IPNS_CHG_YMD,'YYYY-MM-DD')  AS IPNS_CHG_YMD	<!-- 비밀번호 변경일자 -->
+		      , TO_CHAR(TA.LOGIN_FAIL_CNT)  LOGIN_FAIL_CNT				<!-- 로그인 실패 횟수 -->
+		      , TO_CHAR(TA.REG_DT,'YYYY-MM-DD') AS REG_DT	<!-- 등록일 -->
+		      , TA.REG_ID									<!-- 등록자ID -->
+		      , TO_CHAR(TA.MOD_DT,'YYYY-MM-DD') AS MOD_DT   <!-- 수정일 -->
+		      , TA.MOD_ID									<!-- 수정자ID -->
+		      , TO_CHAR(TA.DEL_DT,'YYYY-MM-DD') AS DEL_DT	<!-- 삭제일 -->
+		      , TA.DEL_ID									<!-- 삭제자ID -->
+		      , TA.DEL_YN									<!-- 삭제여부 -->
+			  , TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(TA.IPNS_CHG_YMD, 'YYYYMMDD'), 'YYYYMMDD')) CHG_DT_CNT	<!-- 비밀번호변경일 체크 -->
+		      , CASE WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD='000001' AND USER_ID=#admid#) <![CDATA[ > ]]> 0 THEN<!--전체관리자이면 -->
+		      		'1'
+		      		WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD!='000001' AND USER_ID=#admid#) <![CDATA[ > ]]> 0 THEN<!--부분관리자이면 -->
+		      		'5'
+		      		ELSE<!--일반사용자이면 -->
+		      		'9'
+		      		END AS ADMIN_LEVEL
+		      		
+		  FROM JIT9120 TA
+	      WHERE USER_ID=#admid#
+	</select>	
+	
+	<!-- 인증번호 및 시간 업데이트  -->
+	<update id="JiCmCms.updateAdminAuthCode">
+		/* JiCmCms.updateAdminAuthCode */
+		 UPDATE JIT9120
+			SET AUTHCODE = #authcode#
+				,AUTHCODE_DT = sysdate
+			WHERE USER_ID = #admid#
+			  
+	</update>		
+ 
+ 
+ 	<!-- 사용자 로그인 조회 -->
+    <select id="JiCmCms.getSiteLogin_kepcoenc" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT USER_SEQNO ,
+					  USER_ID ,
+					  USER_NM ,
+					  LOGIN_IPNS ,
+					  USER_DESC ,
+					  USER_STATE_CD ,
+					  TO_CHAR(USE_ST_DT,'YYYY-MM-DD')  AS USE_ST_DT ,
+					  TO_CHAR(USE_END_DT,'YYYY-MM-DD') AS USE_END_DT ,
+					  IPNS_INIT_YN ,
+					  TO_CHAR(IPNS_CHG_YMD,'YYYY-MM-DD') AS IPNS_CHG_YMD ,
+					  TO_CHAR(LOGIN_FAIL_CNT) LOGIN_FAIL_CNT ,
+					  TO_CHAR(REG_DT,'YYYY-MM-DD') AS REG_DT ,
+					  REG_ID ,
+					  TO_CHAR(MOD_DT,'YYYY-MM-DD') AS MOD_DT ,
+					  MOD_ID ,
+					  TO_CHAR(DEL_DT,'YYYY-MM-DD') AS DEL_DT ,
+					  DEL_ID ,
+					  DEL_YN ,
+					  JOIN_YN ,
+					  PRV_AGREE1 ,
+					  PRV_AGREE2 ,
+					  PRV_AGREE3 ,
+					  PRV_AGREE4 
+		      ,TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(IPNS_CHG_YMD, 'YYYYMMDD'), 'YYYYMMDD')) CHG_DT_CNT
+		      , CASE WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD='000001' AND USER_ID=#id#) <![CDATA[ > ]]> 0 THEN<!--전체관리자이면 -->
+		      		'1'
+		      		WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD!='000001' AND USER_ID=#id#) <![CDATA[ > ]]> 0 THEN<!--부분관리자이면 -->
+		      		'5'
+		      		ELSE<!--일반사용자이면 -->
+		      		'9'
+		      		END AS ADMIN_LEVEL
+		  FROM JIT9111
+	      WHERE 1=1
+	      <isNotEmpty property="sso_session_val">
+	      	AND USER_ID=#sso_session_val#
+	      </isNotEmpty>
+	      <isEmpty property="sso_session_val">
+	        AND USER_ID=#id#
+	      	AND LOGIN_IPNS=dbsec.sdb_crypto.encrypt(#PassWord#,'EDPORTAL','TB_KEY','SHA','')
+	      </isEmpty>
+	      	
+	</select>
+	
+    <select id="JiCmCms.getSiteLogin" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT USER_SEQNO ,
+					  USER_ID ,
+					  USER_NM ,
+					  LOGIN_IPNS ,
+					  USER_DESC ,
+					  USER_STATE_CD ,
+					  TO_CHAR(USE_ST_DT,'YYYY-MM-DD')  AS USE_ST_DT ,
+					  TO_CHAR(USE_END_DT,'YYYY-MM-DD') AS USE_END_DT ,
+					  IPNS_INIT_YN ,
+					  TO_CHAR(IPNS_CHG_YMD,'YYYY-MM-DD') AS IPNS_CHG_YMD ,
+					  TO_CHAR(LOGIN_FAIL_CNT) LOGIN_FAIL_CNT ,
+					  TO_CHAR(REG_DT,'YYYY-MM-DD') AS REG_DT ,
+					  REG_ID ,
+					  TO_CHAR(MOD_DT,'YYYY-MM-DD') AS MOD_DT ,
+					  MOD_ID ,
+					  TO_CHAR(DEL_DT,'YYYY-MM-DD') AS DEL_DT ,
+					  DEL_ID ,
+					  DEL_YN ,
+					  JOIN_YN ,
+					  PRV_AGREE1 ,
+					  PRV_AGREE2 ,
+					  PRV_AGREE3 ,
+					  PRV_AGREE4 
+		      ,TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(IPNS_CHG_YMD, 'YYYYMMDD'), 'YYYYMMDD')) CHG_DT_CNT
+		      , CASE WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD='000001' AND USER_ID=#id#) <![CDATA[ > ]]> 0 THEN<!--전체관리자이면 -->
+		      		'1'
+		      		WHEN (SELECT COUNT(*) FROM JIT9132 WHERE AUTH_GRP_CD!='000001' AND USER_ID=#id#) <![CDATA[ > ]]> 0 THEN<!--부분관리자이면 -->
+		      		'5'
+		      		ELSE<!--일반사용자이면 -->
+		      		'9'
+		      		END AS ADMIN_LEVEL
+		  FROM JIT9111
+	      WHERE USER_ID=#id#
+	      	<isEqual property="devMode" compareValue="R">
+		      AND LOGIN_IPNS=damo.HASH_STR_DATA(#PassWord#)
+		    </isEqual>
+		    <isNotEqual property="devMode" compareValue="R">
+		      AND LOGIN_IPNS=#PassWord#
+		    </isNotEqual>
+	</select>	
+	
+	<!-- 관리자 최종로그인 업데이트 -->
+	<update id="JiCmCms.adminLoginLast">
+		UPDATE JIT9120 SET
+			LOGIN_LAST = SYSDATE
+			,AUTHCODE = NULL
+			,AUTHCODE_DT = NULL
+	      <isNotEmpty property="sso_cookie_val">
+	      WHERE USER_ID = #sso_cookie_val#
+	      </isNotEmpty>	
+	      <isEmpty property="sso_cookie_val">
+	      WHERE USER_ID=#userId#
+	      </isEmpty>		      		
+			
+	</update>
+	
+	
+	<!-- 사용자 최종로그인 업데이트 -->
+	<update id="JiCmCms.siteLoginLast">
+		UPDATE JIT9111 SET
+			LOGIN_LAST = SYSDATE
+			WHERE USER_ID=#id#
+	</update>
+	
+	<!-- 사용자 3개월 비밀번호변경 -->
+	<update id="JiCmCms.loginPinChg_kepcoenc">
+			UPDATE JIT9111  SET  
+			       IPNS_CHG_YMD = SYSDATE
+			       ,LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#dec_pass_chg#,'EDPORTAL','TB_KEY','SHA','') /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>
+	
+	<update id="JiCmCms.loginPinChg">
+			UPDATE JIT9111  SET  
+			       IPNS_CHG_YMD = SYSDATE
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#dec_pass_chg#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+	<!-- 관리자 3개월 비밀번호변경  -->
+	<update id="JiCmCms.loginAdminPinChg">
+			UPDATE JIT9120  SET  
+			       IPNS_CHG_YMD = SYSDATE
+			       ,IPNS_INIT_YN = 'Y'
+			       ,LOGIN_IPNS = damo.HASH_STR_DATA(#dec_pass_chg#) /* 비밀번호 단방향 암호화적용  */ 
+			       WHERE USER_ID = #suser_id#						
+	</update>	
+	
+	
+    <select id="JiCmCms.getIpinSearch" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT USER_SEQNO
+		      ,USER_ID
+		      ,USER_NM
+		      ,ORG_CD
+		      ,LOGIN_PASSWD
+		      ,USER_EMAIL
+		      ,CNTAC_PHONENO2
+		  FROM JIT9111
+	      WHERE USER_ID=#iipin_id#
+	</select>	
+	
+    <select id="JiCmCms.getIpCfg" parameterClass="java.util.HashMap" resultClass="int">
+
+		SELECT COUNT(*) CNT	
+		  FROM JIT9501 A
+		 WHERE AC_IP IN( #user_ip1#,#user_ip2#)
+			AND USE_YN='Y'
+ 
+	</select>	
+	
+    <select id="JiCmCms.getIpCfgList" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		SELECT AC_IP	
+		  FROM JIT9501 A
+		 WHERE USE_YN='Y'
+ 
+	</select>
+	
+   <select id="JiCmCms.getMENUAdmSubAuth" parameterClass="java.util.HashMap" resultClass="egovMap">
+   
+		SELECT TA.* FROM
+		 (SELECT
+		  A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM, A.MENU_UPPO_CD
+		 ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS MENU_UPPO_CD_NM
+		 ,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 ,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 ,LEVEL AS LV			
+         ,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'))) AS M_NMS
+         ,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES
+		
+		 FROM JIT9160 A	
+		 START WITH A.MENU_CD = '000000'
+		 CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD	
+		 ORDER BY LEVEL ASC, ORDER_NO ASC) TA			
+		 WHERE TA.MENU_CD IN (SELECT M_CODE FROM JIT9131 WHERE AUTH_GRP_CD IN (SELECT AUTH_GRP_CD FROM JIT9132 WHERE USER_ID=#admin_id#))
+		 ORDER BY lv ASC    	
+
+			
+	</select>		
+	 
+
+
+	
+    <select id="JiCmCms.getFILE_MGR_Chk" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		SELECT FILE_SEQNO AS IDX, MENU_CD M_CODE, MENU_DATA_KEY_DATAS AS RIDX, FILE_NM, UPDATE_FILE_NM AS RFILE_NM
+		 , FILE_ORDER_NO AS ORDER_NO,  REPLACE(TO_CHAR(REG_DT,'YYYY-MM-DD'),'-','') REG_DT
+		FROM JIT9151 
+
+		WHERE MENU_CD=#pcode#	AND MENU_DATA_KEY_DATAS=#RMAXIDX# AND FILE_ORDER_NO=#order_no#
+
+	</select>
+	
+	<insert id="JiCmCms.InsertFILE_MGR">
+
+		   INSERT INTO JIT9506
+
+			(	
+
+			IDX, M_CODE, RIDX, FILE_NM, RFILE_NM 		
+
+			, ORDER_NO, MOD_DT, REG_DT, MOD_ID, REG_ID	
+
+			, FILE_SIZE										
+
+			)VALUES(	
+
+			#max_seq#, #pcode#, #RMAXIDX#, #fileName#, #maskName#		
+
+			, (SELECT CASE WHEN MAX(ORDER_NO) IS NULL THEN
+						0
+					  ELSE
+					  	MAX(ORDER_NO)+1
+					  END 
+			   FROM JIT9506 WHERE M_CODE=#pcode# AND RIDX=#RMAXIDX#)
+
+
+			, NULL, GETDATE(), NULL, #USER_ID#	 
+
+			, #fileSize#												
+
+		   )	
+
+	</insert>
+	
+	<!-- Boi -->
+	
+	<select id="JiCmCms.getMCodeList" parameterClass="java.util.HashMap" resultClass="egovMap">
+			SELECT 
+				STDINFO_DTL_SEQ
+    			,STDINFO_DTL_CD
+    			,STDINFO_DTL_NM
+    			,STDINFO_DTL_LABEL
+    			,STDINFO_DTL_UPPO_CD
+
+    			,STDINFO_CD
+    			, ( SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD= A.STDINFO_CD ) AS STDINFO_CD_NM 
+				,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+				,A.REG_ID
+				,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+				,A.MOD_ID	
+				,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			,DEL_YN	
+    			,ORDER_NO
+    		  
+    		FROM JIT9101 A
+    		WHERE A.STDINFO_DTL_CD = A.STDINFO_CD
+    		AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+    		ORDER BY ORDER_NO ASC
+	</select>
+		
+	<select id="JiCmCms.getBoiTreeList" parameterClass="java.util.HashMap" resultClass="egovMap">
+    		SELECT 
+    		
+   			STDINFO_DTL_SEQ AS TREE_SEQ
+    		,STDINFO_DTL_CD AS TREE_CD
+    		,STDINFO_DTL_NM AS TREE_NM
+    		,STDINFO_DTL_UPPO_CD AS TREE_UPPO_CD
+    		,ORDER_NO AS ORG_SORT_NO
+    		,LV AS TREE_LEVEL
+    		, CODE_NMS AS TREE_NMS
+    		, CODE_CS AS TREE_CDS
+    		,  (SELECT COUNT(*) FROM JIT9101 WHERE STDINFO_DTL_UPPO_CD=CODE_MGR.STDINFO_DTL_CD AND STDINFO_DTL_CD<![CDATA[ <> ]]>STDINFO_DTL_UPPO_CD) AS TREE_SUB_CNT 
+    		, ( SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD= CODE_MGR.STDINFO_DTL_UPPO_CD ) AS TREE_UPPO_CD_NM
+    		
+      
+			   FROM(					
+						SELECT
+							A.STDINFO_DTL_SEQ ,A.STDINFO_DTL_CD ,A.STDINFO_DTL_NM
+							,A.STDINFO_DTL_LABEL, A.STDINFO_DTL_UPPO_CD, A.STDINFO_CD
+							, ( SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD= A.STDINFO_CD ) AS STDINFO_CD_NM 
+							,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+							,A.REG_ID
+							,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+							,A.MOD_ID	
+							,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+							,A.DEL_ID
+							,A.DEL_YN
+							,A.ORDER_NO		
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_NM,'__'),3,300) AS CODE_NMS
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_CD, '__'),3,300) AS CODE_CS
+							,LEVEL AS LV
+					   FROM JIT9101 A	
+							START WITH A.STDINFO_DTL_CD = A.STDINFO_DTL_UPPO_CD
+													
+						CONNECT BY NOCYCLE PRIOR A.STDINFO_DTL_CD  =  A.STDINFO_DTL_UPPO_CD	
+					   ORDER BY LEVEL, ORDER_NO							
+			   ) CODE_MGR	
+    	WHERE 1=1
+
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+  	
+    	ORDER BY lv ASC, ORDER_NO ASC
+ 
+	</select>
+	
+    <select id="JiCmCms.getCODESelect" parameterClass="java.util.HashMap" resultClass="egovMap">
+    		SELECT 
+    			 TO_CHAR(CODE_MGR.LV) LV
+    			  ,TO_CHAR(CODE_MGR.STDINFO_DTL_SEQ) STDINFO_DTL_SEQ
+    			  ,CODE_MGR.STDINFO_DTL_CD
+    			  ,CODE_MGR.STDINFO_DTL_NM
+    			  ,CODE_MGR.STDINFO_DTL_LABEL
+    			  ,CODE_MGR.STDINFO_DTL_UPPO_CD
+    			  ,CODE_MGR.STDINFO_CD
+    			  ,CODE_MGR.STDINFO_CD_NM 
+    			  ,CODE_MGR.REG_DT
+    			  ,CODE_MGR.REG_ID
+    			  ,CODE_MGR.MOD_DT
+    			  ,CODE_MGR.MOD_ID
+    			  ,CODE_MGR.DEL_DT
+    			  ,CODE_MGR.DEL_ID
+    			  ,CODE_MGR.DEL_YN	
+    			  ,TO_CHAR(CODE_MGR.ORDER_NO) ORDER_NO
+      
+    			  , CODE_CS 
+    			  , CODE_NMS 
+    			  , TO_CHAR((SELECT COUNT(*) FROM JIT9101 
+    			  				WHERE STDINFO_DTL_UPPO_CD=CODE_MGR.STDINFO_DTL_CD 
+    			  				AND STDINFO_DTL_CD <![CDATA[ <> ]]> STDINFO_DTL_UPPO_CD
+								AND STDINFO_CD=CODE_MGR.STDINFO_CD
+    			  			)) AS TREE_SUB_CNT 
+    			  , (SELECT STDINFO_DTL_NM FROM JIT9101 
+    			  		WHERE STDINFO_DTL_CD= CODE_MGR.STDINFO_DTL_UPPO_CD
+						AND STDINFO_CD=CODE_MGR.STDINFO_CD
+    			  	 ) AS STDINFO_DTL_UPPO_CD_NM
+    			  , TO_CHAR(ROWNUM) AS ROW_SEQ 
+				  , CODE_MGR.STDINFO_DTL_DATA1
+				  , CODE_MGR.STDINFO_DTL_DATA2
+				  , CODE_MGR.STDINFO_DTL_DATA3
+				  , CODE_MGR.STDINFO_DTL_DATA4
+				  , CODE_MGR.STDINFO_DTL_DATA5   
+			   FROM(					
+						SELECT
+							A.STDINFO_DTL_SEQ ,A.STDINFO_DTL_CD ,A.STDINFO_DTL_NM
+							,A.STDINFO_DTL_LABEL, A.STDINFO_DTL_UPPO_CD, A.STDINFO_CD
+							, ( SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD= A.STDINFO_CD ) AS STDINFO_CD_NM 
+							,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+							,A.REG_ID
+							,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+							,A.MOD_ID	
+							,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+							,A.DEL_ID
+							,A.DEL_YN
+							,A.ORDER_NO		
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_NM,'::'),3,300) AS CODE_NMS
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_CD, '::'),3,300) AS CODE_CS
+							,LEVEL AS LV
+							, A.STDINFO_DTL_DATA1
+							, A.STDINFO_DTL_DATA2
+							, A.STDINFO_DTL_DATA3
+							, A.STDINFO_DTL_DATA4
+							, A.STDINFO_DTL_DATA5
+					   FROM JIT9101 A	
+					   WHERE 1=1
+						<isNotEmpty property="stdinfo_dtl_data1">
+							 AND STDINFO_DTL_DATA1 = #stdinfo_dtl_data1#
+						</isNotEmpty>
+
+							START WITH A.STDINFO_DTL_CD = A.STDINFO_DTL_UPPO_CD
+
+							<isNotEmpty property="se_stdinfo_group_cd">
+								AND A.STDINFO_CD = #se_stdinfo_group_cd#
+							</isNotEmpty>
+						
+						CONNECT BY NOCYCLE 	
+							PRIOR A.STDINFO_DTL_CD  =  A.STDINFO_DTL_UPPO_CD AND PRIOR A.STDINFO_CD = A.STDINFO_CD
+					   ORDER BY LEVEL, ORDER_NO							
+			   ) CODE_MGR	
+    	WHERE 1=1
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+		   	<isEqual property="all_fl" compareValue="ALL">
+		   		AND LV <![CDATA[ > ]]> 0
+			  	<isNotEmpty property="lim_lv">
+		    		AND LV <![CDATA[ <= ]]> #lim_lv#
+			  	</isNotEmpty>		   		
+		   	</isEqual>
+
+		   	<isNotEqual property="all_fl" compareValue="ALL">
+		   		 AND STDINFO_DTL_CD  !=  #all_fl#
+	   			 AND STDINFO_DTL_UPPO_CD = #all_fl#
+	
+		   	</isNotEqual>		   
+
+			<isNotEmpty property="use_yn">
+		    		AND DEL_YN = #use_yn#
+			</isNotEmpty>
+			
+			<isNotEmpty property="sty">
+				<isEqual property="sty" compareValue="stdinfo_dtl_nm">
+			    	<isNotEmpty property="stext">
+			       		AND UPPER(STDINFO_DTL_NM) LIKE '%' || UPPER(#stext#) || '%' 
+					</isNotEmpty>   		
+				</isEqual>
+
+			    <isEqual property="sty" compareValue="stdinfo_dtl_cd">
+			       	<isNotEmpty property="stext">
+			       		AND STDINFO_DTL_CD LIKE '%' || UPPER(#stext#) || '%' 
+			       	</isNotEmpty>   		
+				</isEqual>	
+
+			    <isEqual property="sty" compareValue="stdinfo_dtl_label">
+			       	<isNotEmpty property="stext">
+			       		AND UPPER(STDINFO_DTL_LABEL) LIKE '%' || UPPER(#stext#) || '%' 
+			       	</isNotEmpty>   		
+				</isEqual>						   					   	
+			</isNotEmpty> 			
+
+		  	<isNotEmpty property="lv_val">
+	    		AND LV = #lv_val#
+		  	</isNotEmpty>
+		  	
+			ORDER BY LV ASC, TO_NUMBER(ORDER_NO) ASC			       
+ 
+	</select>
+		
+    <select id="JiCmCms.getCODESelect_201907" parameterClass="java.util.HashMap" resultClass="egovMap">
+    		SELECT 
+    			 TO_CHAR(CODE_MGR.LV) LV
+    			  ,TO_CHAR(CODE_MGR.STDINFO_DTL_SEQ) STDINFO_DTL_SEQ
+    			  ,CODE_MGR.STDINFO_DTL_CD
+    			  ,CODE_MGR.STDINFO_DTL_NM
+    			  ,CODE_MGR.STDINFO_DTL_LABEL
+    			  ,CODE_MGR.STDINFO_DTL_UPPO_CD
+    			  ,CODE_MGR.STDINFO_CD
+    			  ,CODE_MGR.STDINFO_CD_NM 
+    			  ,CODE_MGR.REG_DT
+    			  ,CODE_MGR.REG_ID
+    			  ,CODE_MGR.MOD_DT
+    			  ,CODE_MGR.MOD_ID
+    			  ,CODE_MGR.DEL_DT
+    			  ,CODE_MGR.DEL_ID
+    			  ,CODE_MGR.DEL_YN	
+    			  ,TO_CHAR(CODE_MGR.ORDER_NO) ORDER_NO
+      
+    			  , CODE_CS 
+    			  , CODE_NMS 
+    			  , TO_CHAR((SELECT COUNT(*) FROM JIT9101 
+    			  				WHERE STDINFO_DTL_UPPO_CD=CODE_MGR.STDINFO_DTL_CD 
+    			  				AND STDINFO_DTL_CD <![CDATA[ <> ]]> STDINFO_DTL_UPPO_CD
+    			  			)) AS TREE_SUB_CNT 
+    			  , (SELECT STDINFO_DTL_NM FROM JIT9101 
+    			  		WHERE STDINFO_DTL_CD= CODE_MGR.STDINFO_DTL_UPPO_CD
+    			  	 ) AS STDINFO_DTL_UPPO_CD_NM
+    			  , TO_CHAR(ROWNUM) AS ROW_SEQ 
+				  , CODE_MGR.STDINFO_DTL_DATA1
+				  , CODE_MGR.STDINFO_DTL_DATA2
+				  , CODE_MGR.STDINFO_DTL_DATA3
+				  , CODE_MGR.STDINFO_DTL_DATA4
+				  , CODE_MGR.STDINFO_DTL_DATA5     			     
+			   FROM(					
+						SELECT
+							A.STDINFO_DTL_SEQ ,A.STDINFO_DTL_CD ,A.STDINFO_DTL_NM
+							,A.STDINFO_DTL_LABEL, A.STDINFO_DTL_UPPO_CD, A.STDINFO_CD
+							, ( SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD= A.STDINFO_CD ) AS STDINFO_CD_NM 
+							,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+							,A.REG_ID
+							,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+							,A.MOD_ID	
+							,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+							,A.DEL_ID
+							,A.DEL_YN
+							,A.ORDER_NO		
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_NM,'::'),3,300) AS CODE_NMS
+							,SUBSTR(SYS_CONNECT_BY_PATH(A.STDINFO_DTL_CD, '::'),3,300) AS CODE_CS
+							,LEVEL AS LV
+							, A.STDINFO_DTL_DATA1
+							, A.STDINFO_DTL_DATA2
+							, A.STDINFO_DTL_DATA3
+							, A.STDINFO_DTL_DATA4
+							, A.STDINFO_DTL_DATA5							
+					   FROM JIT9101 A	
+						<isEqual property="all_fl" compareValue="ALL">
+							START WITH A.STDINFO_DTL_CD = A.STDINFO_DTL_UPPO_CD
+						</isEqual>
+						<isNotEqual property="all_fl" compareValue="ALL">
+							START WITH A.STDINFO_DTL_CD = #all_fl#		
+						</isNotEqual>			   									
+													
+						CONNECT BY NOCYCLE PRIOR A.STDINFO_DTL_CD  =  A.STDINFO_DTL_UPPO_CD	
+					   ORDER BY LEVEL, ORDER_NO							
+			   ) CODE_MGR	
+    	WHERE 1=1
+    	AND DEL_YN <![CDATA[ <> ]]> 'Y'	
+		   	<isEqual property="all_fl" compareValue="ALL">
+		   		AND LV <![CDATA[ > ]]> 0
+			  	<isNotEmpty property="lim_lv">
+		    		AND LV <![CDATA[ <= ]]> #lim_lv#
+			  	</isNotEmpty>		   		
+		   	</isEqual>
+
+		   	<isNotEqual property="all_fl" compareValue="ALL">
+		   		 AND STDINFO_DTL_CD  !=  #all_fl#
+			  	<isNotEmpty property="lim_lv">
+		    		AND LV <![CDATA[ <= ]]> #lim_lv#
+			 	 </isNotEmpty>	
+		   	</isNotEqual>		   
+
+			<isNotEmpty property="use_yn">
+		    		AND DEL_YN = #use_yn#
+			</isNotEmpty>
+			
+			<isNotEmpty property="sty">
+				<isEqual property="sty" compareValue="stdinfo_dtl_nm">
+			    	<isNotEmpty property="stext">
+			       		AND UPPER(STDINFO_DTL_NM) LIKE '%' || UPPER(#stext#) || '%' 
+					</isNotEmpty>   		
+				</isEqual>
+
+			    <isEqual property="sty" compareValue="stdinfo_dtl_cd">
+			       	<isNotEmpty property="stext">
+			       		AND STDINFO_DTL_CD LIKE '%' || UPPER(#stext#) || '%' 
+			       	</isNotEmpty>   		
+				</isEqual>	
+
+			    <isEqual property="sty" compareValue="stdinfo_dtl_label">
+			       	<isNotEmpty property="stext">
+			       		AND UPPER(STDINFO_DTL_LABEL) LIKE '%' || UPPER(#stext#) || '%' 
+			       	</isNotEmpty>   		
+				</isEqual>						   					   	
+			</isNotEmpty> 			
+
+			ORDER BY LV ASC, TO_NUMBER(ORDER_NO) ASC			       
+ 
+	</select>
+	
+	<select id="JiCmCms.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9101_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+	<select id="JiCmCms.getTableMaxSeqJIT9601" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9601_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+    <select id="JiCmCms.getMaxCode" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 			
+    SELECT 
+    
+    	<isEmpty property="UpCode">
+    		'M'||LPAD(TO_NUMBER(SUBSTR(TTA.MAX_C,2,LENGTH(TTA.MAX_C)))+1,#ColLen#,'0') MAX_CODE
+    		, TO_CHAR(MAC_O+1) MAX_ORDER
+    	</isEmpty>
+    				
+    	<isNotEmpty property="UpCode">
+    		LPAD(TTA.MAX_C+1,#ColLen#,'0') MAX_CODE
+			,CASE WHEN INSTR(#UpCode#,'__')=0 THEN
+					TO_CHAR((SELECT TO_CHAR(NVL(MAX(ORDER_NO),0)+1) FROM JIT9101 
+    					WHERE STDINFO_DTL_UPPO_CD=#UpCode# 
+    					AND STDINFO_DTL_CD!=STDINFO_DTL_UPPO_CD
+    					AND STDINFO_CD=#UpCode#
+    					AND DEL_YN='N'))    				
+    		ELSE
+    				TO_CHAR((SELECT TO_CHAR(NVL(MAX(ORDER_NO),0)+1) FROM JIT9101 
+    					WHERE STDINFO_DTL_UPPO_CD=SUBSTR(#UpCode#,instr(#UpCode#,'__',-1)+2) 
+    					AND STDINFO_DTL_CD!=STDINFO_DTL_UPPO_CD
+    					AND STDINFO_CD=SUBSTR(#UpCode#,0,instr(#UpCode#,'__')-1)
+    					AND DEL_YN='N'))
+    		END AS MAX_ORDER
+    		    		
+    	</isNotEmpty>    
+    	
+
+    FROM (
+    	SELECT NVL(MAX(TA.STDINFO_DTL_CD),0) MAX_C 
+      ,NVL(MAX(TA.ORDER_NO),0) MAC_O
+        FROM(
+          SELECT STDINFO_DTL_CD,ORDER_NO, DEL_YN
+					,CASE WHEN REGEXP_LIKE(STDINFO_DTL_CD,#WhereStr#) THEN 'Y'
+          ELSE 
+           'N'
+          END AS ISNUM
+					 FROM JIT9101
+				) TA WHERE TA.ISNUM='Y'
+						AND TA.DEL_YN='N'
+						<isNotEmpty property="UpCode">
+							AND LENGTH(TA.STDINFO_DTL_CD) = 6	
+						</isNotEmpty>					
+			) TTA			
+			    
+ 	</select>
+	
+	<select id="JiCmCms.getCodeChk" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9101
+		WHERE STDINFO_DTL_CD=#max_code#	
+			<isNotEmpty property="istdinfo_dtl_uppo_cd">
+				AND STDINFO_DTL_UPPO_CD=SUBSTR(#istdinfo_dtl_uppo_cd#,instr(#istdinfo_dtl_uppo_cd#,'__',-1)+2)
+				AND STDINFO_CD=SUBSTR(#istdinfo_dtl_uppo_cd#,0,instr(#istdinfo_dtl_uppo_cd#,'__')-1) 	
+			</isNotEmpty>	
+				
+			<isEqual property="mods" compareValue="U">
+				AND STDINFO_DTL_SEQ  !=  #sidx#	
+			</isEqual>	
+	</select>	
+	
+	<insert id="JiCmCms.insertCode">
+		INSERT INTO JIT9101
+           (STDINFO_DTL_SEQ
+           ,STDINFO_DTL_CD
+           ,STDINFO_DTL_NM
+           ,STDINFO_DTL_LABEL
+           ,STDINFO_DTL_UPPO_CD
+           ,STDINFO_CD
+           ,REG_DT
+           ,REG_ID
+           ,ORDER_NO
+           ,STDINFO_DTL_DATA1
+           ,STDINFO_DTL_DATA2
+           ,STDINFO_DTL_DATA3
+           ,STDINFO_DTL_DATA4
+           ,STDINFO_DTL_DATA5
+           )
+     	VALUES
+           (
+           #istdinfo_dtl_seq#
+           ,#istdinfo_dtl_cd#
+           ,#istdinfo_dtl_cd_nm#
+           ,#istdinfo_dtl_label#
+           ,#istdinfo_dtl_uppo_cd#
+           ,#istdinfo_cd#
+           ,SYSDATE
+           ,#user_id#
+           ,#iorder_no#
+           ,#istdinfo_dtl_data1#
+           ,#istdinfo_dtl_data2#
+           ,#istdinfo_dtl_data3#
+           ,#istdinfo_dtl_data4#
+           ,#istdinfo_dtl_data5#
+           )
+	</insert>	
+	
+	<update id="JiCmCms.updateDelCode">
+
+		UPDATE JIT9101 SET		
+
+		   ORDER_NO=ORDER_NO-1 
+
+		WHERE 1=1
+				AND STDINFO_DTL_UPPO_CD=SUBSTR(#sel_up_code#,instr(#sel_up_code#,'__',-1)+2)
+				AND STDINFO_CD=SUBSTR(#sel_up_code#,0,instr(#sel_up_code#,'__')-1) 		
+
+		AND ORDER_NO <![CDATA[ > ]]> #ORDER_NOh# 
+
+	</update>	
+
+
+	<update id="JiCmCms.updateUpCode">
+
+		UPDATE JIT9101 SET		
+
+		 ORDER_NO=ORDER_NO+1
+
+		WHERE 1=1
+				AND STDINFO_DTL_UPPO_CD=SUBSTR(#sel_up_code#,instr(#sel_up_code#,'__',-1)+2)
+				AND STDINFO_CD=SUBSTR(#sel_up_code#,0,instr(#sel_up_code#,'__')-1) 	
+		 
+		 AND ORDER_NO <![CDATA[ >= ]]> #ORDER_NO_M# 
+
+	</update>
+	
+	<update id="JiCmCms.updateCode">
+		UPDATE JIT9101 SET
+ 			STDINFO_DTL_CD=#istdinfo_dtl_cd#
+           ,STDINFO_DTL_NM=#istdinfo_dtl_cd_nm#
+           ,STDINFO_DTL_LABEL=#istdinfo_dtl_label#
+           ,MOD_DT=SYSDATE
+           ,MOD_ID=#user_id#
+           ,ORDER_NO=#iorder_no#
+           ,STDINFO_DTL_DATA1=#istdinfo_dtl_data1#
+           ,STDINFO_DTL_DATA2=#istdinfo_dtl_data2#
+           ,STDINFO_DTL_DATA3=#istdinfo_dtl_data3#
+           ,STDINFO_DTL_DATA4=#istdinfo_dtl_data4#
+           ,STDINFO_DTL_DATA5=#istdinfo_dtl_data5#
+        WHERE STDINFO_DTL_SEQ=#sidx#
+	</update>
+	
+	<update id="JiCmCms.deleteCode">
+		<![CDATA[
+
+		UPDATE JIT9101 SET
+           DEL_DT=SYSDATE
+           ,DEL_ID=#user_id#
+		   ,DEL_YN='Y'		
+		WHERE (STDINFO_DTL_SEQ,STDINFO_DTL_SEQ) IN 
+
+		   (SELECT  	
+
+		   A.STDINFO_DTL_SEQ 	
+
+		   , A.STDINFO_DTL_SEQ  	
+
+		   FROM JIT9101 A 	
+		  
+		   START WITH (A.STDINFO_DTL_CD,A.STDINFO_CD) = (SELECT STDINFO_DTL_CD,STDINFO_CD FROM JIT9101 WHERE STDINFO_DTL_SEQ=#sidx#) 
+
+		   CONNECT BY NOCYCLE PRIOR A.STDINFO_DTL_CD  =  A.STDINFO_DTL_UPPO_CD AND PRIOR A.STDINFO_CD = A.STDINFO_CD) 	
+
+		]]>
+			
+ 
+	</update>					
+	<!-- Boi -->
+	
+	<!--JqPlot -->
+	<select id="JiCmCms.selectJqPlotBARCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+		<![CDATA[
+		SELECT 
+			TO_DATE('20080628', 'YYYYMMDD') + LEV - 1 AS DT 
+     	 	, LEV NAME
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='main')*LEV AS LINE1 
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000039')*LEV AS LINE2
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000011')*LEV AS LINE3
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000003')*LEV AS LINE4
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000012')*LEV AS LINE5
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000010')*LEV AS LINE6
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000020')*LEV AS LINE7
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000038')*LEV AS LINE8
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000009')*LEV AS LINE9
+      		,(SELECT COUNT(*) FROM JIT8100 WHERE MENU_CD ='000013')*LEV AS LINE10
+    
+			FROM (
+				SELECT LEVEL LEV 
+      			FROM DUAL 
+      			CONNECT BY LEVEL  <=  ((TO_DATE('20080628', 'YYYYMMDD')+9) - TO_DATE('20080628', 'YYYYMMDD')+1) 
+			)
+		]]>
+
+	</select>
+	<!--JqPlot -->
+	
+	
+	
+	<delete id="JiCmCms.DeleteJRCMS_FILE_MGR_ALL">
+
+		DELETE FROM JIT9151 WHERE MENU_CD=#pcode# AND MENU_DATA_KEY_DATAS=#sidx#
+
+	</delete>	
+	
+	
+    <select id="JiCmCms.getPopSelect" parameterClass="java.util.HashMap" resultMap="COMMON.selectPopCLOB">
+					
+		SELECT
+			TO_CHAR(IDX) IDX,
+			BN_TITLE,
+			BN_CONTENTS,
+			TO_CHAR(BN_ORDER_NO) BN_ORDER_NO,
+			BN_LINK,
+			TO_CHAR(A.USE_ST_DT,'YYYY-MM-DD') USE_ST_DT,
+			TO_CHAR(A.USE_END_DT,'YYYY-MM-DD') USE_END_DT,	
+			TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,
+			A.REG_ID,
+			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),
+			                                            '::')) AS FILE_NMS
+			                             FROM JIT9151
+			                            WHERE MENU_CD = '000150'
+			                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+			                              AND DEL_DT IS NULL
+			                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1 
+			                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+			                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+			                            GROUP BY MENU_CD, FILE_GROUP),
+			                           '') FILE_NMS,
+  			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                             FROM JIT9151
+                            WHERE MENU_CD = '000150'
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+                              AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),
+                           '') FILE_SEQ	,
+            (SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.REG_ID) REG_ID_NM,		
+			TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT,
+			A.MOD_ID,
+			TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT,
+			A.DEL_ID,
+			A.DEL_YN,
+			TO_CHAR(RANK() OVER (ORDER BY IDX DESC, BN_ORDER_NO ASC)) NUM_OF_ROWS
+
+	   FROM JIT9601 A	
+	   WHERE 1=1
+		   				
+			<isNotEmpty property="sty">
+				<isEqual property="sty" compareValue="bn_title">
+			    	<isNotEmpty property="stext">
+			       		AND UPPER(BN_TITLE) LIKE '%' || UPPER(#stext#) || '%' 
+					</isNotEmpty>   		
+				</isEqual>
+
+			    <isEqual property="sty" compareValue="bn_contents">
+			       	<isNotEmpty property="stext">
+			       		AND DBMS_LOB.INSTR(DATA_DESC, #stext# ) > 0 
+			       	</isNotEmpty>   		
+				</isEqual>	
+
+				   					   	
+			</isNotEmpty> 			
+
+			ORDER BY IDX DESC, BN_ORDER_NO ASC						       
+ 
+	</select>	
+	
+	<select id="JiCmCms.getPopChk" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9601
+		WHERE 1=1
+		AND(
+			(TO_CHAR(USE_ST_DT,'YYYY-MM-DD') <![CDATA[ <= ]]>  #iuse_st_dt# AND  TO_CHAR(USE_END_DT,'YYYY-MM-DD') <![CDATA[ >= ]]>  #iuse_st_dt#)
+			OR (TO_CHAR(USE_ST_DT,'YYYY-MM-DD') <![CDATA[ <= ]]>  #iuse_end_dt# AND  TO_CHAR(USE_END_DT,'YYYY-MM-DD') <![CDATA[ >= ]]>  #iuse_end_dt#)
+		)
+	 		     <!-- 수정 모드인경우 자기 자신은 제외한다 -->
+	 		     <isEqual property="imode" compareValue="U">
+	 		     	AND IDX <![CDATA[ <> ]]> #sidx#
+	 		     </isEqual>	
+	 		     
+	</select>	
+	
+	<insert id="JiCmCms.insertPop">
+		INSERT INTO JIT9601
+           (
+			IDX,
+			BN_TITLE,
+			BN_CONTENTS,
+			BN_ORDER_NO,
+			BN_LINK,
+				 <isNotEmpty property="iuse_st_dt">
+					USE_ST_DT, 
+	    		 </isNotEmpty>				
+	   			 <isNotEmpty property="iuse_end_dt">
+	   				USE_END_DT,	 
+	 		     </isNotEmpty>			
+			
+			
+			REG_DT,
+			REG_ID
+
+           )
+     	VALUES
+           (
+           #max_seq#
+           ,#ibn_title#
+           ,#BN_CONTENTS#
+           ,#ibn_order_no#
+           ,#ibn_link#
+				 <isNotEmpty property="iuse_st_dt">
+					, TO_DATE(#iuse_st_dt#,'YYYY-MM-DD') 
+	    		 </isNotEmpty>				
+	   			 <isNotEmpty property="iuse_end_dt">
+	   				, TO_DATE(#iuse_end_dt#,'YYYY-MM-DD') 
+	 		     </isNotEmpty>
+           ,SYSDATE
+           ,#user_id#
+           )
+	</insert>	
+	
+	
+	<update id="JiCmCms.updateDelPop">
+
+		UPDATE JIT9601 SET		
+
+		   BN_ORDER_NO=BN_ORDER_NO-1 
+
+		WHERE BN_ORDER_NO <![CDATA[ > ]]> #ORDER_NOh# 
+
+	</update>	
+
+
+	<update id="JiCmCms.updateUpPop">
+
+		UPDATE JIT9601 SET		
+
+		 BN_ORDER_NO=BN_ORDER_NO+1
+
+		 WHERE BN_ORDER_NO <![CDATA[ >= ]]> #ORDER_NO_M# 
+
+	</update>	
+	
+	<update id="JiCmCms.updatePop">
+		UPDATE JIT9601
+           SET
+			
+			BN_TITLE=#ibn_title#,
+			BN_CONTENTS=#BN_CONTENTS#,
+			BN_ORDER_NO=#ibn_order_no#,
+			BN_LINK=#ibn_link#,
+				 <isNotEmpty property="iuse_st_dt">
+					USE_ST_DT=TO_DATE(#iuse_st_dt#,'YYYY-MM-DD') , 
+	    		 </isNotEmpty>				
+	   			 <isNotEmpty property="iuse_end_dt">
+	   				USE_END_DT= TO_DATE(#iuse_end_dt#,'YYYY-MM-DD') ,	 
+	 		     </isNotEmpty>
+			
+			MOD_DT=SYSDATE,
+			MOD_ID=#user_id#
+
+     	WHERE IDX=#sidx#
+  
+	</update>	
+	
+	<delete id="JiCmCms.deletePop">
+		<![CDATA[
+		
+		DELETE FROM JIT9601
+        WHERE IDX=#sidx#	
+		
+		]]>
+		
+	</delete>	
+	
+	
+	<!-- 메인 공지사항 -->
+	<select id="JiCmCms.selectMainNotice" parameterClass="java.util.HashMap"  resultMap="COMMON.selectBOARDCLOB">
+			SELECT
+			    TO_CHAR(DATA_SEQNO) DATA_SEQNO
+				,MENU_CD
+			   ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=TA.MENU_CD) AS MENU_NM
+				,DATA_TITLE
+				<![CDATA[,REGEXP_REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(DATA_DESC, '&', ''), 'amp;', ''), 'nbsp;', ''), '&nbsp;', ' '), '&amp;', ''), 'gt;', '>'), 'lt;', '<'), '<[^>]*>|\\&(^;])*;') AS DATA_DESC]]>
+				,TO_CHAR(INQ_CNT) INQ_CNT
+				,TO_CHAR(DATA_ORIGIN_NO) DATA_ORIGIN_NO
+				,TO_CHAR(DATA_DEPTH) DATA_DEPTH
+				,TO_CHAR(DATA_SORT_NO) DATA_SORT_NO
+				,OPEN_YN
+				,DECODE(TA.OPEN_YN,'Y','일반게시','N','숨김','T','공지글','P','비공개','일반게시') AS OPEN_YN_NM	
+  				,TO_CHAR(TA.DATA_SPA_ST_DT,'YYYY-MM-DD') DATA_SPA_ST_DT
+			    ,TO_CHAR(TA.DATA_SPA_END_DT,'YYYY-MM-DD') DATA_SPA_END_DT
+				,PHOTO_IMAGE_ALT
+				,DECODE(TA.DATA_SPA_COL0,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL0 ),TA.DATA_SPA_COL0)) DATA_SPA_COL0
+				,DECODE(TA.DATA_SPA_COL1,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL1 ),TA.DATA_SPA_COL1)) DATA_SPA_COL1
+				,DECODE(TA.DATA_SPA_COL2,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL2 ),TA.DATA_SPA_COL2)) DATA_SPA_COL2
+				,DECODE(TA.DATA_SPA_COL3,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL3 ),TA.DATA_SPA_COL3)) DATA_SPA_COL3
+				,DECODE(TA.DATA_SPA_COL4,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL4 ),TA.DATA_SPA_COL4)) DATA_SPA_COL4
+				,DECODE(TA.DATA_SPA_COL5,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL5 ),TA.DATA_SPA_COL5)) DATA_SPA_COL5
+				,DECODE(TA.DATA_SPA_COL6,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL6 ),TA.DATA_SPA_COL6)) DATA_SPA_COL6
+				,DECODE(TA.DATA_SPA_COL7,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL7 ),TA.DATA_SPA_COL7)) DATA_SPA_COL7
+				,DECODE(TA.DATA_SPA_COL8,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL8 ),TA.DATA_SPA_COL8)) DATA_SPA_COL8
+				,DECODE(TA.DATA_SPA_COL9,NULL,'',NVL((SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_CD=TA.DATA_SPA_COL9 ),TA.DATA_SPA_COL9)) DATA_SPA_COL9
+				,REG_ID_NM
+				,TO_CHAR(TA.REG_DT,'YYYY-MM-DD') REG_DT	
+				,REG_ID
+			 ,(SELECT COUNT(*) FROM JIT9150 WHERE DATA_ORIGIN_NO=TA.DATA_SEQNO AND DATA_DEPTH > 1) RPY_CNT	
+			 ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),
+			                                            '::')) AS FILE_NMS
+			                             FROM JIT9151
+			                            WHERE MENU_CD = TA.MENU_CD
+			                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+			                              AND DEL_DT IS NULL
+			                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1 
+			                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+			                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+			                            GROUP BY MENU_CD, FILE_GROUP),
+			                           '') FILE_NMS
+  			,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                             FROM JIT9151
+                            WHERE MENU_CD = TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),
+                           '') FILE_SEQ   
+			 ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),
+			                                            '::')) AS FILE_NMS
+			                             FROM JIT9151
+			                            WHERE MENU_CD = TA.MENU_CD
+			                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+			                              AND DEL_DT IS NULL
+			                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+			                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+			                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+			                            GROUP BY MENU_CD, FILE_GROUP),
+			                           '') FILE_GROUP_NM
+			 ,NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                             FROM JIT9151
+                            WHERE MENU_CD = TA.MENU_CD
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(TA.DATA_SEQNO)
+                              AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=2
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=2
+                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),
+                           '') FILE_GROUP_SEQ
+               
+			 , TO_CHAR(RANK() OVER (ORDER BY TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC )) NUM_OF_ROWS
+			  
+			  FROM JIT9150 TA
+			  WHERE TA.MENU_CD=#main_bbs_cd#
+			  ORDER BY TO_NUMBER(TA.DATA_ORIGIN_NO) DESC, TA.DATA_SORT_NO, TA.DATA_DEPTH ASC
+	</select>
+	
+	
+	
+	<!-- 메일발송 -->
+	<insert id="JiCmCms.insertEmail">
+		INSERT INTO JIT8110 (MAIL_SEQ,
+		                     MENU_CD,
+		                     MENU_DATA_KEY,
+		                     ORDER_NO,
+		                     REG_DT,
+		                     REG_ID,
+		                     FR_MAIL,
+		                     TO_MAIL,
+		                     TO_USER_ID,
+		                     TO_USER_TY,
+		                     MAIL_SUBJECT,
+		                     MAIL_CONTENTS)
+		     VALUES (#MAIL_SEQ#,
+		             #MENU_CD#,
+		             #MENU_DATA_KEY#,
+		             #ORDER_NO#,
+		             SYSDATE,
+		             #REG_ID#,
+		             #FR_MAIL#,
+		             #TO_MAIL#,
+		             #TO_USER_ID#,
+		             #TO_USER_TY#,
+		             #MAIL_SUBJECT#,
+		             #MAIL_CONTENTS#)
+	</insert>
+	
+	<!-- 메일수신확인 -->
+	<update id="JiCmCms.updateEmailChk">
+		UPDATE JIT8110 SET
+			RECV_DT=SYSDATE
+		WHERE MAIL_SEQ=#mailseq#
+	</update>	
+	
+	<select id="JiCmCms.selectMailLogList" parameterClass="java.util.HashMap"  resultMap="selectMailLogCLOB">
+		SELECT  A.MAIL_SEQ,
+		        A.MENU_CD,
+		        A.MENU_DATA_KEY,
+		        A.ORDER_NO,
+		        TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,
+		        A.REG_ID,
+		        A.FR_MAIL,
+		        A.TO_MAIL,
+		        A.TO_USER_ID,
+		        NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.TO_USER_ID),'') TO_USER_NM,
+		        A.TO_USER_TY,
+		        A.MAIL_SUBJECT,
+		        A.MAIL_CONTENTS,
+		        TO_CHAR(A.RECV_DT,'YYYY-MM-DD HH24:MI:SS') RECV_DT
+		FROM JIT8110 A
+		WHERE A.MENU_CD = #selMENU_CD#
+		AND A.MENU_DATA_KEY = #selMENU_DATA_KEY#
+		ORDER BY A.MAIL_SEQ ASC, A.ORDER_NO ASC
+	</select>	
+	
+	<!-- 문자발송SMSSIEME SMSSUPPORT -->
+	<insert id="JiCmCms.insertSMS">
+	INSERT INTO KOMIPOWEB.TC_NTCOB_SMS
+	(
+          BOARD_SEQ
+        , BOARD_CD		<!-- 수신번호 -->
+        , PHONE		<!-- 발송번호 -->
+        , MSG		<!-- 상태 -->
+        , SITE			<!-- 발송시스템명 -->
+        , REG_DATE			<!-- 등록일자 -->
+	)
+	VALUES
+	(
+		  #tran_etc3#
+		, #tran_etc2#
+		, #tran_phone#
+		, #tran_msg#
+		, #tran_etc4#
+		, SYSDATE
+	)
+	</insert>
+	
+	<insert id="JiCmCms.insertSMS_bak">
+	INSERT INTO SMSSUPPORT.EM_TRAN
+	(
+          TRAN_PR
+        , TRAN_PHONE		<!-- 수신번호 -->
+        , TRAN_CALLBACK		<!-- 발송번호 -->
+        , TRAN_STATUS		<!-- 상태 -->
+        , TRAN_DATE			<!-- 날짜시간 -->
+        , TRAN_MSG			<!-- 내용 -->
+        , TRAN_ETC1			<!-- 발송시스템명 -->
+		, TRAN_ETC2			<!-- 시스템담당자명 -->
+		, TRAN_ETC3			<!-- 발송시스템연락처 -->
+	)
+	VALUES
+	(
+		  SMSSUPPORT.EM_TRAN_PR.NEXTVAL
+		, #tran_phone#
+		, #tran_callback#
+		, '1'
+		, sysdate
+		, #tran_msg#
+		, #tran_etc1#
+		, #tran_etc2#
+		, #tran_etc3#
+	)
+	</insert>	
+			
+	<!-- 메일발송내역조회 -->
+	<select id="JiCmCms.getSelectMail" parameterClass="java.util.HashMap" resultClass="egovMap">
+	SELECT
+		  SEQIDX
+		, SUBJECT		<!-- 제목 -->
+		, SQL			<!-- 실제수신인 -->
+		, MAILFROM		<!-- 발송인 -->
+		, MAILTO		<!-- 수신인 -->
+		, REPLYTO
+		, ERRORSTO
+		, GUBUN			<!-- 발송시스템명 -->
+		, RNAME			<!-- 시스템담당자명 -->
+		, CONTENT		<!-- 내용 -->
+	FROM WEBADM.IM_DMAIL_INFO_16
+	WHERE GUBUN='전력데이터제공포털'
+	ORDER BY SEQIDX DESC
+	</select>
+
+	<!-- 메일발송대상 조회(사용자) -->
+	<select id="JiCmCms.getSendInfoUser_kepcoenc" parameterClass="java.util.HashMap" resultClass="egovMap">
+	SELECT
+		  USER_ID
+		, USER_NM
+		, dbsec.sdb_crypto.decrypt(EMAIL,'EDPORTAL','TB_KEY','ARIA') EMAIL	
+		, dbsec.sdb_crypto.decrypt(MOBLPHON,'EDPORTAL','TB_KEY','ARIA') MOBLPHON	
+	FROM JIT9111
+	WHERE USER_ID= #email_id#
+	</select>
+	
+	<select id="JiCmCms.getSendInfoUser" parameterClass="java.util.HashMap" resultClass="egovMap">
+	SELECT
+		  USER_ID
+		, USER_NM
+		, EMAIL	
+		, MOBLPHON	
+	FROM JIT9111
+	WHERE USER_ID= #email_id#
+	</select>	
+	
+	<!-- 메일발송대상 조회(관리자) -->
+	<select id="JiCmCms.getSendInfoAdmin" parameterClass="java.util.HashMap" resultClass="egovMap">
+	SELECT
+		  USER_ID
+		, USER_NM
+		, EMAIL EMAIL	
+		, MOBLPHON MOBLPHON		
+	FROM JIT9120
+	WHERE USER_ID= #email_id#
+	</select>
+	
+	
+    <select id="JiCmCms.selectMainPop_bak" parameterClass="java.util.HashMap" resultMap="COMMON.selectPopCLOB">
+					
+		SELECT
+			TO_CHAR(IDX) IDX,
+			BN_TITLE,
+			BN_CONTENTS,
+			TO_CHAR(BN_ORDER_NO) BN_ORDER_NO,
+			BN_LINK,
+			TO_CHAR(A.USE_ST_DT,'YYYY-MM-DD') USE_ST_DT,
+			TO_CHAR(A.USE_END_DT,'YYYY-MM-DD') USE_END_DT,
+			TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,
+			A.REG_ID,
+			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),
+			                                            '::')) AS FILE_NMS
+			                             FROM JIT9151
+			                            WHERE MENU_CD = '000150'
+			                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+			                              AND DEL_DT IS NULL
+			                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+			                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+			                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+			                            GROUP BY MENU_CD, FILE_GROUP),
+			                           '') FILE_NMS,
+  			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                             FROM JIT9151
+                            WHERE MENU_CD = '000150'
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+                              AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),
+                           '') FILE_SEQ	,
+            (SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.REG_ID) REG_ID_NM,
+			TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT,
+			A.MOD_ID,
+			TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT,
+			A.DEL_ID,
+			A.DEL_YN,
+			TO_CHAR(RANK() OVER (ORDER BY IDX DESC, BN_ORDER_NO ASC)) NUM_OF_ROWS
+
+	   FROM JIT9601 A	
+	   WHERE 1=1
+	   AND SYSDATE BETWEEN A.USE_ST_DT AND A.USE_END_DT
+
+		ORDER BY BN_ORDER_NO ASC						       
+ 
+	</select>
+		
+    <select id="JiCmCms.selectMainPop" parameterClass="java.util.HashMap" resultMap="COMMON.selectPopCLOB">
+		SELECT
+			TO_CHAR(IDX) IDX,
+			BN_TITLE,
+			BN_CONTENTS,
+			TO_CHAR(BN_ORDER_NO) BN_ORDER_NO,
+			BN_LINK,
+			TO_CHAR(A.USE_ST_DT,'YYYY-MM-DD') USE_ST_DT,
+			TO_CHAR(A.USE_END_DT,'YYYY-MM-DD') USE_END_DT,	
+			TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,
+			A.REG_ID,
+			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_NM, '::'),
+			                                            '::')) AS FILE_NMS
+			                             FROM JIT9151
+			                            WHERE MENU_CD = '000150'
+			                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+			                              AND DEL_DT IS NULL
+			                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+			                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+			                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+			                            GROUP BY MENU_CD, FILE_GROUP),
+			                           '') FILE_NMS,
+  			NVL((SELECT MAX(LTRIM(SYS_CONNECT_BY_PATH(FILE_SEQNO, '::'),
+                                            '::')) AS FILE_SEQNO
+                             FROM JIT9151
+                            WHERE MENU_CD = '000150'
+                              AND MENU_DATA_KEY_DATAS = TO_CHAR(A.IDX)
+                              AND DEL_DT IS NULL
+                            START WITH FILE_ORDER_NO = 1 AND FILE_GROUP=1
+                           CONNECT BY NOCYCLE PRIOR FILE_ORDER_NO = FILE_ORDER_NO - 1 AND FILE_GROUP=1
+                                  AND PRIOR MENU_DATA_KEY_DATAS = MENU_DATA_KEY_DATAS
+                            GROUP BY MENU_CD, FILE_GROUP),
+                           '') FILE_SEQ	,	
+            '' REG_ID_NM,	
+			TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT,
+			A.MOD_ID,
+			TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT,
+			A.DEL_ID,
+			A.DEL_YN,
+			TO_CHAR(RANK() OVER (ORDER BY IDX DESC, BN_ORDER_NO ASC)) NUM_OF_ROWS
+
+	   FROM JIT9601 A	
+	   WHERE 1=1
+
+	   AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(A.USE_ST_DT,'YYYYMMDD')
+	   						 AND TO_CHAR(A.USE_END_DT,'YYYYMMDD')
+
+			ORDER BY BN_ORDER_NO ASC
+								
+					       
+ 
+	</select>	
+	
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

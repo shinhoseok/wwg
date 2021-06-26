@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmMtm">
+ <!--  ########### jrcms 시작 ########################### -->
+ 
+	<insert id="JiCmMtm.InsertFILE_MGR">
+	
+		INSERT INTO JIT9151 
+			(	
+			FILE_SEQNO,			<!--파일일련번호  -->
+			MENU_CD,			<!--메뉴코드  -->
+			MENU_DATA_KEY_DATAS,			<!--메뉴 데이터 KEY 데이터들  -->
+			FILE_GROUP,			<!--파일그룹  -->
+			MENU_DATA_TITLE,			<!--메뉴 데이터 제목  -->
+			FILE_NM,			<!-- 파일명 -->
+			UPDATE_FILE_NM,			<!-- 수정파일명 -->
+			FILE_ORDER_NO,			<!--파일 순번  -->
+			FILE_SIZE,			<!-- 파일크기 -->
+			FILE_DESC,			<!--파일비고  -->
+			REG_DT,		<!--등록일자  -->
+			REG_ID,		<!-- 등록자 직원 ID	 -->
+			DEL_YN,
+			SECRET_YN
+			)VALUES(	
+			 #ifile_seqno#,
+			<isNotEmpty property="rpcode">
+				#rpcode#,
+			</isNotEmpty>
+			<isEmpty property="rpcode">
+				#pcode#,
+			</isEmpty>			 
+			 
+			 #ikey_datas#,
+			 #ifile_group#,
+			 #imenu_data_title#,
+			 #fileName#,
+			 #maskName#, 		
+			 #order_no#,
+			 #fileSize#,
+			 #ifile_desc#,
+			 SYSDATE,
+			 #USER_ID#,
+			 'N',
+			 #SECRET_YN#
+		  )	
+  
+  	
+	</insert>
+	
+	<update id="JiCmMtm.updateFileOrder">
+		  UPDATE   JIT9151 
+		    SET
+			 FILE_ORDER_NO=FILE_ORDER_NO-1
+			 ,MOD_DT = SYSDATE
+			 ,MOD_ID = #USER_ID#
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+		  AND FILE_ORDER_NO <![CDATA[ > ]]> #idelorderno#
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="ikey_datas">
+			AND MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND FILE_SEQNO NOT IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty> 	
+	</update>
+	
+	
+	<!--<update id="JiCmMtm.updateFileDel">
+		  UPDATE   JIT9151 
+		    SET
+			 DEL_DT = SYSDATE,
+			 DEL_ID = #USER_ID#
+			 ,DEL_YN = 'Y'
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			<isNotEmpty property="pcode">
+				AND MENU_CD = #pcode#
+			</isNotEmpty>	
+		</isEmpty>	
+		
+		<isNotEmpty property="ikey_datas">
+			AND MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty> 	
+	</update>-->
+	
+	<delete id="JiCmMtm.updateFileDel">
+		  DELETE FROM   JIT9151 
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+		
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>		
+		
+		<isNotEmpty property="ikey_datas">
+			AND MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty> 	
+	</delete>	
+	
+	<update id="JiCmMtm.updateFileDelGroup">
+		  UPDATE   JIT9151 
+		    SET
+			 DEL_DT =  SYSDATE,
+			 DEL_ID = #user_id#
+			 ,DEL_YN = 'Y'
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>
+		
+  		  AND MENU_DATA_KEY_DATAS = #ikey_datas#
+  		  <isNotEmpty property="ifilegroup">
+		  AND FILE_GROUP	= #ifilegroup#	
+		  </isNotEmpty>
+ 	
+	</update>	
+	
+	<update id="JiCmMtm.updateFilePx1Key">
+		UPDATE   JIT9151 
+		    SET
+			 MENU_DATA_KEY_DATAS=#ikey_datas#
+			 , MENU_DATA_TITLE = #imenu_data_title#
+			 ,MOD_DT =  SYSDATE,
+			 ,MOD_ID = #USER_ID#			 
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="iuploadseq">
+			AND FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty>
+</update>	
+	
+	<delete id="JiCmMtm.deleteFileDel">
+		  DELETE   JIT9151 
+		  WHERE 1=1
+		  AND DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="ikey_datas">
+			AND MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty> 	
+	</delete>			
+	
+	
+	<select id="JiCmMtm.selectListFilePF1" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(A.FILE_SEQNO) FILE_SEQNO,			<!--파일일련번호  -->
+			A.MENU_CD,			<!--메뉴코드  -->
+			TO_CHAR(A.MENU_DATA_KEY_DATAS) MENU_DATA_KEY_DATAS ,			<!--메뉴 데이터 KEY 데이터들  -->
+			TO_CHAR(A.FILE_GROUP) FILE_GROUP,			<!--파일그룹  -->
+			A.MENU_DATA_TITLE,			<!--메뉴 데이터 제목  -->
+			A.FILE_NM,			<!-- 파일명 -->
+			A.UPDATE_FILE_NM,			<!-- 수정파일명 -->
+			TO_CHAR(A.FILE_ORDER_NO) FILE_ORDER_NO,			<!--파일 순번  -->
+			TO_CHAR(A.FILE_SIZE) FILE_SIZE,			<!-- 파일크기 -->
+			A.FILE_DESC,			<!--파일비고  -->
+			REPLACE(TO_CHAR(A.REG_DT,'YYYY-MM-DD'),'-','') REGST_YMD			<!--등록일자  -->
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="ifilegroup">
+			AND A.FILE_GROUP = #ifilegroup#
+		</isNotEmpty>
+				
+		
+		<isNotEmpty property="ikey_datas">
+			AND A.MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND A.FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty>		
+		ORDER BY A.FILE_ORDER_NO ASC
+
+	</select>
+	
+	<select id="JiCmMtm.selectListFilePF2" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(A.FILE_SEQNO) FILE_SEQNO,			<!--파일일련번호  -->
+			A.MENU_CD,			<!--메뉴코드  -->
+			TO_CHAR(A.MENU_DATA_KEY_DATAS) MENU_DATA_KEY_DATAS ,			<!--메뉴 데이터 KEY 데이터들  -->
+			TO_CHAR(A.FILE_GROUP) FILE_GROUP,			<!--파일그룹  -->
+			A.MENU_DATA_TITLE,			<!--메뉴 데이터 제목  -->
+			A.FILE_NM,			<!-- 파일명 -->
+			A.UPDATE_FILE_NM,			<!-- 수정파일명 -->
+			TO_CHAR(A.FILE_ORDER_NO) FILE_ORDER_NO,			<!--파일 순번  -->
+			TO_CHAR(A.FILE_SIZE) FILE_SIZE,			<!-- 파일크기 -->
+			A.FILE_DESC,			<!--파일비고  -->
+			REPLACE(TO_CHAR(A.REG_DT,'YYYY-MM-DD'),'-','') REGST_YMD			<!--등록일자  -->
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="ifilegroup">
+			AND A.FILE_GROUP = #ifilegroup#
+		</isNotEmpty>
+				
+		
+		<isNotEmpty property="ikey_datas">
+			AND A.MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+	
+		ORDER BY A.FILE_ORDER_NO ASC
+
+	</select>
+	 
+	<select id="JiCmMtm.selectFileGroupCnt" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(COUNT(*)) CNT
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+		<isNotEmpty property="rpcode">
+			AND MENU_CD = #rpcode#
+		</isNotEmpty>
+		<isEmpty property="rpcode">
+			AND MENU_CD = #pcode#
+		</isEmpty>	
+		
+		<isNotEmpty property="file_group_idx">
+			AND A.FILE_GROUP = #file_group_idx#
+		</isNotEmpty>
+				
+		
+		<isNotEmpty property="ikey_datas">
+			AND A.MENU_DATA_KEY_DATAS = #ikey_datas#
+		</isNotEmpty>		
+		<isNotEmpty property="iuploadseq">
+			AND A.FILE_SEQNO IN
+		    <iterate property="iuploadseq_sp" open="(" close=")" conjunction="," >
+				          #iuploadseq_sp[]#
+	     	</iterate>
+		</isNotEmpty>		
+
+	</select>
+	
+	
+	<!-- 첨부파일 카운트 증가 -->
+	<update id="JiCmMtm.updateFILE_CNT">
+		UPDATE JIT9151 
+		SET
+			 FILE_CNT=FILE_CNT+1
+		WHERE 1=1
+		AND FILE_SEQNO = #file_seqno#
+	</update>
+	
+	<!-- 첨부파일 다운 카운트 로그 -->
+	<insert id="insertFILE_CNT" parameterClass="java.util.HashMap">
+		INSERT INTO JIT9152  (FILE_SEQNO, FDOWN_SEQ) VALUES(#file_seqno#, JIT9152_SQ.NEXTVAL)
+	</insert>
+	
+	
+	<!-- 목록에서 첨부파일 다운로드시 조회 -->
+	<select id="JiCmMtm.getFILEDOWN" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(A.FILE_SEQNO) FILE_SEQNO,			<!--파일일련번호 -->
+			A.MENU_CD,									<!--메뉴코드 -->
+			TO_CHAR(A.MENU_DATA_KEY_DATAS) MENU_DATA_KEY_DATAS ,		<!--메뉴 데이터 KEY 데이터들  -->
+			TO_CHAR(A.FILE_GROUP) FILE_GROUP,			<!--파일그룹 -->
+			A.MENU_DATA_TITLE,							<!--메뉴 데이터 제목 -->
+			A.FILE_NM,									<!--파일명 -->
+			A.UPDATE_FILE_NM,							<!--수정파일명 -->
+			TO_CHAR(A.FILE_ORDER_NO) FILE_ORDER_NO,		<!--파일 순번 -->
+			TO_CHAR(A.FILE_SIZE) FILE_SIZE,				<!--파일크기 -->
+			A.FILE_DESC,								<!--파일비고 -->
+			REPLACE(TO_CHAR(A.REG_DT,'YYYY-MM-DD'),'-','') REGST_YMD,	<!--등록일자  -->
+			SECRET_YN,									<!--shin 비밀파일여부 19.10.28 취약점 조치 N이면 비밀글  -->
+			REG_ID
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+		<isNotEmpty property="file_seqno">
+			AND A.FILE_SEQNO = #file_seqno#
+		</isNotEmpty>
+		<isEmpty property="file_seqno">
+			AND A.FILE_SEQNO IS NULL
+		</isEmpty>
+	</select>
+
+	<!-- 상세에서 다운로드할 파일조회 -->
+	<select id="JiCmMtm.getFILEDOWN2" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(A.FILE_SEQNO) FILE_SEQNO,			<!--파일일련번호  -->
+			A.MENU_CD,									<!--메뉴코드  -->
+			TO_CHAR(A.MENU_DATA_KEY_DATAS) MENU_DATA_KEY_DATAS ,	<!--메뉴 데이터 KEY 데이터들  -->
+			TO_CHAR(A.FILE_GROUP) FILE_GROUP,						<!--파일그룹  -->
+			A.MENU_DATA_TITLE,							<!--메뉴 데이터 제목  -->
+			A.FILE_NM,									<!--파일명 -->
+			A.UPDATE_FILE_NM,							<!--수정파일명 -->
+			TO_CHAR(A.FILE_ORDER_NO) FILE_ORDER_NO,		<!--파일 순번 -->
+			TO_CHAR(A.FILE_SIZE) FILE_SIZE,				<!--파일크기 -->
+			A.FILE_DESC,								<!--파일비고 -->
+			REPLACE(TO_CHAR(A.REG_DT,'YYYY-MM-DD'),'-','') REGST_YMD	<!--등록일자  -->
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+				
+		<isNotEmpty property="fpcode">
+			AND A.MENU_CD = #fpcode#
+		</isNotEmpty>
+		
+		<isNotEmpty property="sidx">
+			AND A.MENU_DATA_KEY_DATAS = #sidx#
+		</isNotEmpty>
+		
+		<isNotEmpty property="fidx">
+			AND A.FILE_ORDER_NO = #fidx#
+		</isNotEmpty>	
+		
+		<isNotEmpty property="groupidx">
+			AND A.FILE_GROUP = #groupidx#
+		</isNotEmpty>			
+		
+				
+		<isEmpty property="fpcode">
+			AND A.FILE_SEQNO IS NULL
+		</isEmpty>
+		<isEmpty property="sidx">
+			AND A.FILE_SEQNO IS NULL
+		</isEmpty>		
+		<isEmpty property="fidx">
+			AND A.FILE_SEQNO IS NULL
+		</isEmpty>
+		<isEmpty property="groupidx">
+			AND A.FILE_GROUP = 1
+		</isEmpty>		
+
+	</select>		
+	
+	
+	
+	<select id="JiCmMtm.getFILElist" parameterClass="java.util.HashMap" resultClass="egovMap">			
+     SELECT
+				TO_CHAR(FILE_SEQNO) AS FILE_SEQNO
+			    ,(SELECT MENU_NM FROM JIT9160 O WHERE O.MENU_CD = T.MENU_CD) AS MENU_NM
+        		,T.MENU_CD
+				,MENU_DATA_KEY_DATAS
+				,FILE_GROUP
+				,MENU_DATA_TITLE
+				,FILE_NM
+				,UPDATE_FILE_NM
+				,FILE_ORDER_NO
+				<!--,to_char(FILE_SIZE,'999,999,999') as FILE_SIZE-->
+				,FILE_SIZE+'' FILE_SIZE
+				,FILE_DESC
+				,TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REGST_YMD
+				,REG_ID
+				,(SELECT USER_NM FROM JIT9111 WHERE USER_ID=T.REG_ID) AS REGST_EMP_NM
+         FROM JIT9151 T
+         WHERE 1=1
+         	AND DEL_YMD	IS NULL
+				<isNotEmpty property="menu_cd">
+		      		 AND  T.MENU_CD IN <iterate open="(" close=")"  property="seq_no" conjunction=","> 	
+					 		#seq_no[]#
+					 	</iterate>     
+		       </isNotEmpty> 	
+			 
+		       <!-- 검색조건 -->
+		       <isNotEmpty property="searchType">
+		       		<isEqual property="searchType" compareValue="1">
+		       			AND UPPER(T.MENU_DATA_TITLE) LIKE '%' || UPPER(#searchText#) || '%'    		
+				   	</isEqual>
+		       	    <isEqual property="searchType" compareValue="2">
+						AND UPPER(T.FILE_NM) LIKE '%' || UPPER(#searchText#) || '%'		       	    
+				   	</isEqual>
+		       	    <isEqual property="searchType" compareValue="3">
+						AND UPPER(EMP_NM_FU01(T.REG_ID)) LIKE '%' || UPPER(#searchText#) || '%'		       	    
+				   	</isEqual>				   	
+		       </isNotEmpty> 
+		       
+			   <!-- <isEmpty property="start_ym">
+					    <isNotEmpty property="end_ym">
+					    AND (TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE,'YYYYMMDD') AND REPLACE(#end_ym#,'-') OR TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE,'YYYYMMDD') AND REPLACE(#end_ym#,'-') )
+					    </isNotEmpty>
+			  </isEmpty>
+				    
+			   <isEmpty property="end_ym">
+				     	<isNotEmpty property="start_ym">
+				     	 AND (TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN REPLACE(#start_ym#,'-') AND TO_CHAR(SYSDATE,'YYYYMMDD') OR TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN REPLACE(#start_ym#,'-') AND TO_CHAR(SYSDATE,'YYYYMMDD') )
+					    </isNotEmpty>
+			   </isEmpty>
+		       <isNotEmpty property="start_ym">
+		         	<isNotEmpty property="end_ym">
+ 					AND (TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN REPLACE(#start_ym#,'-') AND REPLACE(#end_ym#,'-') OR TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN REPLACE(#start_ym#,'-') AND REPLACE(#end_ym#,'-') )
+		         	</isNotEmpty>
+		       </isNotEmpty>
+		         
+		       <isEmpty property="start_ym">
+					    <isEmpty property="end_ym">
+					    AND (TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD') OR TO_CHAR(REGST_YMD,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD') )
+					    </isEmpty>
+			   </isEmpty> -->	
+			   
+				<isNotEmpty property="start_ym"><!-- 시작일자가 있으면 -->	
+					AND TO_CHAR(T.REG_DT,'YYYYMMDD')   <![CDATA[ >= ]]>   REPLACE(#start_ym#,'-','')
+				</isNotEmpty>
+				<isNotEmpty property="end_ym"><!-- 종료일자가 있으면 -->
+					AND TO_CHAR(T.REG_DT,'YYYYMMDD')   <![CDATA[ <= ]]>   REPLACE(#end_ym#,'-','')
+				</isNotEmpty>			   
+			 ORDER BY REGST_YMD DESC	       	
+		       	        
+         
+	</select>	
+	
+	<select id="JiCmMtm.getdeleteJRCMS_FILE_MGR_ALL" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		   SELECT FILE_SEQNO AS IDX, MENU_CD AS M_CODE, MENU_DATA_KEY_DATAS AS RIDX, FILE_NM, UPDATE_FILE_NM AS RFILE_NM  
+		 		, FILE_ORDER_NO AS ORDER_NO,  TO_CHAR(REG_DT,'YYYYMMDD') REG_DT , FILE_GROUP
+		 	FROM JIT9151 
+		 	WHERE 1=1
+				AND MENU_CD=#pcode# 
+		 		AND MENU_DATA_KEY_DATAS=#sidx#
+		 		AND DEL_YN = 'N' AND DEL_DT IS NULL
+		 	ORDER BY FILE_ORDER_NO ASC	
+		 	
+	 	
+
+	</select>
+	
+	<select id="JiCmMtm.getMenuFileFullList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(A.FILE_SEQNO) FILE_SEQNO,			<!--파일일련번호  -->
+			A.MENU_CD,			<!--메뉴코드  -->
+			TO_CHAR(A.MENU_DATA_KEY_DATAS) MENU_DATA_KEY_DATAS ,			<!--메뉴 데이터 KEY 데이터들  -->
+			TO_CHAR(A.FILE_GROUP) FILE_GROUP,			<!--파일그룹  -->
+			A.MENU_DATA_TITLE,			<!--메뉴 데이터 제목  -->
+			A.FILE_NM,			<!-- 파일명 -->
+			A.UPDATE_FILE_NM,			<!-- 수정파일명 -->
+			TO_CHAR(A.FILE_ORDER_NO) FILE_ORDER_NO,			<!--파일 순번  -->
+			TO_CHAR(A.FILE_SIZE) FILE_SIZE,			<!-- 파일크기 -->
+			A.FILE_DESC,			<!--파일비고  -->
+			REPLACE(TO_CHAR(A.REG_DT,'YYYY-MM-DD'),'-','') REGST_YMD			<!--등록일자  -->
+		FROM JIT9151 A			
+		WHERE 1=1
+		AND A.DEL_YN = 'N'
+			AND A.MENU_CD = #pcode#
+
+	</select>	
+	
+	<select id="JiCmMtm.getdeleteJRCMS_FILE_MGR_ALL_G" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		   SELECT FILE_SEQNO AS IDX, MENU_CD AS M_CODE, MENU_DATA_KEY_DATAS AS RIDX, FILE_NM, UPDATE_FILE_NM AS RFILE_NM  
+
+		 		, FILE_ORDER_NO AS ORDER_NO,  TO_CHAR(REG_DT,'YYYYMMDD') REG_DT , FILE_GROUP			
+
+		 	FROM JIT9151 WHERE MENU_CD=#pcode# AND MENU_DATA_KEY_DATAS=#sidx# AND FILE_GROUP=#groupidx#
+		 	AND DEL_YN = 'N' AND DEL_DT IS NULL
+
+		 	ORDER BY FILE_ORDER_NO ASC	
+		 	
+	 	
+
+	</select>	
+	
+	<select id="JiCmMtm.getSequence" parameterClass="java.util.HashMap" resultClass="int">
+
+		SELECT JIT9151_SQ.NEXTVAL FROM DUAL
+
+	</select>		
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

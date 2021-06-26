@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmSti">
+ <!--  ########### jrcms 시작 ########################### -->
+	<select id="JiCmSti.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT8100_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	 
+	<insert id="JiCmSti.insertACCESS_CNT">
+		 INSERT INTO JIT8100
+					(ACES_LOG_SEQNO
+					,MENU_CD
+					,MENU_PSTATE
+					,MENU_ORI_PSTATE
+					,ACES_LOG_DESC
+					,REG_DT
+					,REG_ID
+					,REG_ORG_ID
+					,STDINFO_CD
+					,DATA_TITLE
+					,DATA_SEQ
+					,REG_NM
+					)
+			VALUES	
+					 (
+					 #max_seq#
+					 ,#pcode#
+					 ,#cms_state#
+					 ,#cms_pstate# 
+					 ,#aces_log_desc# 
+					 ,SYSDATE
+					 ,#cms_emp_id#
+					 ,#cms_org_id#
+					 ,#cms_stdinfo_cd#
+					 ,#privacy_data_title#
+					 ,#privacy_data_seq#
+					 ,#privacy_data_regNm#
+					 )
+
+ 	</insert>	
+
+ 	<select id="JiCmSti.getYear" parameterClass="java.util.HashMap" resultClass="egovMap">		
+ 	<![CDATA[ 
+		SELECT 
+			TO_CHAR(LEV) AS ID1
+			,TO_CHAR(TO_CHAR(SYSDATE,'YYYY')-10 + LEV - 1) AS CODE
+			,TO_CHAR(TO_CHAR(SYSDATE,'YYYY')-10 + LEV - 1) AS NAME
+		FROM (SELECT LEVEL LEV 
+				FROM DUAL 
+				CONNECT BY LEVEL <= 21 
+		) 	
+
+	]]> 	
+
+	</select>
+
+	<!--
+	'MSSQL 날짜 사이 기간 일자 목록 구하기
+	
+	WITH A AS (
+	 SELECT LVL = 1
+	   , CAST('20130115' AS DATETIME) DT
+	 UNION ALL
+	 SELECT LVL + 1
+	   , DATEADD(D, 1, DT)
+	   FROM A
+	  WHERE DT < CAST('20130122' AS DATETIME)
+	)
+	SELECT LVL
+	  , DT
+	  , YEAR = DATEPART(YEAR, DT)
+	  , MONTH = DATEPART(MONTH, DT)
+	  , DAY = DATEPART(DAY, DT)
+	  , WEEK_OF_YEAR = DATEPART(WK, DT)
+	  , WEEK_OF_MONTH = DATEPART(WK, DT) - DATEPART(WK, LEFT(CONVERT(VARCHAR, DT, 112), 6) + '01') + 1
+	  , DAY = DATEPART(DW, DT)
+	  , 요일 = DATENAME(W, DT)
+	  , 분기 = DATEPART(Q, DT)
+	  , 반기 = CASE WHEN DATEPART(MONTH, DT) BETWEEN 1 AND 6 THEN '상반기' ELSE '하반기' END
+	  FROM A
+	OPTION (MAXRECURSION 0) 
+	
+	'MSSQL 현재일자 기준 이전 10년 이후10년 목록 구하기
+	WITH A AS (
+	 SELECT LVL = 1
+	   , (YEAR(SYSDATE)-10) DT
+	 UNION ALL
+	 SELECT LVL + 1
+	   , DT +1
+	   FROM A
+	  WHERE DT < (YEAR(SYSDATE)+10)
+	)
+	SELECT LVL
+	  , DT
+	  FROM A
+	OPTION (MAXRECURSION 0)	
+	
+	' 현재월부터 10개월이후까지 월데이터
+		WITH A AS (
+	 		SELECT LVL = 1
+	   		, SYSDATE DT
+	   		
+	 		UNION ALL
+	 		
+	 		SELECT LVL + 1
+	   		, dateadd(MONTH, 1, DT)  
+	   		FROM A
+	  		WHERE DT < dateadd(MONTH, 10, SYSDATE)
+		)
+		SELECT LVL AS ID1
+	  	, SUBSTRING(CONVERT(VARCHAR,DT,112),1,6) AS CODE
+	  	, DT AS NAME
+	  	FROM A
+		OPTION (MAXRECURSION 0)		
+	-->
+
+		<select id="JiCmSti.YearMonthCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+
+
+			 SELECT  ' ' || T.NAME || LPAD('',4,' ') AS NAME, SUM(T.LINE1) AS LINE1
+
+			  FROM ( SELECT 
+			  			TO_CHAR(REG_DT,'YYYY-MM-DD') AS NAME 
+			  			,COUNT(1) AS LINE1 FROM JIT8100
+		           	WHERE TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+		           	AND MENU_ORI_PSTATE = 'L'
+                    AND MENU_CD IN(
+                        SELECT MENU_CD FROM JIT9160
+                        WHERE (M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)
+								OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)
+								OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)
+								OR (M_SDATE IS NULL AND M_EDATE IS NULL) 
+                        START WITH MENU_UPPO_CD          ='S01' 
+                         CONNECT BY NOCYCLE PRIOR MENU_CD = MENU_UPPO_CD
+                    )
+                    		           	
+		          	GROUP BY TO_CHAR(REG_DT,'YYYY-MM-DD')
+
+			 		UNION ALL
+
+			  		SELECT	
+						TO_CHAR(TO_DATE(#start_ymd#, 'YYYY-MM-DD') + LEVEL - 1, 'YYYY-MM-DD') AS NAME
+						, 0 LINE1	
+					FROM DUAL  
+			        CONNECT BY  
+			          TO_DATE(#start_ymd#, 'YYYY-MM-DD') + LEVEL - 1 <= TO_DATE(#end_ymd#, 'YYYY-MM-DD')) T  
+			      GROUP BY T.NAME 
+			      ORDER BY T.NAME DESC
+
+		 ]]> 
+
+		</select>
+
+		
+
+		<select id="JiCmSti.DayCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+		
+			SELECT 
+				DECODE(T.NAME,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금',7,'토',0,'총합') AS NAME
+				,T.NAME AS AAAAAA
+				,SUM(T.LINE1) AS LINE1
+
+			  FROM ( SELECT 
+			  			TO_NUMBER(TO_CHAR(REG_DT,'D')) AS NAME 
+			  			,COUNT(1) AS LINE1 
+			  		FROM JIT8100
+			        WHERE TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+			        AND MENU_ORI_PSTATE = 'L'
+                    AND MENU_CD IN(
+                        SELECT MENU_CD FROM JIT9160
+                        WHERE (M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)
+								OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)
+								OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)
+								OR (M_SDATE IS NULL AND M_EDATE IS NULL) 
+                        START WITH MENU_UPPO_CD          ='S01' 
+                         CONNECT BY NOCYCLE PRIOR MENU_CD = MENU_UPPO_CD
+                    )
+                    			        
+		          	GROUP BY TO_NUMBER(TO_CHAR(REG_DT,'D'))
+
+			  		UNION ALL
+
+			    	SELECT  
+			        	1 + LEVEL - 1 AS NAME
+			        	, 0 AS LINE1 
+			        FROM DUAL  
+			        CONNECT BY 1 + LEVEL - 1  <= 7  
+
+			  		UNION ALL          
+
+			         SELECT 
+			         	0 AS NAME 
+			         	,COUNT(1) AS LINE1 FROM JIT8100
+			          WHERE TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+			          AND MENU_ORI_PSTATE = 'L'
+			          AND MENU_CD IN(
+                        SELECT MENU_CD FROM JIT9160
+                        WHERE (M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)
+								OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)
+								OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)
+								OR (M_SDATE IS NULL AND M_EDATE IS NULL) 
+                        START WITH MENU_UPPO_CD          ='S01' 
+                         CONNECT BY NOCYCLE PRIOR MENU_CD = MENU_UPPO_CD
+                    )
+			     ) T
+		      GROUP BY T.NAME 
+		      ORDER BY T.NAME 
+
+		 ]]> 
+
+		</select>		
+
+	
+
+	
+
+	<select id="JiCmSti.getSitecode" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+
+			MENU_CD AS CODE
+			,MENU_NM AS NAME
+		FROM(
+				SELECT
+					 A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+					 ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+					 ,A.M_S_STYLE 
+					 , CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+					 ,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+					 ,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+					 , STD_NM_FU03('M00002',A.LINK_TY) AS LINK_TY_NM
+					 ,A.CLASS_PATH		
+					 ,A.LINK_PATH ,A.BOARD_TY 
+					 , STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+					 ,A.BOARD_GBN ,A.LINK_TARGET 
+					 , CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+					 ,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+					 ,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+					 ,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+					 ,LEVEL AS LV			
+					 ,SYS_CONNECT_BY_PATH(A.MENU_NM,'::') AS M_NMS
+					 ,SYS_CONNECT_BY_PATH(A.MENU_CD, '::') AS M_CODES
+					 , A.JSP_INCLUDE_YN 
+					 , CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+					 , A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+					 , A.BOARD_ETC_ITEM_NM , A.BOARD_OPT , A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+					 , DECODE(A.BOARD_TY,'000014'	
+							,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+					 , A.M_OPT					
+				
+				 FROM JIT9160 A	
+				 START WITH A.MENU_CD = '000000'
+				 CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD	
+			) MENU_MGR 
+			WHERE 1=1 
+			AND lv=2
+			AND MENU_CD NOT IN('000008','000019')
+
+		</select>
+
+		
+
+		
+
+	<select id="JiCmSti.MenuCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+					SELECT *
+					FROM
+					  (SELECT
+							(SELECT 
+								COUNT(O.MENU_CD)
+							FROM JIT8100 O
+							WHERE T.MENU_CD = O.MENU_CD
+							AND TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+							AND MENU_ORI_PSTATE = 'L'
+							) AS LINE1 ,
+							
+							LPAD(' ',LEVEL*2,'--') || T.MENU_NM AS NAME ,
+							SYS_CONNECT_BY_PATH(T.MENU_NM,'::')  AS M_NMS ,
+							SYS_CONNECT_BY_PATH(T.MENU_CD, '::') AS M_CODES ,
+							ORDER_NO
+					  FROM JIT9160 T
+					  WHERE ( 
+								(M_SDATE <= SYSDATE AND SYSDATE <= M_EDATE)
+								OR (M_SDATE IS NULL AND SYSDATE <= M_EDATE)
+								OR (M_SDATE <= SYSDATE AND M_EDATE IS NULL)
+								OR (M_SDATE IS NULL AND M_EDATE IS NULL) )
+					  START WITH T.MENU_UPPO_CD          =#siteCode#   
+					  CONNECT BY NOCYCLE PRIOR T.MENU_CD = T.MENU_UPPO_CD
+					  ORDER BY M_CODES DESC,  ORDER_NO 
+					  )
+					  
+					UNION ALL
+					
+					SELECT 
+							COUNT(MENU_CD) AS LINE1 ,
+							'메인'                AS NAME,
+							'메인'  AS M_NMS ,
+							'main' AS M_CODES ,
+							0 ORDER_NO  
+					FROM JIT8100
+					WHERE MENU_CD='main'
+					AND TO_CHAR(REG_DT,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#
+					AND MENU_ORI_PSTATE = 'L'					  
+
+
+		 ]]> 
+
+		</select>	
+
+		
+
+	<select id="JiCmSti.MenuCrudCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+
+			SELECT 0 AS LINE1
+
+					,COUNT(MENU_CD) AS LINE2
+
+					,0 AS LINE3
+
+					,0 AS LINE4
+
+					, '메인' AS NAME
+
+					  FROM JIT8100
+
+					 WHERE MENU_CD = 'main'
+
+					 AND TO_CHAR(REGST_YMD,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd#	
+
+					UNION ALL
+
+					SELECT * FROM (SELECT 
+
+					       NVL((SELECT COUNT(O.MENU_PSTATE) FROM JIT8100 O WHERE T.MENU_CD = O.MENU_CD AND O.MENU_PSTATE='C' AND TO_CHAR(REGST_YMD,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd# GROUP BY MENU_CD,MENU_PSTATE),0) AS LINE1,
+
+					        NVL((SELECT COUNT(O.MENU_PSTATE) FROM JIT8100 O WHERE T.MENU_CD = O.MENU_CD AND O.MENU_PSTATE='L' AND TO_CHAR(REGST_YMD,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd# GROUP BY MENU_CD,MENU_PSTATE),0) AS LINE2,
+
+					         NVL((SELECT COUNT(O.MENU_PSTATE) FROM JIT8100 O WHERE T.MENU_CD = O.MENU_CD AND O.MENU_PSTATE='U' AND TO_CHAR(REGST_YMD,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd# GROUP BY MENU_CD,MENU_PSTATE),0) AS LINE3,
+
+					          NVL((SELECT COUNT(O.MENU_PSTATE) FROM JIT8100 O WHERE T.MENU_CD = O.MENU_CD AND O.MENU_PSTATE='D' AND TO_CHAR(REGST_YMD,'YYYY-MM-DD') BETWEEN #start_ymd# AND #end_ymd# GROUP BY MENU_CD,MENU_PSTATE),0) AS LINE4,
+
+					       LPAD(' ', LEVEL, '-') || T.MENU_NM AS NAME
+
+					  FROM JIT9160 T
+
+					  WHERE (      
+
+									               (M_SDATE  <= SYSDATE AND SYSDATE <=  M_EDATE)  
+
+									               OR                      
+
+									               (M_SDATE IS NULL AND SYSDATE <= M_EDATE)  
+
+									               OR                      
+
+									               (M_SDATE <= SYSDATE AND M_EDATE IS NULL)  
+
+									       				OR											
+
+											   				(M_SDATE IS NULL AND M_EDATE IS NULL)		
+
+											   				)	
+
+				    START WITH T.MENU_UPPO_CD =#siteCode#
+
+					CONNECT BY NOCYCLE PRIOR T.MENU_CD = T.MENU_UPPO_CD
+
+					ORDER BY LEVEL ASC, ORDER_NO) 
+
+		 ]]> 
+
+		</select>			
+
+		
+
+		
+
+	<select id="JiCmSti.MainCHART1" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 	
+
+		  SELECT '"'||DECODE(T.NAME,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금',7,'토',0,'총합')||'"' AS NAME,T.NAME AS AAAAAA,SUM(T.LINE1) AS LINE1
+
+        FROM ( SELECT YYYYMM AS NAME,COUNT(REGST_EMP_ID) AS LINE1 FROM  (SELECT TO_NUMBER(TO_CHAR(REGST_YMD,'D')) AS YYYYMM ,REGST_EMP_ID FROM JIT8100 T
+
+                WHERE TO_CHAR(REGST_YMD,'YYYYMM') = TO_CHAR(SYSDATE,'YYYYMM')
+
+                GROUP BY TO_NUMBER(TO_CHAR(REGST_YMD,'D')),REGST_EMP_ID)
+
+                GROUP BY YYYYMM
+
+        UNION ALL
+
+          SELECT  
+
+              1 + LEVEL - 1 AS NAME, 0 AS LINE1 
+
+              FROM DUAL  
+
+              CONNECT BY  
+
+                1 + LEVEL - 1  <= 7  
+
+        UNION ALL          
+
+             SELECT 0 AS NAME ,COUNT(REGST_EMP_ID) AS LINE1 FROM  (SELECT TO_NUMBER(TO_CHAR(REGST_YMD,'D')) AS YYYYMM ,REGST_EMP_ID FROM JIT8100 T
+
+              WHERE TO_CHAR(REGST_YMD,'YYYYMM') = TO_CHAR(SYSDATE,'YYYYMM')
+
+              GROUP BY TO_NUMBER(TO_CHAR(REGST_YMD,'D')),REGST_EMP_ID)
+
+			          ) T
+
+			      GROUP BY T.NAME 
+
+			      ORDER BY T.NAME 		
+
+		 ]]> 
+
+		</select>	
+
+	
+
+	<select id="JiCmSti.MainCHART" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 	
+
+			SELECT '"'||DECODE(R_SEQ,1,'전일',2,'당월',3,'종합(년누계)')||'"' AS NAME , 
+
+			NVL(BEF_OUT,0) AS LINE1, 
+
+			NVL(BEF_OUT2,0) AS LINE4,
+
+			NVL(BEF_USE,0) AS LINE2, 
+
+			NVL(BEF_USE2,0) AS LINE5, 
+
+			NVL(BEF_RATE,0) AS LINE3 
+
+			FROM (
+
+			    SELECT '1' AS R_SEQ
+
+			    , TRUNC(SUM(GEN_OUT)/1000,0) AS BEF_OUT
+
+			    , SUM(GEN_OUT) AS BEF_OUT2
+
+			    , TRUNC(SUM(GEN_USE_AMT)/1000,0) AS BEF_USE
+
+			    , SUM(GEN_USE_AMT) AS BEF_USE2
+
+			    , ROUND((860* (SUM(OUT_MOTOR)+SUM(OUT_SPA)) )/((sum(F.GEN_USE_AMT*A.FUEL_HEAT_AMT)/sum(F.GEN_USE_AMT))*SUM(F.GEN_USE_AMT))*100, 2) AS BEF_RATE
+
+			    /* 20150925 :: SUM(GEN_OUT) => (SUM(OUT_MOTOR)+SUM(OUT_SPA))  */
+
+			    FROM JIT1110 A, JIT1112 F
+
+			    , (SELECT TO_CHAR(SYSDATE-1,'YYYYMMDD') AS C_YMD FROM DUAL) B
+
+			    WHERE A.RSLT_YMD = B.C_YMD
+
+			      AND A.RSLT_YMD = F.RSLT_YMD(+)
+
+			      AND A.PWRPLANT_CD = F.PWRPLANT_CD(+)
+
+			    UNION
+
+			    SELECT '2' AS R_SEQ
+
+			    , TRUNC(SUM(GEN_OUT)/1000,0) AS BEF_OUT
+
+			    , SUM(GEN_OUT) AS BEF_OUT2
+
+    			, TRUNC(SUM(GEN_USE_AMT)/1000,0) AS BEF_USE
+
+    			, SUM(GEN_USE_AMT) AS BEF_USE2
+
+			    , ROUND((860* (SUM(OUT_MOTOR)+SUM(OUT_SPA)) )/((sum(F.GEN_USE_AMT*A.FUEL_HEAT_AMT)/sum(F.GEN_USE_AMT))*SUM(F.GEN_USE_AMT))*100, 2) AS BEF_RATE
+
+			    FROM JIT1110 A, JIT1112 F
+
+			    , (SELECT TO_CHAR(SYSDATE-1,'YYYYMMDD') AS C_YMD FROM DUAL) B
+
+			    WHERE A.RSLT_YMD <= B.C_YMD
+
+			      AND A.RSLT_YMD LIKE SUBSTR(B.C_YMD,0,6)||'%'
+
+			      AND A.RSLT_YMD = F.RSLT_YMD(+)
+
+			      AND A.PWRPLANT_CD = F.PWRPLANT_CD(+)
+
+			    UNION
+
+			    SELECT '3' AS R_SEQ
+
+			    , TRUNC(SUM(GEN_OUT)/1000,0) AS BEF_OUT
+
+			    , SUM(GEN_OUT) AS BEF_OUT2
+
+    			, TRUNC(SUM(GEN_USE_AMT)/1000,0) AS BEF_USE
+
+    			, SUM(GEN_USE_AMT) AS BEF_USE2
+
+			    , ROUND((860* (SUM(OUT_MOTOR)+SUM(OUT_SPA)) )/((sum(F.GEN_USE_AMT*A.FUEL_HEAT_AMT)/sum(F.GEN_USE_AMT))*SUM(F.GEN_USE_AMT))*100, 2) AS BEF_RATE
+
+			    FROM JIT1110 A, JIT1112 F
+
+			    , (SELECT TO_CHAR(SYSDATE-1,'YYYYMMDD') AS C_YMD FROM DUAL) B
+
+			    WHERE A.RSLT_YMD <= B.C_YMD
+
+			      AND A.RSLT_YMD LIKE SUBSTR(B.C_YMD,0,4)||'%'
+
+			      AND A.RSLT_YMD = F.RSLT_YMD(+)
+
+			      AND A.PWRPLANT_CD = F.PWRPLANT_CD(+)
+
+			) ORDER BY R_SEQ		
+
+		 ]]> 
+
+		</select>		
+
+		
+
+		<select id="JiCmSti.LastLoginLog" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+
+	SELECT MIN(LOGINLOG) AS LOGINLOG FROM ( SELECT TO_CHAR(T.REGST_YMD, 'YYYYMMDDHH24MI') AS LOGINLOG
+
+		   FROM JIT8100 T
+
+		  WHERE T.MENU_PSTATE = 'login'
+
+		    AND REGST_EMP_ID = #emp_id#
+
+		  ORDER BY REGST_YMD DESC)
+
+		  WHERE ROWNUM < 3
+
+		 ]]> 
+
+		</select>		
+
+		
+
+<select id="JiCmSti.MainLeftTab" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		<![CDATA[ 
+
+			WITH CURR_DATE AS (   
+
+    SELECT OUTAGE_FIELD
+
+          ,OUTAGE_SECT
+
+    FROM JIT6111
+
+    WHERE INPUT_YMD = TO_CHAR(SYSDATE,'YYYYMMDD')
+
+),
+
+LAST_DATE AS (            
+
+    SELECT OUTAGE_FIELD
+
+          ,OUTAGE_SECT
+
+    FROM JIT6111
+
+    WHERE INPUT_YMD = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYYMMDD')
+
+),
+
+CURR_MONTH AS (        
+
+    SELECT OUTAGE_FIELD
+
+          ,OUTAGE_SECT
+
+    FROM JIT6111
+
+    WHERE INPUT_YMD BETWEEN TO_CHAR(SYSDATE,'YYYYMM') || '01' AND  TO_CHAR(SYSDATE,'YYYYMM') || '31'
+
+),
+
+LAST_MONTH AS (        
+
+    SELECT OUTAGE_FIELD
+
+          ,OUTAGE_SECT
+
+    FROM JIT6111
+
+    WHERE INPUT_YMD BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYYMM') || '01' AND  TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYYMM') || '31'
+
+),
+
+CURR_YEAR AS (         
+
+    SELECT OUTAGE_FIELD
+
+          ,OUTAGE_SECT
+
+    FROM JIT6111
+
+    WHERE INPUT_YMD BETWEEN TO_CHAR(SYSDATE,'YYYY') || '0101' AND TO_CHAR(SYSDATE,'YYYYMMDD')
+
+),
+
+LAST_YEAR AS (        
+
+SELECT OUTAGE_FIELD
+
+      ,OUTAGE_SECT
+
+FROM JIT6111
+
+WHERE INPUT_YMD BETWEEN  TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') || '0101' AND TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYYMMDD')
+
+)
+
+SELECT (SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') || ')' AS RT1
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') || ')' AS RT2
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') || ')' AS RT3
+
+        ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'I') || ')' AS RT4
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'I') || ')' AS RT5
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT = 'I') || ')' AS RT6    
+
+         ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') || ')' AS RT7
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') || ')' AS RT8
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'G' AND OUTAGE_SECT != 'F') || ')' AS RT9    
+
+FROM DUAL
+
+UNION ALL
+
+SELECT (SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') || ')' AS RT1
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') || ')' AS RT2
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') || ')' AS RT3
+
+        ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'I') || ')' AS RT4
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'I') || ')' AS RT5
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT = 'I') || ')' AS RT6    
+
+         ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') || ')' AS RT7
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') || ')' AS RT8
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_FIELD = 'D' AND OUTAGE_SECT != 'F') || ')' AS RT9    
+
+FROM DUAL         
+
+UNION ALL
+
+SELECT (SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_SECT = 'D') || ')' AS RT1
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_SECT = 'D') || ')' AS RT2
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_SECT = 'D') || ')' AS RT3
+
+        ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_SECT = 'D') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_SECT = 'I') || ')' AS RT4
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_SECT = 'I') || ')' AS RT5
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_SECT = 'I') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_SECT = 'I') || ')' AS RT6    
+
+         ,(SELECT COUNT(*) FROM CURR_DATE WHERE OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_DATE WHERE OUTAGE_SECT != 'F') || ')' AS RT7
+
+        ,(SELECT COUNT(*) FROM CURR_MONTH WHERE OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_MONTH WHERE OUTAGE_SECT != 'F') || ')' AS RT8
+
+        ,(SELECT COUNT(*) FROM CURR_YEAR WHERE OUTAGE_SECT != 'F') 
+
+         || ' ('  || (SELECT COUNT(*) FROM LAST_YEAR WHERE OUTAGE_SECT != 'F') || ')' AS RT9    
+
+FROM DUAL
+
+		 ]]> 
+
+		</select>		
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

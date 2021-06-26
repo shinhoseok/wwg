@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="user">
+
+	<!-- 사용자 패스워드 변경시 자신의 패스워드인지 확인한다. -->
+	<select id="user.selectUserDetail" parameterClass="userVO" resultClass="java.lang.Integer">
+		SELECT count(*) cnt 
+		FROM JIT9111_DAMO 
+		WHERE
+		     user_id = #userId#
+		    and login_ipns = damo.HASH_STR_DATA(#userPwd#)
+	</select>
+</sqlMap>

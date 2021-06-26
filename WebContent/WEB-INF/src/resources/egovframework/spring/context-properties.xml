@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+		<property name="properties">
+	        <map>
+	        	<entry key="CMS_DB_TYPE" value="${CMS_DB_TYPE}"/>
+	        	<entry key="CMS_ENC_JASYP_AL" value="${CMS_ENC_JASYP_AL}"/>
+	        	<entry key="CMS_ENC_JASYP_PW" value="${CMS_ENC_JASYP_PW}"/>
+	        	<entry key="CMS_ENC_JASYP_OW" value="${CMS_ENC_JASYP_OW}"/>
+
+	        	<!--데이터 바인딩 키 -->
+				<entry key="RESERVED_DTO_KEY" value="${RESERVED_DTO_KEY}"/>
+				<entry key="DEFAULT_DTO_KEY" value="${DEFAULT_DTO_KEY}"/>
+				
+				<!--D:개발 R:실운영 (sso연동 및 IP체크 등...) -->
+				<entry key="DEV_MODE" value="${DEV_MODE}"/>
+				
+				<!-- SSO 쿠키값 키 -->
+				<entry key="SSO_COOKIE_NM" value="${SSO_COOKIE_NM}"/>
+				<entry key="SSO_COOKIE_IPNM" value="${SSO_COOKIE_IPNM}"/>
+				
+				<!-- CONTEXT관련 -->
+				<entry key="CON_ROOT" value="${CON_ROOT}"/>
+				<entry key="CON_ROOT_WEB" value="${CON_ROOT_WEB}"/>
+				<entry key="CON_ROOT_SVL" value="${CON_ROOT_SVL}"/>
+				<entry key="GUBUN" value="동반성장 오픈플랫폼"/>
+				<entry key="SYSTEM_NAME" value="동반성장 오픈플랫폼"/>
+
+				<entry key="IMG_DIR" value="${IMG_DIR}"/>
+				<entry key="IMG_ADM_DIR" value="${IMG_ADM_DIR}"/>
+				
+				<!-- 관리자 시스템 코드 -->
+				<entry key="SYS_ADMIN_CD" value="${SYS_ADMIN_CD}"/>
+				<!-- 공통  시스템 코드 -->
+				<entry key="SYS_COMMON_CD" value="${SYS_COMMON_CD}"/>
+				<!-- 기본 사이트 코드 -->
+				<entry key="SYS_SITE_CD" value="${SYS_SITE_CD}"/>
+				<!-- 시스템 문자셋 -->
+				<entry key="SYS_ENCODING" value="${SYS_ENCODING}"/>
+
+				<!-- jsp 최상위경로 -->
+				<entry key="JSP_DIR" value="${JSP_DIR}"/>
+				<!-- jsp 관리자 최상위경로 -->
+				<!-- <entry key="JSP_ADM_DIR" value="/WEB-INF/jsp/cmsadmin"/> -->
+				<entry key="JSP_ADM_DIR" value="${JSP_ADM_DIR}"/>
+				<!-- jsp 공통 결과 페이지 -->
+				<!-- <entry key="RESULT_PAGE" value="/WEB-INF/jsp/cm/CmSuccess.jsp"/>-->
+				<entry key="RESULT_PAGE" value="${RESULT_PAGE}"/>
+				
+				<entry key="RESULT_DTO_KEY" value="${RESULT_DTO_KEY}"/>
+				<entry key="RESULT_MSG_KEY" value="${RESULT_MSG_KEY}"/>
+				<entry key="RESULT_STA_KEY" value="${RESULT_STA_KEY}"/>
+				
+				<entry key="RESULT_URL_KEY" value="${RESULT_URL_KEY}"/>
+				<entry key="RESULT_URL_T_KEY" value="${RESULT_URL_T_KEY}"/>
+				<entry key="RESULT_URL_R_KEY" value="${RESULT_URL_R_KEY}"/>
+				<entry key="RESULT_URL_F_KEY" value="${RESULT_URL_F_KEY}"/>
+				<entry key="RESULT_UPPAGE" value="${RESULT_UPPAGE}"/>
+				<entry key="R_FILE" value="${R_FILE}"/>
+				
+				<!-- URL관련 -->
+				<entry key="LOGIN_URL" value="${LOGIN_URL}"/>
+				<entry key="MAIN_URL" value="${MAIN_URL}"/>
+
+				<!-- 처리결과 액션 -->
+				<entry key="FORWARD_SUCCESS" value="${FORWARD_SUCCESS}"/>
+				<entry key="FORWARD_FAILURE" value="${FORWARD_FAILURE}"/>
+				<entry key="FORWARD_CONFIRM" value="${FORWARD_CONFIRM}"/>
+				<entry key="FORWARD_SYS_FAILURE" value="${FORWARD_SYS_FAILURE}"/>
+
+				<!-- 업로드 관련 -->
+				<entry key="CONTEXTROOT_REALPATH" value="${CONTEXTROOT_REALPATH}"/>
+				<entry key="UPLOADROOTPATH" value="${UPLOADROOTPATH}"/>
+				<entry key="UPLOADROOTURL" value="${UPLOADROOTURL}"/>
+				<entry key="MAXUPLOAD" value="${MAXUPLOAD}"/>
+				<entry key="UPLOADCNT" value="${UPLOADCNT}"/>
+
+				<!-- 데이터베이스 관련 >-->
+				<entry key="DATASOURCE" value="${DATASOURCE}"/>
+
+				
+				<!-- 달력 팝업 관련 -->
+				<entry key="CAL_POP_W" value="${CAL_POP_W}"/>
+				<entry key="CAL_POP_H" value="${CAL_POP_H}"/>
+				
+				<!-- 사이트 세션관련 -->
+				<entry key="SITE_SESSION_FN" value="${SITE_SESSION_FN}"/>
+				<entry key="SITE_COOKIE_FN" value="${SITE_COOKIE_FN}"/>
+				<entry key="SITE_ADM_SESSION_FN" value="${SITE_ADM_SESSION_FN}"/>
+				<entry key="SITE_ADM_COOKIE_FN" value="${SITE_ADM_COOKIE_FN}"/>
+				<entry key="SITE_AUTH_SESSION_FN" value="${SITE_AUTH_SESSION_FN}"/>
+				<entry key="SITE_AUTH_COOKIE_FN" value="${SITE_AUTH_COOKIE_FN}"/>
+							
+				<!-- 메일전송관련 -->
+				<entry key="SMTP_SERVER" value="${SMTP_SERVER}"/>
+				<entry key="SMTP_PORT" value="${SMTP_PORT}"/>
+				<entry key="SMTP_DOMAIN" value="${SMTP_DOMAIN}"/>
+				
+				<entry key="SMTP_SERVER_D" value="${SMTP_SERVER_D}"/>
+				<entry key="SMTP_PORT_D" value="${SMTP_PORT_D}"/>
+				<entry key="SMTP_DOMAIN_D" value="${SMTP_DOMAIN_D}"/>				
+				
+				<!-- 인증초기화비밀번호 -->
+				<entry key="INIT_LOGINPASS" value="${INIT_LOGINPASS}"/>
+				
+				<!-- vworld api key -->
+				<entry key="VWORLD_API_KEY" value="${VWORLD_API_KEY}"/>
+				<!-- vworld domain uri -->
+				<entry key="VWORLD_DOMAIN_URI" value="${VWORLD_DOMAIN_URI}"/>
+				
+				<!-- 맞춤데이터 주관부서담당자 -->
+				<entry key="CHF_DEPT_CONFMER_ID" value="${CHF_DEPT_CONFMER_ID}"/>
+				
+				<!-- 맞춤데이터 주관부서승인자 -->
+				<entry key="CHF_DEPT_CONFMER2_ID" value="${CHF_DEPT_CONFMER2_ID}"/>
+				
+				<!-- 공통 이메일폼 -->
+				<entry key="CM_EMAIL_FORM" value="${CM_EMAIL_FORM}"/>
+				
+				<!-- 기본관리자 메일 -->
+				<entry key="CM_ADMIN_EMAIL" value="${CM_ADMIN_EMAIL}"/>
+				<entry key="CM_ADMIN_DEFAULT_ID" value="${CM_ADMIN_DEFAULT_ID}"/>
+				
+				<!-- 시스템url -->
+				<entry key="CM_SYSTEM_URL" value="${CM_SYSTEM_URL}"/>	
+				
+				<entry key="CM_EMAIL_FORM_FT" value="${CM_EMAIL_FORM_FT}"/>				
+				<!-- 페이징갯수 -->
+				<entry key="PAGE_UNIT" value="${PAGE_UNIT}"/>
+				<!-- 페이징사이즈 -->
+				<entry key="PAGE_SIZE" value="${PAGE_SIZE}"/>
+	        </map>
+		</property>
+	</bean>
+	
+</beans>	

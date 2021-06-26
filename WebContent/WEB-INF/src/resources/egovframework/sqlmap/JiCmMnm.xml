@@ -1,0 +1,1045 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmMnm">
+	
+	<!-- 공통게시판 공통 where -->
+	<sql id="menuKindWhere">
+		AND LINK_TY = #linkTy#
+		AND DEL_YN = 'N'
+		<isNotNull property="searchValue">
+			<isNotEmpty property="searchValue">
+				and a.MENU_NM like '%'|| #searchValue# ||'%'
+			</isNotEmpty>
+		</isNotNull>
+	</sql>
+	
+	<!-- 메뉴 종류별 리스트 -->
+	<select id="JiCmMnm.selectMenuKindList" parameterClass="menuVO" resultClass="menuVO">
+		SELECT C.*
+		  FROM (SELECT ROW_NUMBER () OVER (ORDER BY a.MENU_NM ASC) AS rNum,
+		               a.MENU_CD menuCd,
+		               a.MENU_NM menuNm,
+		               a.LINK_TY linkTy,
+		               a.MENU_UPPO_CD menuUppoCd,
+		               TO_CHAR(a.REG_DT, 'YYYY-MM-DD') regDt
+		          FROM JIT9160 a
+		         WHERE 1 = 1 
+		             <include refid="menuKindWhere"/>
+		       ) C
+		 WHERE C.rNum BETWEEN #firstIndex# AND #lastIndex#
+ 	</select>
+ 	
+ 	<!-- 메뉴 종류별 카운트 -->
+	<select id="JiCmMnm.selectMenuKindListCnt" parameterClass="menuVO" resultClass="java.lang.Integer">
+		SELECT COUNT (*) cnt
+		  FROM JIT9160 a
+		 WHERE 1 = 1
+			<include refid="menuKindWhere"/>
+ 	</select>
+ 	
+	<!-- 메뉴수정 -->
+	<update id="JiCmMnm.updateMenuProc" parameterClass="menuVO">
+		 UPDATE JIT9160 SET 
+			MENU_CD = #menuCd#
+			,MENU_NM = #menuNm#
+			,MENU_UPPO_CD = #menuUppoCd#
+			,ORDER_NO = #orderNo#
+			,DEPTH_NO = #depthNo#
+			,LINK_TY = #linkTy#
+			,CLASS_PATH = #classPath#
+			,LINK_PATH = #linkPath#
+			,BOARD_TY = #boardTy#
+			,BOARD_GBN = #boardGbn#
+			,LINK_TARGET = #linkTarget#
+			,M_IMG_ON = #mImgOn#
+			,M_IMG_OFF = #mImgOff#
+			,M_IMG_ALT = #mImgAlt#
+			,CLASS_PATH_JSP = #classPathJsp#
+			,CLASS_METHOD = #classMethod#
+			,M_SDATE = #mSdate#
+			,M_EDATE = #mEdate#
+			,M_S_STYLE = #mSStyle#
+			,JSP_INCLUDE_YN = #jspIncludeYn#
+			,BOARD_LI_ITEM = #boardLiItem#
+			,BOARD_LI_ITEM_NM = #boardLiItemNm#
+			,BOARD_ETC_ITEM = #boardEtcItem#
+			,BOARD_ETC_ITEM_TY = #boardEtcItemTy#
+			,BOARD_ETC_ITEM_NM = #boardEtcItemNm#
+			,BOARD_OPT = #boardOpt#
+			,M_TITLE_HTML = #mTitleHtml#
+			,BOARD_ETC_ITEM_CODE = #boardEtcItemCode#
+			,BOARD_INT_M_CODES = #boardIntMCodes#
+			,M_OPT = #mOpt#
+			,MOD_DT = sysdate
+			,MOD_ID = #modId#
+		 WHERE MENU_SEQNO = #menuSeqno#
+	</update>
+	
+ 	<!-- 메뉴상세정보(하위메뉴리스트) -->
+ 	<select id="JiCmMnm.selectMenu" parameterClass="menuVO" resultClass="menuVO">
+		SELECT MENU_SEQNO menuSeqno,
+		       MENU_CD menuCd,
+		       MENU_NM menuNm,
+		       MENU_UPPO_CD menuUppoCd,
+		       ORDER_NO orderNo,
+		       DEPTH_NO depthNo,
+		       LINK_TY linkTy,
+		       (SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_UPPO_CD = 'M00002' AND STDINFO_DTL_CD = LINK_TY) linkTyNm,
+		       CLASS_PATH classPath,
+		       LINK_PATH linkPath,
+		       BOARD_TY boardTy,
+		       (SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_UPPO_CD = 'M00003' AND STDINFO_DTL_CD = BOARD_TY) boardTyNm,
+		       BOARD_GBN boardGbn,
+		       LINK_TARGET linkTarget,
+		       M_IMG_ON mImgOn,
+		       M_IMG_OFF mImgOff,
+		       M_IMG_ALT mImgAlt,
+		       CLASS_PATH_JSP classPathJsp,
+		       CLASS_METHOD classMethod,
+		       TO_CHAR(M_SDATE, 'YYYY-MM-DD') mSdate,
+		       TO_CHAR(M_EDATE, 'YYYY-MM-DD') mEdate,
+		       M_S_STYLE mSStyle,
+		       JSP_INCLUDE_YN jspIncludeYn,
+		       BOARD_LI_ITEM boardLiItem,
+		       BOARD_LI_ITEM_NM boardLiItemNm,
+		       BOARD_ETC_ITEM boardEtcItem,
+		       BOARD_ETC_ITEM_TY boardEtcItemTy,
+		       BOARD_ETC_ITEM_NM boardEtcItemNm,
+		       BOARD_OPT boardOpt,
+		       M_TITLE_HTML mTitleHtml,
+		       BOARD_ETC_ITEM_CODE boardEtcItemCode,
+		       BOARD_INT_M_CODES boardIntMCodes,
+		       M_OPT mOpt,
+		       TO_CHAR(REG_DT, 'YYYY-MM-DD') regDt,
+		       REG_ID regId,
+		       TO_CHAR(MOD_DT, 'YYYY-MM-DD') modDt,
+		       MOD_ID modId,
+		       TO_CHAR(DEL_DT, 'YYYY-MM-DD') delDt,
+		       DEL_ID delId,
+		       DEL_YN delYn,
+		       TO_CHAR(ALIVE_TIME, 'YYYY-MM-DD') aliveTime,
+		       ALIVE_YN aliveYn
+		  FROM JIT9160
+		  WHERE MENU_SEQNO = #menuSeqno#
+		  	AND DEL_YN = 'N'
+ 	</select>
+ 	
+ 	<!-- 메뉴삭제 -->
+ 	<update id="JiCmMnm.deleteMenuProc" parameterClass="menuVO">
+		 UPDATE JIT9160 SET 
+		 	   DEL_YN = 'Y',
+		 	   DEL_DT = sysdate,
+		 	   DEL_ID = #delId#
+		 WHERE MENU_SEQNO = #menuSeqno#
+	</update>
+	
+ 	<!-- 메뉴등록 -->
+ 	<insert id="JiCmMnm.insertMenuProc" parameterClass="menuVO">
+		INSERT INTO JIT9160
+		(
+			MENU_SEQNO
+			,MENU_CD
+			,MENU_NM
+			,MENU_UPPO_CD
+			,ORDER_NO
+			,DEPTH_NO
+			,LINK_TY
+			,CLASS_PATH
+			,LINK_PATH
+			,BOARD_TY
+			,BOARD_GBN
+			,LINK_TARGET
+			,M_IMG_ON
+			,M_IMG_OFF
+			,M_IMG_ALT
+			,CLASS_PATH_JSP
+			,CLASS_METHOD
+			,M_SDATE
+			,M_EDATE
+			,M_S_STYLE
+			,JSP_INCLUDE_YN
+			,BOARD_LI_ITEM
+			,BOARD_LI_ITEM_NM
+			,BOARD_ETC_ITEM
+			,BOARD_ETC_ITEM_TY
+			,BOARD_ETC_ITEM_NM
+			,BOARD_OPT
+			,M_TITLE_HTML
+			,BOARD_ETC_ITEM_CODE
+			,BOARD_INT_M_CODES
+			,M_OPT
+			,REG_DT
+			,REG_ID
+		)VALUES(
+			#menuSeqno#
+			,#menuCd#
+			,#menuNm#
+			,#menuUppoCd#
+			,#orderNo#
+			,#depthNo#
+			,#linkTy#
+			,#classPath#
+			,#linkPath#
+			,#boardTy#
+			,#boardGbn#
+			,#linkTarget#
+			,#mImgOn#
+			,#mImgOff#
+			,#mImgAlt#
+			,#classPathJsp#
+			,#classMethod#
+			,#mSdate#
+			,#mEdate#
+			,#mSStyle#
+			,#jspIncludeYn#
+			,#boardLiItem#
+			,#boardLiItemNm#
+			,#boardEtcItem#
+			,#boardEtcItemTy#
+			,#boardEtcItemNm#
+			,#boardOpt#
+			,#mTitleHtml#
+			,#boardEtcItemCode#
+			,#boardIntMCodes#
+			,#mOpt#
+			,SYSDATE
+			,#regId#
+		)
+	</insert>
+	
+ 	<!-- 메뉴코드 중복확인 -->
+ 	<select id="JiCmMnm.selectMenuCdCheck" parameterClass="menuVO" resultClass="java.lang.Integer">
+		SELECT COUNT(*) CNT FROM JIT9160 WHERE MENU_CD = #menuCd#
+ 	</select>
+ 	
+ 	<!-- 메뉴상세정보(하위메뉴리스트) -->
+ 	<select id="JiCmMnm.selectMenuDetail" parameterClass="menuVO" resultClass="menuVO">
+		SELECT MENU_SEQNO menuSeqno,
+		       MENU_CD menuCd,
+		       MENU_NM menuNm,
+		       MENU_UPPO_CD menuUppoCd,
+		       ORDER_NO orderNo,
+		       DEPTH_NO depthNo,
+		       LINK_TY linkTy,
+		       (SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_UPPO_CD = 'M00002' AND STDINFO_DTL_CD = LINK_TY) linkTyNm,
+		       CLASS_PATH classPath,
+		       LINK_PATH linkPath,
+		       BOARD_TY boardTy,
+		       (SELECT STDINFO_DTL_NM FROM JIT9101 WHERE STDINFO_DTL_UPPO_CD = 'M00003' AND STDINFO_DTL_CD = BOARD_TY) boardTyNm,
+		       BOARD_GBN boardGbn,
+		       LINK_TARGET linkTarget,
+		       M_IMG_ON mImgOn,
+		       M_IMG_OFF mImgOff,
+		       M_IMG_ALT mImgAlt,
+		       CLASS_PATH_JSP classPathJsp,
+		       CLASS_METHOD classMethod,
+		       TO_CHAR(M_SDATE, 'YYYY-MM-DD') mSdate,
+		       TO_CHAR(M_EDATE, 'YYYY-MM-DD') mEdate,
+		       M_S_STYLE mSStyle,
+		       JSP_INCLUDE_YN jspIncludeYn,
+		       BOARD_LI_ITEM boardLiItem,
+		       BOARD_LI_ITEM_NM boardLiItemNm,
+		       BOARD_ETC_ITEM boardEtcItem,
+		       BOARD_ETC_ITEM_TY boardEtcItemTy,
+		       BOARD_ETC_ITEM_NM boardEtcItemNm,
+		       BOARD_OPT boardOpt,
+		       M_TITLE_HTML mTitleHtml,
+		       BOARD_ETC_ITEM_CODE boardEtcItemCode,
+		       BOARD_INT_M_CODES boardIntMCodes,
+		       M_OPT mOpt,
+		       TO_CHAR(REG_DT, 'YYYY-MM-DD') regDt,
+		       REG_ID regId,
+		       TO_CHAR(MOD_DT, 'YYYY-MM-DD') modDt,
+		       MOD_ID modId,
+		       TO_CHAR(DEL_DT, 'YYYY-MM-DD') delDt,
+		       DEL_ID delId,
+		       DEL_YN delYn,
+		       TO_CHAR(ALIVE_TIME, 'YYYY-MM-DD') aliveTime,
+		       ALIVE_YN aliveYn
+		  FROM JIT9160
+		  WHERE MENU_UPPO_CD = #menuCd#
+		  	AND DEL_YN = 'N'
+		  ORDER BY ORDER_NO ASC
+ 	</select>
+ 	
+ 	<!-- 사용자 or 관리자 메뉴트리 -->
+ 	<select id="JiCmMnm.selectMenuList" parameterClass="menuVO" resultClass="menuVO">
+		SELECT  mn1.menu_cd menuDepth1Cd, 
+	            mn1.menu_nm menuDepth1Nm,
+	            mn1.menu_uppo_cd menuDepth1UppoCd,
+	            mn2.menu_cd menuDepth2Cd,
+	            mn2.menu_nm menuDepth2Nm,
+	            mn2.menu_uppo_cd menuDepth2UppoCd,
+	            mn3.menu_cd menuDepth3Cd,
+	            mn3.menu_nm menuDepth3Nm,
+	            mn3.menu_uppo_cd menuDepth3UppoCd,
+	            mn4.menu_cd menuDepth4Cd,
+	            mn4.menu_nm menuDepth4Nm,
+	            mn4.menu_uppo_cd menuDepth4UppoCd
+		  FROM jit9160 mn1
+		    left join jit9160 mn2 on (mn1.menu_cd = mn2.menu_uppo_cd and mn2.del_yn = 'N' and mn2.menu_cd != '000121')
+		    left join jit9160 mn3 on (mn2.menu_cd = mn3.menu_uppo_cd and mn3.del_yn = 'N')
+		    left join jit9160 mn4 on (mn3.menu_cd = mn4.menu_uppo_cd and mn4.del_yn = 'N')
+		 WHERE mn1.menu_cd = #menuCd#
+		            and mn1.DEL_YN = 'N'
+		 order by MN1.ORDER_NO, mn2.ORDER_NO, mn3.ORDER_NO, mn4.ORDER_NO
+ 	</select>
+ 	
+ 	<!-- 메뉴관리 메뉴트리(ALL) -->
+ 	<select id="JiCmMnm.selectMenuMngList" parameterClass="menuVO" resultClass="menuVO">
+        SELECT  mn1.menu_cd menuDepth1Cd, 
+                mn1.menu_nm menuDepth1Nm,
+                mn1.menu_uppo_cd menuDepth1UppoCd,
+                mn2.menu_cd menuDepth2Cd,
+                mn2.menu_nm menuDepth2Nm,
+                mn2.menu_uppo_cd menuDepth2UppoCd,
+                mn3.menu_cd menuDepth3Cd,
+                mn3.menu_nm menuDepth3Nm,
+                mn3.menu_uppo_cd menuDepth3UppoCd,
+                mn4.menu_cd menuDepth4Cd,
+                mn4.menu_nm menuDepth4Nm,
+                mn4.menu_uppo_cd menuDepth4UppoCd
+          FROM jit9160 mn1
+            left join jit9160 mn2 on (mn1.menu_cd = mn2.menu_uppo_cd and mn2.del_yn = 'N')
+            left join jit9160 mn3 on (mn2.menu_cd = mn3.menu_uppo_cd and mn3.del_yn = 'N')
+            left join jit9160 mn4 on (mn3.menu_cd = mn4.menu_uppo_cd and mn4.del_yn = 'N')
+         WHERE mn1.menu_cd IN ('S01', 'sysadm')
+                    and mn1.DEL_YN = 'N'
+         order by MN1.ORDER_NO, mn2.ORDER_NO, mn3.ORDER_NO, mn4.ORDER_NO
+ 	</select>
+ 	
+    <select id="JiCmMnm.getMENU" parameterClass="java.util.HashMap" resultClass="egovMap">
+    
+			 SELECT 	
+			<isEmpty property="tree_yn">
+			   	TO_CHAR(TA.MENU_SEQNO) AS MENU_SEQNO				
+			   	, TA.MENU_CD, TA.MENU_NM, TA.MENU_UPPO_CD				
+			   	, TA.LV	, TA.MOD_DT, TA.REG_DT, TA.MOD_ID, TA.REG_ID				
+			   	, TA.ORDER_NO, TA.DEPTH_NO				
+			   	, TA.LINK_TY, TA.LINK_TY_NM				
+			   	, TA.CLASS_PATH, TA.LINK_PATH				
+			   	, TA.BOARD_TY, TA.BOARD_TY_NM, TA.BOARD_GBN				
+			   	, TA.LINK_TARGET, DECODE(TA.LINK_TARGET,'_self','현재창','_new','새창','현재창') AS LINK_TARGET_NM		
+		
+			   	, TA.CLASS_PATH_JSP				
+			   	, TA.CLASS_METHOD				
+			   	, TA.M_SDATE			
+			   	, TA.M_EDATE			
+			   	, TA.M_S_STYLE				
+			   	, DECODE(TA.M_S_STYLE,'1','LEFT메뉴','2','TAB메뉴','LEFT메뉴') AS M_S_STYLE_NM		
+			   	, TA.JSP_INCLUDE_YN				
+			   	, DECODE(TA.JSP_INCLUDE_YN,'1','INCLUDE','2','결과JSP','INCLUDE') AS JSP_INCLUDE_YN_NM		
+			
+			   	, TA.BOARD_LI_ITEM				
+			   	, TA.BOARD_LI_ITEM_NM				
+			   	, TA.BOARD_ETC_ITEM				
+			   	, TA.BOARD_ETC_ITEM_TY				
+			   	, TA.BOARD_ETC_ITEM_NM				
+			   	, TA.BOARD_OPT								
+			   	, TA.BOARD_ETC_ITEM_CODE				
+			   	, TA.BOARD_INT_M_CODES				
+			   	, DECODE(TA.BOARD_TY,'000014'	
+			   		,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(TA.BOARD_INT_M_CODES,0,INSTR(TA.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY			
+			   	, TA.M_OPT				
+			
+			   	<!--, SUBSTR(TA.M_NMS,3,LENGTH(TA.M_NMS)) AS M_NMS	
+			   	, SUBSTR(TA.M_CODES,3,LENGTH(TA.M_CODES)) AS M_CODES-->	
+			   	, TA.M_NMS AS M_NMS	
+			   	, TA.M_CODES AS M_CODES				   		
+			   	, TA.M_UP_CODE_NM
+				,  (SELECT COUNT(*) FROM JIT9160 WHERE MENU_UPPO_CD=TA.MENU_CD) AS TREE_SUB_CNT
+				, (SELECT COUNT(*) FROM JIT9602 WHERE M_CODE=TA.MENU_CD) HELP_CNT
+			</isEmpty>
+			<isNotEmpty property="tree_yn">
+				<isEqual property="tree_yn" compareValue="Y">
+    				MENU_SEQNO AS TREE_SEQ
+    				,MENU_CD AS TREE_CD
+    				,MENU_NM AS TREE_NM
+    				,MENU_UPPO_CD AS TREE_UPPO_CD
+    				,ORDER_NO AS ORG_SORT_NO
+    				,lv AS TREE_LEVEL
+    				, M_NMS AS TREE_NMS
+    				, M_CODES AS TREE_CDS
+    				, (SELECT COUNT(*) FROM JIT9160 WHERE MENU_UPPO_CD=TA.MENU_CD) AS TREE_SUB_CNT 
+    				, MENU_UPPO_CD_NM AS TREE_UPPO_CD_NM			
+				</isEqual>
+			</isNotEmpty>			 			
+
+			
+			   FROM(					
+					 
+			
+				SELECT
+		 			A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+		 			,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+		 			,A.M_S_STYLE 
+		 			, CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+		 			,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+		 			,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+		 			,STD_NM_FU03('M00002',A.LINK_TY) AS LINK_TY_NM
+		 			,A.CLASS_PATH		
+		 			,NVL(A.LINK_PATH, '') LINK_PATH, A.BOARD_TY 
+		 			,STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+		 			,A.BOARD_GBN ,A.LINK_TARGET 
+		 			,CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+		 			,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+		 			,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 			,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 			,LEVEL AS LV		
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'))) AS M_NMS
+        			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES		 				
+		 			, A.JSP_INCLUDE_YN 
+		 			, CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+		 			, A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+		 			, A.BOARD_ETC_ITEM_NM , A.BOARD_OPT, A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+		 			, DECODE(A.BOARD_TY,'000014'	
+		 				,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+		 			, A.M_OPT		
+			   FROM JIT9160 A										
+			   	START WITH A.MENU_CD = #all_fl#								
+			   	CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD	
+			   ORDER BY LEVEL, ORDER_NO								
+			   ) TA	
+			WHERE 1=1 
+			
+		  <isEqual property="all_fl" compareValue="000000">
+		  	<isEmpty property="sub_yn">	
+			  	<isNotEmpty property="level">
+		    		AND lv <![CDATA[ > ]]> #level#
+			  	</isNotEmpty>		  
+			  	<isEmpty property="level">
+		    		AND lv <![CDATA[ > ]]> 0
+			  	</isEmpty>
+			</isEmpty>
+					
+			<isNotEmpty property="sub_yn">	
+				<isEqual property="sub_yn" compareValue="Y">
+					<isNotEmpty property="lev">
+						AND lv = #lev#
+					</isNotEmpty>
+				</isEqual>	
+			</isNotEmpty>					 
+		  </isEqual>
+		  
+		  <isNotEqual property="all_fl" compareValue="000000">
+			<isNotEmpty property="sub_yn">	
+				<isEqual property="sub_yn" compareValue="Y">
+					<isNotEmpty property="lev">
+						AND lv = #lev#
+					</isNotEmpty>
+				</isEqual>	
+			</isNotEmpty>
+
+			<isNotEqual property="sub_yn" compareValue="Y">
+					<isNotEmpty property="lev">
+						AND lv <![CDATA[ >= ]]> #lev#
+					</isNotEmpty>
+			</isNotEqual>
+		  </isNotEqual>
+		  
+		  
+		  <!--  사용여부는 기간을 기준으로 체크한다 -->
+		  <isEqual property="use_yn" compareValue="Y">
+				AND(
+					( TO_DATE(M_SDATE,'YYYY-MM-DD') <![CDATA[ <= ]]> SYSDATE AND SYSDATE <![CDATA[ <= ]]> TO_DATE(M_EDATE,'YYYY-MM-DD') )
+					OR	
+					( M_SDATE IS NULL AND SYSDATE <![CDATA[ <= ]]> TO_DATE(M_EDATE,'YYYY-MM-DD') )
+					OR
+					( TO_DATE(M_SDATE,'YYYY-MM-DD') <![CDATA[ <= ]]> SYSDATE AND M_EDATE IS NULL )
+					OR	
+					( M_SDATE IS NULL AND M_EDATE IS NULL )
+					)
+		  </isEqual>
+		  
+		  <isEqual property="adminmenu" compareValue="Y">	
+		  	AND  (INSTR('000008',M_CODES) = 0)
+		  </isEqual>	  
+		  		
+		ORDER BY lv ASC, ORDER_NO ASC			  
+
+	</select> 
+	
+	
+	
+   <select id="JiCmMnm.getMenuCfg" parameterClass="java.util.HashMap" resultClass="egovMap">	
+			
+		SELECT TA.* FROM
+		 (SELECT
+		 A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+		 ,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+		 ,A.M_S_STYLE 
+		 , CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+		 ,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+		 ,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+		 , STD_NM_FU03('M00002',A.LINK_TY) AS LINK_TY_NM
+		 ,A.CLASS_PATH		
+		 ,A.LINK_PATH ,A.BOARD_TY 
+		 , STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+		 ,A.BOARD_GBN ,A.LINK_TARGET 
+		 , CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+		 ,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+		 ,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 ,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 ,LEVEL AS LV			
+         ,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'))) AS M_NMS
+         ,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'),3,LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES
+		 , A.JSP_INCLUDE_YN 
+		 , CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+		 , A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+		 , A.BOARD_ETC_ITEM_NM , A.BOARD_OPT ,A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+		 , DECODE(A.BOARD_TY,'000014'	
+		 		,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+		 , A.M_OPT	
+		 , (SELECT COUNT(*) FROM JIT9602 WHERE M_CODE=A.MENU_CD) HELP_CNT				
+		
+		 FROM JIT9160 A	
+		 START WITH A.MENU_CD = '000000'
+		 CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD	
+		 ORDER BY LEVEL ASC, ORDER_NO ASC) TA			
+		WHERE TA.MENU_CD=#m_code# 	
+
+	</select>	
+	
+	
+	
+	
+	
+	<select id="JiCmMnm.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9160_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>	
+	
+    <select id="JiCmMnm.getMaxCode" parameterClass="java.util.HashMap" resultClass="egovMap">
+			
+    SELECT 
+    		LPAD(TTA.MAX_C+1,#ColLen#,'0') MAX_CODE
+     FROM (    				
+    		SELECT NVL(MAX(TA.MENU_CD),0) MAX_C 
+        	FROM(
+          		SELECT MENU_CD, DEL_YN
+					,CASE WHEN REGEXP_LIKE(MENU_CD,#WhereStr#) THEN 'Y'
+          			ELSE 
+          	 		'N'
+          			END AS ISNUM
+				FROM JIT9160
+				) TA WHERE TA.ISNUM='Y'
+				AND TA.DEL_YN='N'
+			) TTA			
+			
+	</select>
+	
+    <select id="JiCmMnm.getMENUTree" parameterClass="java.util.HashMap" resultClass="egovMap">
+	SELECT 
+    		MENU_SEQNO AS TREE_SEQ
+    		,MENU_CD AS TREE_CD
+    		,MENU_NM AS TREE_NM
+    		,MENU_UPPO_CD AS TREE_UPPO_CD
+    		,ORDER_NO AS ORG_SORT_NO
+    		,lv AS TREE_LEVEL
+    		, M_NMS AS TREE_NMS
+    		, M_CODES AS TREE_CDS
+    		, (SELECT COUNT(*) FROM JIT9160 WHERE MENU_UPPO_CD=MENU_MGR.MENU_CD) AS TREE_SUB_CNT 
+    		, M_UP_CODE_NM AS TREE_UPPO_CD_NM			
+	
+	 FROM (    
+				SELECT
+		 			A.MENU_SEQNO ,A.MENU_CD ,A.MENU_NM
+		 			,(SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_UPPO_CD) AS M_UP_CODE_NM
+		 			,A.M_S_STYLE 
+		 			, CASE A.M_S_STYLE WHEN '1' THEN 'LEFT메뉴' WHEN '2' THEN 'TAB메뉴' ELSE 'LEFT메뉴' END AS M_S_STYLE_NM
+		 			,A.MENU_UPPO_CD ,A.MOD_DT ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT,A.MOD_ID			
+		 			,A.REG_ID ,A.ORDER_NO ,A.DEPTH_NO ,A.LINK_TY 
+		 			, STD_NM_FU03('M00002',A.LINK_TY) AS LINK_TY_NM
+		 			,A.CLASS_PATH		
+		 			,A.LINK_PATH ,A.BOARD_TY 
+		 			, STD_NM_FU03('M00003',A.BOARD_TY) AS BOARD_TY_NM
+		 			,A.BOARD_GBN ,A.LINK_TARGET 
+		 			, CASE A.LINK_TARGET WHEN '_self' THEN '현재창' WHEN '_new' THEN '새창' ELSE '현재창' END AS LINK_TARGET_NM 
+		 			,A.CLASS_PATH_JSP ,A.CLASS_METHOD 
+		 			,TO_CHAR(A.M_SDATE,'YYYY-MM-DD') M_SDATE 
+		 			,TO_CHAR(A.M_EDATE,'YYYY-MM-DD') M_EDATE 		 
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_NM,'::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_NM,'::')))  AS M_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.MENU_CD, '::'),3, LENGTH(SYS_CONNECT_BY_PATH(A.MENU_CD,'::'))) AS M_CODES
+		 			, A.JSP_INCLUDE_YN 
+		 			, CASE A.JSP_INCLUDE_YN WHEN '1' THEN 'INCLUDE' WHEN '2' THEN '결과JSP' ELSE 'INCLUDE' END AS JSP_INCLUDE_YN_NM
+		 			, A.BOARD_LI_ITEM , A.BOARD_LI_ITEM_NM , A.BOARD_ETC_ITEM , A.BOARD_ETC_ITEM_TY				
+		 			, A.BOARD_ETC_ITEM_NM , A.BOARD_OPT , A.BOARD_ETC_ITEM_CODE , A.BOARD_INT_M_CODES					
+		 			, DECODE(A.BOARD_TY,'000014'	
+		 				,(SELECT BOARD_TY FROM JIT9160 WHERE MENU_CD=SUBSTR(A.BOARD_INT_M_CODES,0,INSTR(A.BOARD_INT_M_CODES,'::')-1) ),'') BOARD_INT_TY
+		 			, A.M_OPT		
+			   FROM JIT9160 A										
+			   	START WITH A.MENU_CD = '000000'							
+			   	CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD	
+			   
+	) MENU_MGR
+	WHERE 1=1
+	AND  (INSTR(M_CODES,'000008') = 0)
+	AND  LV > 1
+	ORDER BY LV ASC, ORDER_NO ASC
+
+
+	</select>		
+	
+
+		
+	<select id="JiCmMnm.getMenuCodeChk" parameterClass="java.util.HashMap" resultClass="int">	
+		SELECT COUNT(*) CHK_CNT FROM JIT9160
+		WHERE MENU_CD=#max_code#	
+			<isEqual property="mods" compareValue="U">
+				AND MENU_CD  !=  #se_codeh#	
+			</isEqual>		
+	</select>	
+	
+	<select id="JiCmMnm.getMENUCreatCnt" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT 
+			COUNT(*) CNT
+		FROM JIT9160
+		WHERE MENU_UPPO_CD='000000'
+		AND MENU_CD NOT IN('000000','000008','000019')
+
+	</select>	
+	
+	<select id="JiCmMnm.getMENUCreatList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT 
+			TO_CHAR(MENU_SEQNO) as MENU_SEQNO
+			  ,MENU_CD
+			  ,MENU_NM
+			  ,MENU_UPPO_CD
+		FROM JIT9160
+		WHERE MENU_UPPO_CD='000000'
+		AND MENU_CD NOT IN('000000','000008','000019')
+		ORDER BY MENU_SEQNO ASC
+	</select>				
+	
+	
+	<insert id="JiCmMnm.insertMenu">
+			INSERT INTO JIT9160
+			( 
+			MENU_SEQNO, MENU_CD, MENU_NM, MENU_UPPO_CD, MOD_DT 
+			, REG_DT, MOD_ID, REG_ID, ORDER_NO, DEPTH_NO 
+			, LINK_TY, CLASS_PATH, LINK_PATH, BOARD_TY, BOARD_GBN 
+			, LINK_TARGET, CLASS_PATH_JSP 
+			, CLASS_METHOD, M_S_STYLE, JSP_INCLUDE_YN
+
+			, BOARD_LI_ITEM, BOARD_LI_ITEM_NM, BOARD_ETC_ITEM, BOARD_ETC_ITEM_TY, BOARD_ETC_ITEM_NM, BOARD_OPT 
+			, BOARD_ETC_ITEM_CODE, BOARD_INT_M_CODES
+			 <isNotEmpty property="M_SDATE">
+    			, M_SDATE
+    		 </isNotEmpty>				
+   			 <isNotEmpty property="M_EDATE">
+   			 	, M_EDATE
+ 		     </isNotEmpty>			
+
+			)VALUES( 
+					#max_seq#, #max_code#, #M_NM#, #se_code#, NULL
+					,SYSDATE, NULL,  #USER_ID#,  #ORDER_NO#,  #DEPTH_NO#
+					, #LINK_TY#,  #CLASS_PATH#,  #LINK_PATH#,  #BOARD_TY#, NULL
+					, #LINK_TARGET#, #CLASS_PATH_JSP#
+					, #CLASS_METHOD#, #M_S_STYLE#, #JSP_INCLUDE_YN#
+					, #BOARD_LI_ITEM#, #BOARD_LI_ITEM_NM#, #BOARD_ETC_ITEM#, #BOARD_ETC_ITEM_TY#, #BOARD_ETC_ITEM_NM#, #BOARD_OPT#
+					, #BOARD_ETC_ITEM_CODE#, #BOARD_INT_M_CODES#
+				 <isNotEmpty property="M_SDATE">
+					, TO_DATE(#M_SDATE#,'YYYY-MM-DD') 
+	    		 </isNotEmpty>				
+	   			 <isNotEmpty property="M_EDATE">
+	   				, TO_DATE(#M_EDATE#,'YYYY-MM-DD') 
+	 		     </isNotEmpty>
+	   		)
+
+	</insert>	
+	
+	
+	<update id="JiCmMnm.updateMenu">
+		UPDATE JIT9160 SET
+			MENU_NM=#M_NM#
+			<isEqual property="DEPTH_NOh" compareValue="1">
+				<isNotEmpty property="sel_code">
+					,MENU_CD=#sel_code#
+				</isNotEmpty>
+			</isEqual>
+			,MOD_DT=SYSDATE
+			,MOD_ID=#USER_ID#
+			,ORDER_NO=#ORDER_NO_M#
+			,LINK_TY=#LINK_TY#
+			,CLASS_PATH=#CLASS_PATH#
+			,LINK_PATH=#LINK_PATH#
+			,BOARD_TY=#BOARD_TY#
+			,LINK_TARGET=#LINK_TARGET#
+			,CLASS_PATH_JSP=#CLASS_PATH_JSP#
+			,CLASS_METHOD=#CLASS_METHOD#
+			,M_S_STYLE=#M_S_STYLE#
+			,JSP_INCLUDE_YN=#JSP_INCLUDE_YN#					
+
+			 <isNotEmpty property="M_SDATE">
+				, M_SDATE = TO_DATE(#M_SDATE#,'YYYY-MM-DD')
+    		 </isNotEmpty>				
+
+   			 <isNotEmpty property="M_EDATE">
+   			 	, M_EDATE = TO_DATE(#M_EDATE#,'YYYY-MM-DD') 
+ 		     </isNotEmpty>			
+
+   			,BOARD_LI_ITEM=#BOARD_LI_ITEM#
+   			,BOARD_LI_ITEM_NM=#BOARD_LI_ITEM_NM#
+   			,BOARD_ETC_ITEM=#BOARD_ETC_ITEM#
+   			,BOARD_ETC_ITEM_TY=#BOARD_ETC_ITEM_TY#
+   			,BOARD_ETC_ITEM_NM=#BOARD_ETC_ITEM_NM#
+   			,BOARD_OPT=#BOARD_OPT#
+   			,BOARD_ETC_ITEM_CODE=#BOARD_ETC_ITEM_CODE#
+   			,BOARD_INT_M_CODES=#BOARD_INT_M_CODES#
+   		WHERE MENU_CD=#se_codeh#	
+
+	</update>	
+	
+	<select id="JiCmMnm.getMenuMove" parameterClass="java.util.HashMap" resultClass="egovMap">	
+
+		   SELECT
+		   	A.MENU_SEQNO	
+		   	, A.MENU_CD		
+		   	, A.MENU_UPPO_CD			
+		   	, A.ORDER_NO			
+		   	, A.DEPTH_NO			
+		   	, A.LINK_TY				
+		   	, (SELECT COUNT(*) FROM JIT9160 WHERE MENU_UPPO_CD=A.MENU_CD )	AS SUB_CNT
+		   FROM JIT9160 A						
+		   WHERE A.MENU_CD = #move_code#
+
+	</select>
+	
+	<update id="JiCmMnm.moveMenu">
+					UPDATE JIT9160 SET	
+						MENU_UPPO_CD=#move_code#
+						,DEPTH_NO=#move_depth_no#
+						,ORDER_NO=#move_order_no#
+					WHERE MENU_CD=#sel_code#
+	</update>
+	
+	<update id="JiCmMnm.updateDelMENU">
+		UPDATE JIT9160 SET		
+		   ORDER_NO=ORDER_NO-1 
+		WHERE MENU_UPPO_CD=#sel_up_code# AND ORDER_NO <![CDATA[ > ]]> #ORDER_NOh# 
+	</update>	
+	
+	<update id="JiCmMnm.updateUpMENU">
+		UPDATE JIT9160 SET		
+		 ORDER_NO=ORDER_NO+1
+		 WHERE MENU_UPPO_CD=#sel_up_code# AND ORDER_NO <![CDATA[ >= ]]> #ORDER_NO_M# 
+	</update>
+	
+	<delete id="JiCmMnm.deleteMenuBoard">
+
+		DELETE FROM JIT9150 
+		WHERE (MENU_CD) IN 
+
+		   (SELECT  	
+
+		   A.MENU_CD 	
+
+		   FROM JIT9160 A 	
+
+		   START WITH A.MENU_CD = #sel_code# 	
+
+		   CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD) 
+
+	</delete>
+		
+	<delete id="JiCmMnm.deleteMenuBoardRe">
+	
+		DELETE JIT9150_RE
+		WHERE (MENU_CD) IN 
+
+		   (SELECT  	
+
+		   A.MENU_CD 	
+
+		   FROM JIT9160 A 	
+
+		   START WITH A.MENU_CD = #sel_code# 	
+
+		   CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD) 
+
+
+	</delete>	
+	
+	<select id="JiCmMnm.getdeleteMenuFile" parameterClass="java.util.HashMap" resultClass="egovMap">	
+
+		 SELECT FILE_SEQNO IDX, MENU_CD M_CODE, MENU_DATA_KEY_DATAS RIDX, FILE_NM, UPDATE_FILE_NM RFILE_NM 
+		 ,FILE_ORDER_NO ORDER_NO,  TO_CHAR(REG_DT,'YYYYMMDD') REG_DT			
+		 FROM JIT9151
+		WHERE (MENU_CD) IN 
+
+		   (SELECT  	
+
+		   A.MENU_CD 	
+
+		   FROM JIT9160 A 	
+
+		   START WITH A.MENU_CD = #sel_code# 	
+
+		   CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD) 
+
+	</select>	
+	
+	<delete id="JiCmMnm.deleteMenuFile">
+
+		DELETE FROM JIT9151 
+		WHERE (MENU_CD) IN 
+
+		   (SELECT  	
+
+		   A.MENU_CD 	
+
+		   FROM JIT9160 A 	
+
+		   START WITH A.MENU_CD = #sel_code# 	
+
+		   CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD)
+
+	</delete>	
+	
+	<delete id="JiCmMnm.deleteMenu"> 
+
+		DELETE FROM JIT9160 
+		WHERE (MENU_CD) IN 
+
+		   (SELECT  	
+
+		   A.MENU_CD 	
+
+		   FROM JIT9160 A 	
+
+		   START WITH A.MENU_CD = #sel_code# 	
+
+		   CONNECT BY NOCYCLE PRIOR A.MENU_CD  =  A.MENU_UPPO_CD) 
+
+
+     </delete>									
+	<!--  ########### JiCmMnm 끝 ########################### -->	
+	
+	
+	<!-- 링크 Alive목록 -->
+ 	<select id="JiCmMnm.getAlive" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 	    SELECT TA.*
+			,(SELECT 'http://'||WEB_PROXY_ADDR||':'||WEB_PROXY_PORT||TA.SUBURL_STR 
+			  FROM JIT9165 
+			        WHERE CONN_TYPE=DECODE(TA.PROTOCOL_STR,'http','000411','https','000412','') 
+			        AND WEB_PROXY_RL_DOMAIN=TA.DOMAIN_STR) WEBTOB_URL 	    
+		    FROM
+		      (SELECT
+		            MENU_CD,
+		            MENU_NM,
+		            SYS_CONNECT_BY_PATH(MENU_NM,'>')  AS M_NMS ,
+		            SYS_CONNECT_BY_PATH(MENU_CD, '>') AS M_CODES ,
+		            LINK_PATH,
+		            ALIVE_YN,
+		            TO_CHAR(ALIVE_TIME,'YYYY-MM-DD HH24:MI:SS') ALIVE_TIME,
+		            ORDER_NO,
+		            REPLACE(REGEXP_SUBSTR(LINK_PATH,'<![CDATA[^([A-Za-z]+)(?:\/\/)]]>'),'<![CDATA[://]]>','') PROTOCOL_STR,
+                    REGEXP_REPLACE(REGEXP_SUBSTR(LINK_PATH,'<![CDATA[^([A-Za-z://]*[^/?]*)]]>'),'<![CDATA[^([A-Za-z]+)(?:\/\/)]]>','') DOMAIN_STR,
+                    REPLACE(LINK_PATH,REGEXP_SUBSTR(LINK_PATH,'<![CDATA[^([A-Za-z://]*[^/?]*)]]>'),'') SUBURL_STR
+                    
+		      FROM JIT9160 T
+		      WHERE ( 
+		                (M_SDATE <![CDATA[<=]]> SYSDATE AND SYSDATE <![CDATA[<=]]> M_EDATE)
+		                OR (M_SDATE IS NULL AND SYSDATE <![CDATA[<=]]> M_EDATE)
+		                OR (M_SDATE <![CDATA[<=]]> SYSDATE AND M_EDATE IS NULL)
+		                OR (M_SDATE IS NULL AND M_EDATE IS NULL) )
+		                
+						<!-- 검색조건이 있을경우 -->
+						<isNotEmpty property="sty">
+				       		<isEqual property="sty" compareValue="menu_cd">
+				       			<isNotEmpty property="stext">
+				       				AND UPPER(MENU_CD) LIKE '%' || UPPER(#stext#) || '%' 
+				       			</isNotEmpty>
+						   	</isEqual>
+				       		<isEqual property="sty" compareValue="menu_nm">
+				       			<isNotEmpty property="stext">
+				       				AND UPPER(MENU_NM) LIKE '%' || UPPER(#stext#) || '%' 
+				       			</isNotEmpty>	
+						   	</isEqual>
+						</isNotEmpty>
+						<isNotEmpty property="alive_yn">
+							AND ALIVE_YN = #alive_yn#
+						</isNotEmpty>
+		                
+		      AND LINK_TY='000007'
+		      START WITH MENU_UPPO_CD          = 'S01'
+		      CONNECT BY NOCYCLE PRIOR MENU_CD = MENU_UPPO_CD
+		      ORDER BY ALIVE_YN ASC, M_CODES ASC
+		      ) TA
+ 	</select>
+ 	
+ 	<update id="JiCmMnm.updateAliveYN">
+		UPDATE JIT9160 SET 
+			 ALIVE_YN = #alive_yn#
+			,ALIVE_TIME = SYSDATE
+		WHERE MENU_CD = #menu_cd#
+ 	</update>
+ 	
+	<!-- WebProxy 목록 -->
+ 	<select id="JiCmMnm.getWebProxy" parameterClass="java.util.HashMap" resultClass="egovMap">
+ 	    SELECT *
+		    FROM
+		      (SELECT
+		            TO_CHAR(T.WEB_PROXY_SEQNO) WEB_PROXY_SEQNO
+		            ,CONN_TYPE
+		            ,TG_SYS_NM
+		            ,WEB_PROXY_ADDR
+		            ,WEB_PROXY_PORT
+		            ,WEB_PROXY_RL_ADDR
+		            ,WEB_PROXY_RL_PORT
+		            ,WEB_PROXY_RL_DOMAIN
+		            ,WEB_PROXY_DESC
+		            ,TO_CHAR(REG_DT,'YYYY-MM-DD') REG_DT
+		            ,REG_ID
+		            ,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=T.REG_ID),'') AS REG_NM
+		      FROM JIT9165 T
+		      WHERE 1=1
+		                
+						<!-- 검색조건이 있을경우 -->
+		       			<isNotEmpty property="stext">
+				       		AND UPPER(TG_SYS_NM) LIKE '%' || UPPER(#stext#) || '%' 
+				       	</isNotEmpty>
+
+		      ORDER BY T.WEB_PROXY_SEQNO ASC
+		      )
+ 	</select> 
+ 	
+ 	<delete id="JiCmMnm.deleteWebProxy">
+		DELETE FROM JIT9165 
+		WHERE 1=1
+		<isNotEmpty property="delkey"> 
+			AND WEB_PROXY_SEQNO IN
+		    <iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				#delkey_sp[]#
+	     	</iterate>		
+		</isNotEmpty>
+		<isEmpty property="delkey">
+			AND WEB_PROXY_SEQNO IS NULL
+		</isEmpty>
+
+	</delete>
+	
+    <select id="JiCmMnm.getWebProxyChk" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT  
+			TO_CHAR(COUNT(*)) CHKCNT
+			FROM JIT9165 T
+			WHERE 1=1
+				AND T.CONN_TYPE = #conn_type#
+				AND T.WEB_PROXY_ADDR = #web_proxy_addr#
+				AND T.WEB_PROXY_PORT = #web_proxy_port#
+	</select>	
+	
+	<insert id="JiCmMnm.insertWebProxy">
+	
+		INSERT INTO JIT9165 
+		(	
+			 WEB_PROXY_SEQNO		
+			,CONN_TYPE
+			,TG_SYS_NM
+			,WEB_PROXY_ADDR
+			,WEB_PROXY_PORT
+			,WEB_PROXY_RL_ADDR
+			,WEB_PROXY_RL_PORT
+			,WEB_PROXY_RL_DOMAIN
+			,WEB_PROXY_DESC
+			,REG_DT
+			,REG_ID
+		 
+		)
+		VALUES(
+			 #web_proxy_seqno#		
+			,#conn_type#
+			,#tg_sys_nm#
+			,#web_proxy_addr#		
+			,#web_proxy_port#		
+			,#web_proxy_rl_addr#		
+			,#web_proxy_rl_port#
+			,#web_proxy_rl_domain#
+			,#web_proxy_desc#	
+			,SYSDATE
+			,#user_id#
+
+		)	
+	  			
+	</insert>	
+	
+	<update id="JiCmMnm.updateWebProxy">
+	
+		UPDATE JIT9165 
+		SET	
+			 	
+			CONN_TYPE = #conn_type#
+			,TG_SYS_NM = #tg_sys_nm#
+			,WEB_PROXY_ADDR = #web_proxy_addr#
+			,WEB_PROXY_PORT = #web_proxy_port#
+			,WEB_PROXY_RL_ADDR = #web_proxy_rl_addr#
+			,WEB_PROXY_RL_PORT = #web_proxy_rl_port#
+			,WEB_PROXY_RL_DOMAIN = #web_proxy_rl_domain#
+			,WEB_PROXY_DESC =#web_proxy_desc#
+			,MOD_DT = SYSDATE
+			,MOD_ID = #user_id#
+		 
+		WHERE WEB_PROXY_SEQNO =  #web_proxy_seqno#	
+			  			
+	</update>	
+	
+ 	<select id="JiCmMnm.getHelpContents" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+		SELECT 
+		  	 TO_CHAR(A.HELP_SEQNO) HELP_SEQNO
+		  	, A.M_CODE	
+		  	, A.M_CONTENTS	
+		  	, TO_CHAR(A.REG_DT,'YYYY-MM-DD HH24:MI:SS')	REG_DT
+		  	, A.REG_ID
+		  	
+		  FROM JIT9602 A		
+		  WHERE M_CODE=#m_code#
+		  ORDER BY HELP_SEQNO DESC
+	</select>	
+	
+	<insert id="JiCmMnm.insertHelpContents">
+	
+		INSERT INTO JIT9602 
+		(	
+			 HELP_SEQNO		
+			,M_CODE
+			,M_CONTENTS
+			,REG_DT
+			,REG_ID
+		 
+		)
+		VALUES(
+			 #max_seq#		
+			,#m_code#
+			,#m_help_contents#
+			,SYSDATE
+			,#user_id#
+
+		)	
+	  			
+	</insert>	
+	
+	<update id="JiCmMnm.updateHelpContents">
+	
+		UPDATE JIT9602 SET
+			M_CONTENTS = #m_help_contents#
+			,MOD_DT = SYSDATE
+			,REG_ID = #user_id#
+		 
+		WHERE M_CODE = #m_code#
+	  			
+	</update>
+	
+	<delete id="JiCmMnm.deleteHelpContents">
+	
+		DELETE FROM JIT9602 
+		WHERE M_CODE = #m_code#
+	  			
+	</delete>			
+
+</sqlMap>

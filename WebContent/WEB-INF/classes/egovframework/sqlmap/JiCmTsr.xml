@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmTsr">
+
+    <select id="JiCmTsr.selectList" parameterClass="java.util.HashMap" resultClass="egovMap">
+
+        /* JiCmTsr.selectList : 통합검색 목록 */
+        <!-- 맞춤데이터 제공요청 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.*
+		     FROM(SELECT 'A' AS TYPE
+		               , TO_CHAR(A.IFRM_RCEPT_NO) AS SN
+		               , A.IFRM_REQUST_SJ AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+		               , NVL(A.RDCNT,0) AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000071' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IFRM_RCEPT_NO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000071' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IFRM_RCEPT_NO
+                       )AS FILE_NM
+                       , A.OTHBC_YN AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                             THEN 'Y'
+                             ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT2101 A  /* 맞춤데이터요청TB */
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.RQESTER_ID) /* 사용자TB */
+		          WHERE A.DEL_YN='N'
+		          <isNotEmpty property="all" prepend="AND">
+		              ( A.IFRM_REQUST_SJ LIKE '%' || #all# || '%'
+		             OR A.IFRM_CN LIKE '%' || #all# || '%'
+		             OR B.USER_NM LIKE '%' || #all# || '%')
+		          </isNotEmpty>
+		          <isNotEmpty property="title" prepend="AND">
+		              A.IFRM_REQUST_SJ LIKE '%' || #title# || '%'
+		          </isNotEmpty>
+		          <isNotEmpty property="cn" prepend="AND">
+		              A.IFRM_CN LIKE '%' || #cn# || '%'
+		          </isNotEmpty>
+		          <isNotEmpty property="reg_nm" prepend="AND">
+		              B.USER_NM LIKE '%' || #reg_nm# || '%'
+		          </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+        UNION ALL
+        
+        <!-- 아이디어 제안 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'B' AS TYPE
+		               , TO_CHAR(A.IDEA_PROPSE_SN) AS SN
+		               , A.IDEA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , NVL(A.RDCNT,0) AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000401' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IDEA_PROPSE_SN
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000401' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IDEA_PROPSE_SN
+                       )AS FILE_NM
+                       , DECODE(IDEA_PROPSE_PASSWORD, NULL, 'N', 'Y') AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT4201 A  /* 오픈포탈아이디어TB */
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.IDEA_TITLE LIKE '%' || #all# || '%'
+                     OR A.IDEA_PROPSE_CN LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.IDEA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.IDEA_PROPSE_CN LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+		<!-- 공지사항 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'C' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000115' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000115' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000115'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- 빅데이터 NEWS -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'D' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000091' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000091' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000091'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- 분석보고서 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'E' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000157' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000157' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000157'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- 자유게시판 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'F' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000136' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000136' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000136'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- 자료실 -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.*
+		     FROM(SELECT'G' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000101' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000101' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000101'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- FAQ -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'H' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000119' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000119' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000119'
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+		UNION ALL
+		
+        <!-- Q&A -->
+		SELECT TB.*
+		FROM(SELECT ROWNUM AS RNUM, TB.* 
+		     FROM(SELECT 'I' AS TYPE
+		               , TO_CHAR(A.DATA_SEQNO) AS SN
+		               , A.DATA_TITLE AS TITLE
+		               , A.REG_ID AS REG_ID
+		               , B.USER_NM AS REG_NM
+		               , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000100' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000100' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+		          FROM JIT9150 A
+		          LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+		          AND A.MENU_CD='000100'
+		          AND A.DATA_DEPTH = 1	/* 답변은 제외 */
+		          <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+		          ORDER BY A.REG_DT DESC
+		    ) TB
+		)TB WHERE TB.RNUM <![CDATA[<]]> 4
+		
+	</select>
+	
+    <select id="JiCmTsr.selectListCnt" parameterClass="java.util.HashMap" resultClass="egovMap">
+	
+	    /* JiCmTsr.selectListCnt : 통합검색 목록 갯수 */
+		SELECT LISTAGG (TB.CNT, ',') WITHIN GROUP (ORDER BY TB.TYPE) AS CNT, SUM(TB.CNT) AS TOTAL_CNT
+		FROM(
+		     <!-- 맞춤데이터 제공요청 -->
+		     SELECT 'A' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT2101 A
+			 LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+             <isNotEmpty property="all" prepend="AND">
+                 ( A.IFRM_REQUST_SJ LIKE '%' || #all# || '%'
+                OR A.IFRM_CN LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.IFRM_REQUST_SJ LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.IFRM_CN LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			     
+			 UNION ALL 
+			
+			 <!-- 아이디어 제안 -->
+			 SELECT 'B' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT4201 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+             <isNotEmpty property="all" prepend="AND">
+                 ( A.IDEA_PROPSE_CN LIKE '%' || #all# || '%'
+                OR A.IDEA_PROPSE_CN LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.IDEA_PROPSE_CN LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.IDEA_PROPSE_CN LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			 
+			 UNION ALL
+			
+			 <!-- 공지사항 -->
+			 SELECT 'C' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000115'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>  
+			
+			 UNION ALL
+			 
+			 <!-- 빅데이터 NEWS -->
+			 SELECT 'D' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000091'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>		 
+			
+			 UNION ALL
+			 
+			 <!-- 분석보고서 -->
+			 SELECT 'E' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000157'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			
+			 UNION ALL
+			
+			 <!-- 자유게시판 -->
+			 SELECT 'F' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000136'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			
+			 UNION ALL
+			
+			 <!-- 자료실 -->
+			 SELECT 'G' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000101'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			
+			 UNION ALL
+			
+			 <!-- FAQ -->
+			 SELECT 'H' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000119'
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+			
+			 UNION ALL
+			
+			 <!-- Q&A -->
+			 SELECT 'H' AS TYPE
+			      , COUNT(*) AS CNT
+			 FROM JIT9150 A
+             LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+             WHERE A.DEL_YN='N'
+			 AND A.MENU_CD='000100'
+			 AND A.DATA_DEPTH = 1	/* 답변은 제외 */
+			 <isNotEmpty property="all" prepend="AND">
+                 ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                OR A.DATA_DESC LIKE '%' || #all# || '%'
+                OR B.USER_NM LIKE '%' || #all# || '%')
+             </isNotEmpty>
+             <isNotEmpty property="title" prepend="AND">
+                 A.DATA_TITLE LIKE '%' || #title# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="cn" prepend="AND">
+                 A.DATA_DESC LIKE '%' || #cn# || '%'
+             </isNotEmpty>
+             <isNotEmpty property="reg_nm" prepend="AND">
+                 B.USER_NM LIKE '%' || #reg_nm# || '%'
+             </isNotEmpty>
+		)TB
+		
+	</select>
+	
+	
+    <select id="JiCmTsr.selectAList" parameterClass="java.util.HashMap" resultClass="egovMap">
+    
+        /* JiCmTsr.selectAList : 맞춤데이터 제공요청 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.*
+             FROM(SELECT 'A' AS TYPE
+                       , TO_CHAR(A.IFRM_RCEPT_NO) AS SN
+                       , A.IFRM_REQUST_SJ AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , NVL(A.RDCNT,0) AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000071' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IFRM_REQUST_SN
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000071' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IFRM_REQUST_SN
+                       )AS FILE_NM
+                       , A.OTHBC_YN AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                             THEN 'Y'
+                             ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT2101 A  /* 맞춤데이터요청TB */
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.IFRM_REQUST_SJ LIKE '%' || #all# || '%'
+                     OR A.IFRM_CN LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.IFRM_REQUST_SJ LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.IFRM_CN LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+        
+    </select>
+    
+    <select id="JiCmTsr.selectBList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectBList : 아이디어 제안 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'B' AS TYPE
+                       , TO_CHAR(A.IDEA_PROPSE_SN) AS SN
+                       , A.IDEA_PROPSE_CN AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , NVL(A.RDCNT,0) AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000401' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IDEA_PROPSE_SN
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000401' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.IDEA_PROPSE_SN
+                       )AS FILE_NM
+                       , DECODE(IDEA_PROPSE_PASSWORD, NULL, 'N', 'Y') AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT4201 A  /* 오픈포탈아이디어TB */
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.IDEA_PROPSE_CN LIKE '%' || #all# || '%'
+                     OR A.IDEA_PROPSE_CN LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.IDEA_PROPSE_CN LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.IDEA_PROPSE_CN LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+        
+    </select>
+    
+    <select id="JiCmTsr.selectCList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectCList : 공지사항 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'C' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000115' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000115' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000115'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectDList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectDList : 빅데이터News 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.*
+             FROM(SELECT 'D' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000091' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000091' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000091'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectEList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectEList : 분석보고서 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'E' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000157' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000157' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID)  /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000157'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectFList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectFList : 자유게시판 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'F' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000136' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000136' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000136'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectGList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectGList : 자료실 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'G' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000101' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000101' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000101'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectHList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectHList : FAQ 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'H' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000119' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000119' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000119'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+    
+    <select id="JiCmTsr.selectIList" parameterClass="java.util.HashMap" resultClass="egovMap">
+        
+        /* JiCmTsr.selectIList : QA 목록 */
+        SELECT TB.*
+        FROM(SELECT ROWNUM AS RNUM, TB.* 
+             FROM(SELECT 'I' AS TYPE
+                       , TO_CHAR(A.DATA_SEQNO) AS SN
+                       , A.DATA_TITLE AS TITLE
+                       , A.REG_ID AS REG_ID
+                       , B.USER_NM AS REG_NM
+                       , TO_CHAR(A.REG_DT,'YYYY-MM-DD') AS REG_DT
+                       , A.INQ_CNT AS RDCNT
+                       , (SELECT LISTAGG(FILE_SEQNO, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000100' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_SEQNO
+                       , (SELECT LISTAGG(FILE_NM, '::')WITHIN GROUP (ORDER BY FILE_SEQNO) FROM JIT9151 J
+                         WHERE J.MENU_CD = '000100' AND J.DEL_YN = 'N' AND J.MENU_DATA_KEY_DATAS = A.DATA_SEQNO
+                       )AS FILE_NM
+                       , DECODE(OPEN_YN, 'Y', 'N', 'Y')AS SECRET_YN
+                       , CASE WHEN SYSDATE <![CDATA[<=]]> (A.REG_DT + 7)
+                              THEN 'Y'
+                              ELSE 'N'
+                       END AS NEW_FLAG  /* 신규데이터 */
+                  FROM JIT9150 A
+                  LEFT OUTER JOIN JIT9111 B ON(B.USER_ID = A.REG_ID) /* 사용자TB */
+                  WHERE A.DEL_YN='N'
+                  AND A.MENU_CD='000100'
+                  <isNotEmpty property="all" prepend="AND">
+                      ( A.DATA_TITLE LIKE '%' || #all# || '%'
+                     OR A.DATA_DESC LIKE '%' || #all# || '%'
+                     OR B.USER_NM LIKE '%' || #all# || '%')
+                  </isNotEmpty>
+                  <isNotEmpty property="title" prepend="AND">
+                      A.DATA_TITLE LIKE '%' || #title# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="cn" prepend="AND">
+                      A.DATA_DESC LIKE '%' || #cn# || '%'
+                  </isNotEmpty>
+                  <isNotEmpty property="reg_nm" prepend="AND">
+                      B.USER_NM LIKE '%' || #reg_nm# || '%'
+                  </isNotEmpty>
+                  ORDER BY A.REG_DT DESC
+            ) TB
+        )TB WHERE TB.RNUM <![CDATA[<]]> 4
+
+    </select>
+	
+</sqlMap>

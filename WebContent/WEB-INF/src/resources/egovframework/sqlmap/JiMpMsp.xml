@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiMpMsp">
+ <!--  ########### K - shop 중소기업 제품관 시작 ########################### -->
+ 
+    <resultMap class="java.util.HashMap" id="selectJIT_MSC_PRODCLOB">
+    	<result column="RNUM" property="RNUM" />
+    	<result column="PAGE_NUM" property="PAGE_NUM" />
+    	<result column="PROD_SEQ" property="PROD_SEQ" />
+    	<result column="PROD_NM" property="PROD_NM" />
+    	<result column="PROD_DIVN" property="PROD_DIVN" />
+    	<result column="PROD_ATCH_FILE_ID" property="PROD_ATCH_FILE_ID" />
+    	<result column="PROD_FUNT" property="PROD_FUNT" />
+    	<result column="TECH_STND" property="TECH_STND" />
+    	<result column="OPRT_PRCP" property="OPRT_PRCP" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="DLVRY_RCD" property="DLVRY_RCD" />
+    	<result column="CT_ATCH_FILE_ID" property="CT_ATCH_FILE_ID" />
+    	<result column="SECRET_NO" property="SECRET_NO" />
+		<result column="CORP_NM" property="CORP_NM" />
+    	<result column="CORP_LINK" property="CORP_LINK" />
+    	<result column="MANAGER_TEL_NO" property="MANAGER_TEL_NO" />
+    	<result column="CORP_EMAIL" property="CORP_EMAIL" />
+    	<result column="CORP_ADDR" property="CORP_ADDR" />
+    	<result column="CORP_REPE_NM" property="CORP_REPE_NM" />
+    	<result column="CORP_EST_DT" property="CORP_EST_DT" />
+    	<result column="CORP_TTL_CNT" property="CORP_TTL_CNT" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="CORP_HIST" property="CORP_HIST" />
+    	<result column="CORP_MAIN_PROD" property="CORP_MAIN_PROD" />
+    	<result column="CORP_NO" property="CORP_NO" />
+    	<result column="CORP_TEL_NO_1" property="CORP_TEL_NO_1" />
+    	<result column="CORP_FAX_NO" property="CORP_FAX_NO" />
+    	<result column="CORP_DIVN" property="CORP_DIVN" />
+    	<result column="CERT_PROD" property="CERT_PROD" />
+    	<result column="CERT_DIVN" property="CERT_DIVN" />
+    	<result column="CERT_DT" property="CERT_DT" />
+    	<result column="CERT_NO" property="CERT_NO" />
+    	<result column="CERT_EXPR_DT" property="CERT_EXPR_DT" />
+    	<result column="REG_ID" property="REG_ID" />
+    	<result column="REG_DATE" property="REG_DATE" />
+    	<result column="DEL_YN" property="DEL_YN" />
+    	<result column="DUPL_INFO" property="DUPL_INFO" />
+    	<result column="AUTH_TYPE" property="AUTH_TYPE" />
+    	<result column="CORP_TEL_NO_2" property="CORP_TEL_NO_2" />
+    	<result column="CORP_TEL_NO_3" property="CORP_TEL_NO_3" />
+    	<result column="CORP_TEL_NO" property="CORP_TEL_NO" />
+    	<result column="CORP_FAC_DIVN" property="CORP_FAC_DIVN" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	
+    	<result column="CORP_MEM_DIVN_NM" property="CORP_MEM_DIVN_NM" />
+    	<result column="PROD_DIVN_NM" property="PROD_DIVN_NM" />
+    	<result column="CERT_DIVN_NM" property="CERT_DIVN_NM" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	<result column="CORP_MEM_DIVN" property="CORP_MEM_DIVN" />
+    	
+    	<result column="CORP_DIVN_1" property="CORP_DIVN_1" />
+    	<result column="CORP_DIVN_2" property="CORP_DIVN_2" />
+    	<result column="CORP_DIVN_3" property="CORP_DIVN_3" />
+    	<result column="CORP_DIVN_4" property="CORP_DIVN_4" />
+    	
+    	<result column="CORP_FAC_DIVN_1" property="CORP_FAC_DIVN_1" />
+    	<result column="CORP_FAC_DIVN_2" property="CORP_FAC_DIVN_2" />
+    	<result column="CORP_FAC_DIVN_3" property="CORP_FAC_DIVN_3" />
+    	<result column="CORP_FAC_DIVN_4" property="CORP_FAC_DIVN_4" />
+    	<result column="CORP_FAC_DIVN_5" property="CORP_FAC_DIVN_5" />
+    	
+    	<result column="FILE1_NMS" property="FILE1_NMS" />
+    	<result column="FILE1_SEQ" property="FILE1_SEQ" />
+    	<result column="FILE2_NMS" property="FILE2_NMS" />
+    	<result column="FILE2_SEQ" property="FILE2_SEQ" />
+    	
+    	<result column="USER_NM" property="USER_NM" />
+    	
+    	<result column="CORP_DIVN_CD_NM" property="CORP_DIVN_CD_NM" />
+    	<result column="CORP_FAC_DIVN_CD_NM" property="CORP_FAC_DIVN_CD_NM" />
+    	 	
+    	<result column="PROD_TY_1" property="PROD_TY_1" />
+    	<result column="PROD_TY_2" property="PROD_TY_2" />
+    	<result column="PROD_TY_3" property="PROD_TY_3" />
+    	<result column="PROD_TY_4" property="PROD_TY_4" />
+    	<result column="PROD_TY_5" property="PROD_TY_5" />
+    	<result column="PROD_TY_6" property="PROD_TY_6" />
+    	<result column="PROD_TY_7" property="PROD_TY_7" />
+    	<result column="PROD_TY_8" property="PROD_TY_8" />
+    	<result column="PROD_TY_9" property="PROD_TY_9" />
+    	<result column="PROD_TY_10" property="PROD_TY_10" />
+    	<result column="PROD_TY_11" property="PROD_TY_11" />
+    	<result column="PROD_TY_12" property="PROD_TY_12" />
+    	<result column="PROD_TY_13" property="PROD_TY_13" />
+    	<result column="PROD_TY_14" property="PROD_TY_14" />
+    	<result column="PROD_TY_15" property="PROD_TY_15" />
+    	<result column="PROD_TY_16" property="PROD_TY_16" />
+    	<result column="PROD_TY_17" property="PROD_TY_17" />
+    	<result column="PROD_TY_18" property="PROD_TY_18" />
+    	
+    	<result column="PROD_TY" property="PROD_TY" />
+    	<result column="PROD_TY_NM" property="PROD_TY_NM" />
+    	 	
+    </resultMap>
+     
+	<insert id="JiMpMsp.insertJIT_MSC_PROD">
+		INSERT INTO JIT_MSC_PROD (
+				PROD_SEQ, PROD_NM, PROD_DIVN, PROD_ATCH_FILE_ID, PROD_FUNT,
+		        TECH_STND, OPRT_PRCP, DLVRY_RCD, CT_ATCH_FILE_ID, SECRET_NO,
+		        CORP_NM, CORP_LINK, MANAGER_TEL_NO, CORP_EMAIL, CORP_ADDR,
+		        CORP_REPE_NM, CORP_EST_DT, CORP_TTL_CNT, CORP_HIST, CORP_MAIN_PROD,
+		        CORP_NO, CORP_TEL_NO_1, CORP_FAX_NO, CORP_DIVN, CERT_PROD,
+		        CERT_DIVN, CERT_DT, CERT_NO, CERT_EXPR_DT, REG_ID,
+		        REG_DATE, DEL_YN, DUPL_INFO, AUTH_TYPE, 
+		        CORP_TEL_NO_2, CORP_TEL_NO_3, CORP_TEL_NO,
+		        CORP_FAC_DIVN, CORP_MEM_DIVN, PROD_TY
+		     )VALUES (
+		     	#ikey_datas#, #PROD_NM#, #PROD_DIVN#, '', #PROD_FUNT#,
+		        #TECH_STND#, #OPRT_PRCP#, #DLVRY_RCD#, '', damo.HASH_STR_DATA(#SECRET_NO#),
+		        #CORP_NM#, #CORP_LINK#, #MANAGER_TEL_NO#, #CORP_EMAIL#, #CORP_ADDR#,
+		        #CORP_REPE_NM#, #CORP_EST_DT#, #CORP_TTL_CNT#, #CORP_HIST#, #CORP_MAIN_PROD#,
+		        #CORP_NO#, #CORP_TEL_NO_1#, #CORP_FAX_NO#, #CORP_DIVN_cds#, #CERT_PROD#,
+		        #CERT_DIVN#, TO_DATE(REPLACE(#CERT_DT#,'-',''),'YYYYMMDD'), #CERT_NO#, TO_DATE(REPLACE(#CERT_EXPR_DT#,'-',''),'YYYYMMDD'), #user_id#,
+		        SYSDATE, 'N', #DUPL_INFO#, #AUTH_TYPE#,
+		        #CORP_TEL_NO_2#,  #CORP_TEL_NO_3#, #CORP_TEL_NO#,
+		        #CORP_FAC_DIVN_cds#,  #CORP_MEM_DIVN_cds#, #PROD_TY_cds#
+		     )
+ 	
+	</insert>  
+	
+	<update id="JiMpMsp.updateJIT_MSC_PROD">
+		UPDATE JIT_MSC_PROD SET
+				PROD_NM=#PROD_NM#, PROD_DIVN=#PROD_DIVN#,
+				PROD_ATCH_FILE_ID='', PROD_FUNT=#PROD_FUNT#,
+		        TECH_STND=#TECH_STND#, OPRT_PRCP=#OPRT_PRCP#,
+		        DLVRY_RCD=#DLVRY_RCD#, CT_ATCH_FILE_ID='', 
+		        CORP_NM=#CORP_NM#, CORP_LINK=#CORP_LINK#,
+		        MANAGER_TEL_NO=#MANAGER_TEL_NO#, CORP_EMAIL=#CORP_EMAIL#,
+		        CORP_ADDR=#CORP_ADDR#, CORP_REPE_NM=#CORP_REPE_NM#,
+		        CORP_EST_DT=#CORP_EST_DT#, CORP_TTL_CNT=#CORP_TTL_CNT#,
+		        CORP_HIST=#CORP_HIST#, CORP_MAIN_PROD=#CORP_MAIN_PROD#,
+		        CORP_NO=#CORP_NO#, CORP_TEL_NO_1=#CORP_TEL_NO_1#,
+		        CORP_FAX_NO=#CORP_FAX_NO#, CORP_DIVN=#CORP_DIVN_cds#,
+		        CERT_PROD=#CERT_PROD#,CERT_DIVN=#CERT_DIVN#,
+		        CERT_DT=TO_DATE(REPLACE(#CERT_DT#,'-',''),'YYYYMMDD'), <!-- CERT_NO=#CERT_NO#, -->
+		        CERT_EXPR_DT=TO_DATE(REPLACE(#CERT_EXPR_DT#,'-',''),'YYYYMMDD'), CORP_TEL_NO_2=#CORP_TEL_NO_2#,
+		        CORP_TEL_NO_3=#CORP_TEL_NO_3#, CORP_TEL_NO=#CORP_TEL_NO#,
+		        CORP_FAC_DIVN=#CORP_FAC_DIVN_cds#, CORP_MEM_DIVN=#CORP_MEM_DIVN_cds#,PROD_TY=#PROD_TY_cds#,
+		        MOD_ID=#user_id#, MOD_DATE=SYSDATE
+		WHERE PROD_SEQ = #ikey_datas#
+		
+
+	</update>
+	
+	<update id="JiMpMsp.deleteJIT_MSC_PROD">
+		UPDATE JIT_MSC_PROD SET
+				DEL_YN='Y',
+		        
+		        MOD_ID=#user_id#, MOD_DATE=SYSDATE
+		WHERE PROD_SEQ = #ikey_datas#
+		
+
+	</update>		
+	
+	<!-- K - shop 중소기업 제품관 목록 -->
+	<select id="JiMpMsp.selectJIT_MSC_PRODList" parameterClass="java.util.HashMap" resultMap="selectJIT_MSC_PRODCLOB">
+		/* JiMpMsp.selectJIT_MSC_PRODList */
+		SELECT OIRI.* 
+           FROM 
+               (SELECT ROWNUM AS RNUM, OIRI.*
+						,RTRIM(NVL2(OIRI.CORP_DIVN_1, STD_NM_FU03('M00100', OIRI.CORP_DIVN_1) || ',' ,'') 
+								|| NVL2(OIRI.CORP_DIVN_2, STD_NM_FU03('M00100', OIRI.CORP_DIVN_2) || ',' ,'') 
+								|| NVL2(OIRI.CORP_DIVN_3, STD_NM_FU03('M00100', OIRI.CORP_DIVN_3) || ',' ,'')
+								|| NVL2(OIRI.CORP_DIVN_4, STD_NM_FU03('M00100', OIRI.CORP_DIVN_4) || ',' ,'')
+						 	, ',') AS CORP_DIVN_CD_NM /* 기업구분코드명 */
+						,RTRIM(NVL2(OIRI.CORP_FAC_DIVN_1, STD_NM_FU03('M00101', OIRI.CORP_FAC_DIVN_1) || ',' ,'') 
+								|| NVL2(OIRI.CORP_FAC_DIVN_2, STD_NM_FU03('M00101', OIRI.CORP_FAC_DIVN_2) || ',' ,'') 
+								|| NVL2(OIRI.CORP_FAC_DIVN_3, STD_NM_FU03('M00101', OIRI.CORP_FAC_DIVN_3) || ',' ,'')
+								|| NVL2(OIRI.CORP_FAC_DIVN_4, STD_NM_FU03('M00101', OIRI.CORP_FAC_DIVN_4) || ',' ,'')
+								|| NVL2(OIRI.CORP_FAC_DIVN_5, STD_NM_FU03('M00101', OIRI.CORP_FAC_DIVN_5) || ',' ,'')
+						 	, ',') AS CORP_FAC_DIVN_CD_NM /* 설비분야코드명 */	
+						,RTRIM(NVL2(OIRI.PROD_TY_1, STD_NM_FU03('M00106', OIRI.PROD_TY_1) || ',' ,'') 
+								|| NVL2(OIRI.PROD_TY_2, STD_NM_FU03('M00106', OIRI.PROD_TY_2) || ',' ,'') 
+								|| NVL2(OIRI.PROD_TY_3, STD_NM_FU03('M00106', OIRI.PROD_TY_3) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_4, STD_NM_FU03('M00106', OIRI.PROD_TY_4) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_5, STD_NM_FU03('M00106', OIRI.PROD_TY_5) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_6, STD_NM_FU03('M00106', OIRI.PROD_TY_6) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_7, STD_NM_FU03('M00106', OIRI.PROD_TY_7) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_8, STD_NM_FU03('M00106', OIRI.PROD_TY_8) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_9, STD_NM_FU03('M00106', OIRI.PROD_TY_9) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_10, STD_NM_FU03('M00106', OIRI.PROD_TY_10) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_11, STD_NM_FU03('M00106', OIRI.PROD_TY_11) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_12, STD_NM_FU03('M00106', OIRI.PROD_TY_12) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_13, STD_NM_FU03('M00106', OIRI.PROD_TY_13) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_14, STD_NM_FU03('M00106', OIRI.PROD_TY_14) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_15, STD_NM_FU03('M00106', OIRI.PROD_TY_15) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_16, STD_NM_FU03('M00106', OIRI.PROD_TY_16) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_17, STD_NM_FU03('M00106', OIRI.PROD_TY_17) || ',' ,'')
+								|| NVL2(OIRI.PROD_TY_18, STD_NM_FU03('M00106', OIRI.PROD_TY_18) || ',' ,'')
+						 	, ',') AS PROD_TY_NM /* 제품유형 */						 						 	                
+                   FROM 
+                             (SELECT 
+                             	CEIL((ROW_NUMBER() OVER ( ORDER BY A.REG_DATE DESC)) / 10 ) AS PAGE_NUM ,
+                             
+								A.PROD_SEQ, A.PROD_NM, A.PROD_DIVN, A.PROD_ATCH_FILE_ID, A.PROD_FUNT,
+						        A.TECH_STND, A.OPRT_PRCP, A.DLVRY_RCD, A.CT_ATCH_FILE_ID, A.SECRET_NO,
+						        A.CORP_NM, A.CORP_LINK, A.MANAGER_TEL_NO, A.CORP_EMAIL, A.CORP_ADDR,
+						        A.CORP_REPE_NM, A.CORP_EST_DT, A.CORP_TTL_CNT, A.CORP_HIST, A.CORP_MAIN_PROD,
+						        A.CORP_NO, A.CORP_TEL_NO_1, A.CORP_FAX_NO, A.CORP_DIVN, A.CERT_PROD,
+						        A.CERT_DIVN, A.CERT_DT, A.CERT_NO, A.CERT_EXPR_DT, A.REG_ID,
+						        TO_CHAR(A.REG_DATE, 'YYYY-MM-DD') REG_DATE, A.DEL_YN, A.DUPL_INFO, A.AUTH_TYPE, 
+						        A.CORP_TEL_NO_2, A.CORP_TEL_NO_3, A.CORP_TEL_NO, A.CORP_FAC_DIVN, A.CORP_MEM_DIVN, A.PROD_TY
+		                                     
+								,DECODE(A.AUTH_TYPE,'LOGIN','로그인','CHECKPLUS','핸드폰','IPIN','아이핀') AUTH_TYPE_NM 		                                    
+								,NVL(STD_NM_FU03('M00103',A.CORP_MEM_DIVN),'') CORP_MEM_DIVN_NM
+								,NVL(STD_NM_FU03('M00102',A.PROD_DIVN),'') PROD_DIVN_NM
+								,NVL(STD_NM_FU03('M00104',A.CERT_DIVN),'') CERT_DIVN_NM
+								
+								
+							    ,REGEXP_SUBSTR(A.CORP_DIVN, '[^,]+', 1, 1) AS CORP_DIVN_1
+					            ,REGEXP_SUBSTR(A.CORP_DIVN, '[^,]+', 1, 2) AS CORP_DIVN_2
+					            ,REGEXP_SUBSTR(A.CORP_DIVN, '[^,]+', 1, 3) AS CORP_DIVN_3
+					            ,REGEXP_SUBSTR(A.CORP_DIVN, '[^,]+', 1, 4) AS CORP_DIVN_4
+					            
+							    ,REGEXP_SUBSTR(A.CORP_FAC_DIVN, '[^,]+', 1, 1) AS CORP_FAC_DIVN_1
+					            ,REGEXP_SUBSTR(A.CORP_FAC_DIVN, '[^,]+', 1, 2) AS CORP_FAC_DIVN_2
+					            ,REGEXP_SUBSTR(A.CORP_FAC_DIVN, '[^,]+', 1, 3) AS CORP_FAC_DIVN_3
+					            ,REGEXP_SUBSTR(A.CORP_FAC_DIVN, '[^,]+', 1, 4) AS CORP_FAC_DIVN_4
+					            ,REGEXP_SUBSTR(A.CORP_FAC_DIVN, '[^,]+', 1, 5) AS CORP_FAC_DIVN_5	
+					            
+							    ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 1) AS PROD_TY_1
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 2) AS PROD_TY_2
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 3) AS PROD_TY_3
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 4) AS PROD_TY_4
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 5) AS PROD_TY_5	
+							    ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 6) AS PROD_TY_6
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 7) AS PROD_TY_7
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 8) AS PROD_TY_8
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 9) AS PROD_TY_9
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 10) AS PROD_TY_10		
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 11) AS PROD_TY_11
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 12) AS PROD_TY_12
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 13) AS PROD_TY_13	
+							    ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 14) AS PROD_TY_14
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 15) AS PROD_TY_15
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 16) AS PROD_TY_16
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 17) AS PROD_TY_17
+					            ,REGEXP_SUBSTR(A.PROD_TY, '[^,]+', 1, 18) AS PROD_TY_18						            				            
+					           			
+								<![CDATA[
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_NM) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD='000484'
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.PROD_SEQ)
+											AND FILE_GROUP ='1'
+										),'') FILE1_NMS
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_SEQNO) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD='000484'
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.PROD_SEQ)
+											AND FILE_GROUP ='1'
+										),'') FILE1_SEQ
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_NM) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD='000484'
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.PROD_SEQ)
+											AND FILE_GROUP ='2'
+										),'') FILE2_NMS
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_SEQNO) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD='000484'
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.PROD_SEQ)
+											AND FILE_GROUP ='2'
+										),'') FILE2_SEQ
+								]]>
+									           								
+								,B.USER_NM	
+								,(SELECT COUNT(*) FROM JIT8110 WHERE MENU_CD='000484' AND MENU_DATA_KEY=A.PROD_SEQ) MAIL_SEND_CNT
+			                             
+							FROM JIT_MSC_PROD A	/* K - shop 중소기업 제품관 정보 */
+							        ,JIT9111 B		/* 사용자정보 */
+							WHERE A.REG_ID 		= B.USER_ID(+)
+							AND   A.DEL_YN = 'N'
+							<isNotEmpty property="prod_seq">
+								AND   A.PROD_SEQ = #prod_seq#
+								<isNotEmpty property="req_SECRET_NO">
+									AND   A.SECRET_NO = damo.HASH_STR_DATA(#req_SECRET_NO#)
+								</isNotEmpty>
+								<isNotEmpty property="USER_ID">
+									AND   A.REG_ID = #USER_ID#		
+								</isNotEmpty>																
+							</isNotEmpty>
+							
+							<isEmpty property="prod_seq">
+							
+					  			<isNotEmpty property="sp_sdate">
+					  				AND A.REG_DATE <![CDATA[ >= ]]> TO_DATE(REPLACE(#sp_sdate#,'-','')||' 000000','YYYYMMDD HH24MISS')
+					  			</isNotEmpty>
+					  			
+					  			<isNotEmpty property="sp_edate">
+					  				AND A.REG_DATE <![CDATA[ <= ]]> TO_DATE(REPLACE(#sp_edate#,'-','')||' 235959','YYYYMMDD HH24MISS')
+					  			</isNotEmpty> 
+				  										
+								<isNotEmpty property="searchTab">
+									<isNotEqual property="searchTab" compareValue="1">
+										AND A.PROD_DIVN = DECODE(#searchTab#,'2','000421'
+																				,'3','000422'
+																				,'4','000423'
+																				,'5','000424')
+									</isNotEqual>
+								</isNotEmpty>
+								
+								<isNotEmpty property="searchGubun">
+									<isEqual property="searchGubun" compareValue="prod_nm">
+										AND A.PROD_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>
+									<isEqual property="searchGubun" compareValue="PROD_NM">
+										AND A.PROD_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>									
+									<isEqual property="searchGubun" compareValue="prod_info">
+										AND (A.PROD_FUNT LIKE '%' || #searchValue# || '%'
+											OR A.TECH_STND LIKE '%' || #searchValue# || '%'
+											OR A.OPRT_PRCP LIKE '%' || #searchValue# || '%'
+											OR DBMS_LOB.INSTR(A.DLVRY_RCD, #searchValue# ) <![CDATA[>]]> 0
+										)
+									</isEqual>		
+									
+									<isEqual property="searchGubun" compareValue="corp_nm">
+										AND A.CORP_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>
+									<isEqual property="searchGubun" compareValue="CORP_NM">
+										AND A.CORP_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>																	
+															
+								</isNotEmpty>
+								
+								<isEmpty property="searchGubun">
+									<isNotEqual property="scode" compareValue="sysadm">
+									AND (
+										A.PROD_NM LIKE '%' || #searchValue# || '%'
+										OR (A.PROD_FUNT LIKE '%' || #searchValue# || '%'
+											OR A.TECH_STND LIKE '%' || #searchValue# || '%'
+											OR A.OPRT_PRCP LIKE '%' || #searchValue# || '%'
+											OR DBMS_LOB.INSTR(A.DLVRY_RCD, #searchValue# ) <![CDATA[>]]> 0
+											)
+										OR A.CORP_NM LIKE '%' || #searchValue# || '%'
+										)
+									</isNotEqual>
+									<isEqual property="scode" compareValue="sysadm">
+									AND (
+										A.PROD_NM LIKE '%' || #searchValue# || '%'
+										OR A.CORP_NM LIKE '%' || #searchValue# || '%'
+										)									
+									</isEqual>
+								</isEmpty>
+								
+								<isNotEmpty property="sCORP_DIVN">
+									AND A.CORP_DIVN LIKE '%' || #sCORP_DIVN# || '%' 
+								</isNotEmpty>
+								<isNotEmpty property="sCORP_MEM_DIVN">
+									AND A.CORP_MEM_DIVN = #sCORP_MEM_DIVN#
+								</isNotEmpty>	
+								<isNotEmpty property="sCORP_FAC_DIVN">
+									AND A.CORP_FAC_DIVN LIKE '%' || #sCORP_FAC_DIVN# || '%'
+								</isNotEmpty>
+								<isNotEmpty property="sPROD_DIVN">
+									AND A.PROD_DIVN = #sPROD_DIVN#
+								</isNotEmpty>	
+								
+																														
+								ORDER BY A.REG_DATE DESC
+														
+							</isEmpty>
+
+						)OIRI
+				)OIRI
+
+           
+	</select>	
+	
+	<select id="JiMpMsp.getJIT_MSC_PROD_RN" parameterClass="java.util.HashMap" resultClass="egovMap">
+				SELECT * FROM(
+					SELECT 
+					  A.PROD_SEQ, A.PROD_NM
+					  ,LEAD(PROD_SEQ,1,0) OVER(ORDER BY A.REG_DATE DESC) NEXT_SEQ
+					  ,LEAD(PROD_NM,1,'') OVER(ORDER BY A.REG_DATE DESC) NEXT_TITLE
+					  ,LAG(PROD_SEQ,1,0) OVER(ORDER BY A.REG_DATE DESC) PREV_SEQ
+					  ,LAG(PROD_NM,1,'') OVER(ORDER BY A.REG_DATE DESC) PREV_TITLE
+
+					FROM JIT_MSC_PROD A 
+					WHERE 1=1
+					AND   A.DEL_YN = 'N'
+					  			<isNotEmpty property="sp_sdate">
+					  				AND A.REG_DATE <![CDATA[ >= ]]> TO_DATE(REPLACE(#sp_sdate#,'-',''),'YYYYMMDD')
+					  			</isNotEmpty>
+					  			
+					  			<isNotEmpty property="sp_edate">
+					  				AND A.REG_DATE <![CDATA[ <= ]]> TO_DATE(REPLACE(#sp_edate#,'-',''),'YYYYMMDD')
+					  			</isNotEmpty>
+					  								
+								<isNotEmpty property="searchTab">
+									<isNotEqual property="searchTab" compareValue="1">
+										AND A.PROD_DIVN = DECODE(#searchTab#,'2','000421'
+																				,'3','000422'
+																				,'4','000423'
+																				,'5','000424')
+									</isNotEqual>
+								</isNotEmpty>
+								
+								<isNotEmpty property="searchGubun">
+									<isEqual property="searchGubun" compareValue="prod_nm">
+										AND A.PROD_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>
+									<isEqual property="searchGubun" compareValue="prod_info">
+										AND (A.PROD_FUNT LIKE '%' || #searchValue# || '%'
+											OR A.TECH_STND LIKE '%' || #searchValue# || '%'
+											OR A.OPRT_PRCP LIKE '%' || #searchValue# || '%'
+											OR DBMS_LOB.INSTR(A.DLVRY_RCD, #searchValue# ) <![CDATA[>]]> 0
+										)
+									</isEqual>		
+									
+									<isEqual property="searchGubun" compareValue="corp_nm">
+										AND A.CORP_NM LIKE '%' || #searchValue# || '%'
+									</isEqual>								
+															
+								</isNotEmpty>
+								
+								<isEmpty property="searchGubun">
+									AND (
+										A.PROD_NM LIKE '%' || #searchValue# || '%'
+										OR (A.PROD_FUNT LIKE '%' || #searchValue# || '%'
+											OR A.TECH_STND LIKE '%' || #searchValue# || '%'
+											OR A.OPRT_PRCP LIKE '%' || #searchValue# || '%'
+											OR DBMS_LOB.INSTR(A.DLVRY_RCD, #searchValue# ) <![CDATA[>]]> 0
+											)
+										OR A.CORP_NM LIKE '%' || #searchValue# || '%'
+										)
+								</isEmpty>
+								
+								ORDER BY  A.REG_DATE DESC
+
+				) WHERE PROD_SEQ=#prod_seq#	
+	  
+	</select>	
+	
+	<!-- K - shop 중소기업 제품관 첨부파일 목록 -->
+	<select id="JiMpMsp.selectFileList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiMpMsp.selectFileList */
+		SELECT FILE_SEQNO AS IDX
+			      ,MENU_CD AS M_CODE
+			      ,MENU_DATA_KEY_DATAS AS RIDX
+			      ,FILE_NM
+			      ,UPDATE_FILE_NM AS RFILE_NM  
+			      ,FILE_ORDER_NO AS ORDER_NO
+			      ,TO_CHAR(REG_DT,'YYYYMMDD') REG_DT
+			      ,FILE_GROUP
+			      ,FILE_SCRTY_AT
+			      ,TO_CHAR(FILE_SIZE, '999,999,999,999') AS FILE_SIZE
+			      ,COUNT(*)OVER(PARTITION BY FILE_GROUP) AS FILE_GROUP_CNT
+		FROM JIT9151
+		WHERE MENU_CD = #file_menu_cd#
+		AND MENU_DATA_KEY_DATAS = #prod_seq#
+		<isNotEmpty property="file_group_no" prepend="AND" >
+			FILE_GROUP = #file_group_no#
+		</isNotEmpty>
+		AND DEL_YN = 'N' 
+		AND DEL_DT IS NULL
+		ORDER BY FILE_GROUP ASC, FILE_ORDER_NO ASC
+		
+	</select>	
+	
+	<!-- 마스킹된 사용자정보 -->
+	<select id="JiMpMsp.selectUserInfo" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiMpMsp.selectUserInfo */
+		SELECT USER_SEQNO
+				   ,USER_ID
+				   ,USER_NM
+				   ,BRTHDY BRTHDY
+				   ,LOGIN_IPNS
+				   ,SUBSTR(MOBLPHON, 0, INSTR(MOBLPHON,'-', 1)) ||  SUBSTR(MOBLPHON, INSTR(MOBLPHON,'-', 1)+1, 1) || '***' || SUBSTR(MOBLPHON, INSTR(MOBLPHON,'-', -1), 2) || '***' AS MOBLPHON
+				   ,MOBLPHON USER_MOBLPHON
+				   ,SUBSTR(TELNO, 0, INSTR(TELNO,'-', 1)) ||  SUBSTR(TELNO, INSTR(TELNO,'-', 1)+1, 1) || '***' || SUBSTR(TELNO, INSTR(TELNO,'-', -1), 2) || '***' AS TELNO
+				   ,TELNO USER_TELNO
+				   ,ZIP
+				   ,ADRES ADRES
+				   ,BUNJI BUNJI
+				   ,SUBSTR(EMAIL, 0, 1) || '*****' || SUBSTR(EMAIL, INSTR(EMAIL,'@', 1), 1) || SUBSTR(EMAIL, INSTR(EMAIL,'@', 1) + 1, 1) || '*****' || SUBSTR(EMAIL, INSTR(EMAIL,'.', 1)) AS EMAIL
+				   ,EMAIL USER_EMAIL
+				   ,EMAIL_RECPTN_AT
+				   ,SMS_RECPTN_AT
+				   ,NEW_RECPTN_AT
+				   ,HAPPYCL_PROVD_AT
+				   ,INDVDLINFO_PRCUSE_AT
+				   ,REG_DT
+				   ,REG_ID
+				   ,DEL_YN
+				   ,DUPINFO
+				   ,INDVDL_GRP_SE
+				   ,GRP_NM
+		FROM JIT9111
+		WHERE 1=1
+		<isNotEmpty property="user_id">
+			AND USER_ID = #user_id#
+		</isNotEmpty>
+		<isNotEmpty property="user_nm">
+			AND USER_NM = #user_nm#
+		</isNotEmpty>
+		<isNotEmpty property="brthdy">
+			AND BRTHDY = #brthdy#
+		</isNotEmpty>
+		<isNotEmpty property="moblphon">
+			AND MOBLPHON =#moblphon#
+		</isNotEmpty>
+		<isNotEmpty property="email">
+			AND EMAIL = #email#
+		</isNotEmpty>
+		<isNotEmpty property="sDupInfo">
+			AND DUPINFO = #sDupInfo#
+		</isNotEmpty>
+		<isNotEmpty property="authcode">
+			AND AUTHCODE = #authcode#
+		</isNotEmpty>
+	</select>				
+ <!--  ########### K - shop 중소기업 제품관 끝 ########################### -->
+ 
+ <!--  ########### K - shop 중소기업 제품관 - 사업소별 설비분야별 담당자관리시작 ########################### -->
+	<!-- 사업소별 설비분야별 담당자관리  목록 -->
+	<select id="JiMpMsp.selectJIT_MP_TY_CHARGERList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiMpMsp.selectJIT_MP_TY_CHARGERList */
+		SELECT ROW_NUMBER() OVER (ORDER BY TA.BS_OFC_ORG_CD ASC, TA.CHAG_EMP_NO ASC, TA.CHAG_SEQ DESC) AS ROW_SEQNO, 
+					TA.CHAG_SEQ,
+				    TA.BS_OFC_ORG_CD,
+				    NVL(ORG_NM_FU01(TA.BS_OFC_ORG_CD),'') BS_OFC_ORG_NM,
+				    TA.FAC_KIND_CD,
+				    NVL(STD_NM_FU03('M00101',TA.FAC_KIND_CD),'') FAC_KIND_CD_NM,
+       				TA.CHAG_EMP_NO,
+				
+					TA.REG_ID , 
+					TO_CHAR(TA.REG_DT, 'YYYY-MM-DD') AS REG_DT , 
+					TA.DEL_ID , 
+					TO_CHAR(TA.DEL_DT, 'YYYY-MM-DD') AS DEL_DT , 
+					TA.DEL_YN,					
+					TB.USER_NM CHAG_USER_NM,
+					NVL(ORG_NM_FU01(TB.ORG_CD),'') CHAG_USER_ORG_NM,
+					TB.GRD_NM CHAG_USER_GRD_NM,
+					TB.MOBLPHON CHAG_USER_MOBLPHON,
+					TB.NAESUN CHAG_USER_NAESUN,
+					TB.EMAIL CHAG_USER_EMAIL,
+					(SELECT USER_NM FROM JIT9120 WHERE USER_ID=TA.REG_ID) REG_USER_NM,
+					(SELECT USER_NM FROM JIT9120 WHERE USER_ID=TA.DEL_ID) DEL_USER_NM,
+					TC.ORG_NMS,
+					TC.ORG_CS	
+			                 
+			FROM JIT_MP_TY_CHARGER TA	/* 사업소별 설비분야별 담당자관리 */
+			, JIT9120 TB
+    		, (
+    		
+				SELECT
+				    A.ORG_SEQNO
+      				,A.ORG_CD
+      				,A.ORG_NM
+      				,A.UPPO_ORG_CD
+      				,A.ORIGIN_ORG_CD
+      				,A.ORIGIN_UPPO_ORG_CD
+      				,A.ORG_SORT_NO
+      				,A.ORG_DESC
+      				,TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD') USE_ST_YMD
+      				,TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD') USE_END_YMD
+      				,A.ORG_TY_CD
+      				,A.ORG_MANAGER
+    			  ,TO_CHAR(A.REG_DT,'YYYY-MM-DD') REG_DT
+    			  ,REG_ID
+    			  ,TO_CHAR(A.MOD_DT,'YYYY-MM-DD') MOD_DT
+    			  ,MOD_ID
+    			  ,TO_CHAR(A.DEL_DT,'YYYY-MM-DD') DEL_DT
+    			  ,DEL_ID
+    			  ,DEL_YN	
+		 			,LEVEL AS LV			
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_NM,'::'),3,300) AS ORG_NMS
+         			,SUBSTR(SYS_CONNECT_BY_PATH(A.ORG_CD, '::'),3,300) AS ORG_CS
+			   FROM (
+				SELECT *
+				FROM JIT9110  
+    			WHERE 1=1 
+				<isNotEmpty property="base_ymd">		
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   #base_ymd# AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  #base_ymd# AND USE_END_YMD  <![CDATA[ >= ]]>  #base_ymd#)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+				</isNotEmpty>	
+				
+				<isEmpty property="base_ymd">
+						AND (
+		  						(USE_ST_YMD   <![CDATA[ <= ]]>   SYSDATE AND USE_END_YMD IS NULL)
+								OR       
+							 	(USE_ST_YMD   <![CDATA[ <= ]]>  SYSDATE AND USE_END_YMD  <![CDATA[ >= ]]>  SYSDATE)
+							 	OR (USE_ST_YMD    IS NULL AND USE_END_YMD   IS NULL) 
+		            		)
+		
+				</isEmpty> 				   
+			   ) A
+    			WHERE 1=1
+    			AND A.DEL_YN <![CDATA[ <> ]]> 'Y'	
+				<isNotEmpty property="base_ymd">	
+	  				AND (
+	  						(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>   #base_ymd# AND A.USE_END_YMD IS NULL)
+							OR       
+						 	(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>  #base_ymd# AND TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD')   <![CDATA[ >= ]]>   #base_ymd#)
+						 	OR
+						 	(A.USE_ST_YMD IS NULL AND A.USE_END_YMD IS NULL) 
+	            		)
+				</isNotEmpty>	
+			
+				<isEmpty property="base_ymd">
+	  				AND (
+	  						(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD') AND A.USE_END_YMD IS NULL)
+							OR       
+						 	(TO_CHAR(A.USE_ST_YMD,'YYYY-MM-DD')   <![CDATA[ <= ]]>  TO_CHAR(SYSDATE,'YYYY-MM-DD') AND TO_CHAR(A.USE_END_YMD,'YYYY-MM-DD')   <![CDATA[ >= ]]>   TO_CHAR(SYSDATE,'YYYY-MM-DD'))
+						 	OR
+						 	(A.USE_ST_YMD IS NULL AND A.USE_END_YMD IS NULL) 
+	            		)				
+
+	
+				</isEmpty>			   	
+   				START WITH A.ORG_CD = A.UPPO_ORG_CD
+			   	CONNECT BY NOCYCLE PRIOR A.ORG_CD  =  A.UPPO_ORG_CD
+    		) TC			
+			WHERE 1=1
+			AND 	TA.CHAG_EMP_NO = TB.USER_ID
+			AND 	TB.ORG_CD = TC.ORG_CD
+			AND     TA.DEL_YN = 'N'
+			
+			<isEmpty property="ichag_seq">
+						
+				<isNotEmpty property="sBsOfcOrgCd">
+					/* AND TA.BS_OFC_ORG_CD = #sBsOfcOrgCd# */
+					<isEqual property="sBsOfcOrgCd" compareValue="NOTBsOfc">
+						AND INSTR(TC.ORG_CS,'8410') = 0
+						AND INSTR(TC.ORG_CS,'8420') = 0
+						AND INSTR(TC.ORG_CS,'8570') = 0
+						AND INSTR(TC.ORG_CS,'8590') = 0
+						AND INSTR(TC.ORG_CS,'8710') = 0
+						AND INSTR(TC.ORG_CS,'8930') = 0
+						AND INSTR(TC.ORG_CS,'8940') = 0
+						AND INSTR(TC.ORG_CS,'9180') = 0
+					</isEqual>
+					<isNotEqual property="sBsOfcOrgCd" compareValue="NOTBsOfc">
+						AND INSTR(TC.ORG_CS,#sBsOfcOrgCd#) > 0
+					</isNotEqual>
+				</isNotEmpty>
+				
+				<isNotEmpty property="sFecKindCd">
+					AND TA.FAC_KIND_CD = #sFecKindCd# 
+				</isNotEmpty>	
+				
+				<isNotEmpty property="corp_fac_divn_cds" prepend="AND" >
+					<iterate prepend="TA.FAC_KIND_CD IN" open="(" conjunction="," close=")" property="corp_fac_divn_cds">
+						<![CDATA[#corp_fac_divn_cds[]#]]>
+					</iterate>
+				</isNotEmpty>						
+			</isEmpty>
+				
+				
+			<isNotEmpty property="ichag_seq">
+				AND TA.CHAG_SEQ = #ichag_seq# 
+			</isNotEmpty>
+			
+			ORDER BY  TA.BS_OFC_ORG_CD ASC, TA.CHAG_EMP_NO ASC, TA.CHAG_SEQ DESC
+		
+	</select>  	
+	
+	<select id="JiMpMsp.selectJIT_MP_TY_CHARGERList_bak" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiMpMsp.selectJIT_MP_TY_CHARGERList */
+		SELECT ROW_NUMBER() OVER (ORDER BY A.BS_OFC_ORG_CD ASC, A.CHAG_EMP_NO ASC, A.CHAG_SEQ DESC) AS ROW_SEQNO, 
+					A.CHAG_SEQ,
+				    A.BS_OFC_ORG_CD,
+				    NVL(ORG_NM_FU01(A.BS_OFC_ORG_CD),'') BS_OFC_ORG_NM,
+				    A.FAC_KIND_CD,
+				    NVL(STD_NM_FU03('M00101',A.FAC_KIND_CD),'') FAC_KIND_CD_NM,
+       				A.CHAG_EMP_NO,
+				
+					A.REG_ID , 
+					TO_CHAR(A.REG_DT, 'YYYY-MM-DD') AS REG_DT , 
+					A.DEL_ID , 
+					TO_CHAR(A.DEL_DT, 'YYYY-MM-DD') AS DEL_DT , 
+					A.DEL_YN,					
+					B.USER_NM CHAG_USER_NM,
+					NVL(ORG_NM_FU01(B.ORG_CD),'') CHAG_USER_ORG_NM,
+					B.GRD_NM CHAG_USER_GRD_NM,
+					B.MOBLPHON CHAG_USER_MOBLPHON,
+					B.NAESUN CHAG_USER_NAESUN,
+					B.EMAIL CHAG_USER_EMAIL,
+					(SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.REG_ID) REG_USER_NM,
+					(SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.DEL_ID) DEL_USER_NM	
+			                 
+			FROM JIT_MP_TY_CHARGER A	/* 사업소별 설비분야별 담당자관리 */
+			, JIT9120 B
+			WHERE 1=1
+			AND 	A.CHAG_EMP_NO = B.USER_ID
+			AND     A.DEL_YN = 'N'
+			
+			<isEmpty property="ichag_seq">
+						
+				<isNotEmpty property="sBsOfcOrgCd">
+					AND A.BS_OFC_ORG_CD = #sBsOfcOrgCd# 
+				</isNotEmpty>
+				
+				<isNotEmpty property="sFecKindCd">
+					AND A.FAC_KIND_CD = #sFecKindCd# 
+				</isNotEmpty>	
+				
+				<isNotEmpty property="corp_fac_divn_cds" prepend="AND" >
+					<iterate prepend="A.FAC_KIND_CD IN" open="(" conjunction="," close=")" property="corp_fac_divn_cds">
+						<![CDATA[#corp_fac_divn_cds[]#]]>
+					</iterate>
+				</isNotEmpty>						
+			</isEmpty>
+				
+				
+			<isNotEmpty property="ichag_seq">
+				AND A.CHAG_SEQ = #ichag_seq# 
+			</isNotEmpty>
+			
+			ORDER BY  A.BS_OFC_ORG_CD ASC, A.CHAG_EMP_NO ASC, A.CHAG_SEQ DESC
+		
+	</select>	
+	
+	<select id="JiMpMsp.selectBusinessOfficeList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT ORG_SEQNO, ORG_CD, ORG_NM, UPPO_ORG_CD, ORG_SORT_NO, ORG_MANAGER
+		 FROM JIT9110 
+		WHERE UPPO_ORG_CD ='A000'
+		ORDER BY ORG_SORT_NO ASC, ORG_CD ASC	
+	</select>	
+	
+	<insert id="JiMpMsp.insertJIT_MP_TY_CHARGER">
+		INSERT INTO JIT_MP_TY_CHARGER
+		 (
+			CHAG_SEQ,
+       		BS_OFC_ORG_CD,
+       		FAC_KIND_CD,
+       		CHAG_EMP_NO,
+       		REG_ID,
+       		REG_DT,
+       		DEL_YN
+      	   
+		   ) VALUES (
+		   
+		    #iseqno#
+           ,#BS_OFC_ORG_CD#
+           ,#FAC_KIND_CD#
+           ,#chag_emp_no#
+           ,#user_id#
+           ,SYSDATE
+           ,'N'
+		  )
+ 	
+	</insert>
+	
+	<delete id="JiMpMsp.deleteJIT_MP_TY_CHARGER">
+
+		DELETE FROM JIT_MP_TY_CHARGER 
+		WHERE 1=1
+		AND BS_OFC_ORG_CD=#BS_OFC_ORG_CD#
+		AND FAC_KIND_CD=#FAC_KIND_CD#
+		<isNotEmpty property="delkey"> 
+			AND CHAG_SEQ IN
+		    <iterate property="delkey_sp" open="(" close=")" conjunction="," >
+				          #delkey_sp[]#
+	     	</iterate>		
+		</isNotEmpty>
+		<isEmpty property="delkey"> 
+			AND CHAG_SEQ IS NULL
+		</isEmpty>
+
+	</delete>			
+ <!--  ########### K - shop 중소기업 제품관 - 사업소별 설비분야별 담당자관리 끝 ########################### --> 	
+</sqlMap>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <settings useStatementNamespaces="true" /><!-- 쿼리수행시 namespace를 통한접근 여부(.포함ID의 경우제외) -->
+    <typeAlias alias="CmMap" type="com.ji.common.CmMap"/>
+    <typeAlias alias="CmResMap" type="com.ji.common.CmResMap"/>
+    <typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" /><!-- 공통으로 사용할 typeAlias -->
+    <typeAlias alias="userVO" type="com.ji.user.service.UserVO"/>
+    <typeAlias alias="privacyMngVO" type="com.ji.vo.PrivacyMngVO" />
+    <!-- 메뉴 -->
+	<typeAlias alias="menuVO" type="com.ji.vo.MenuVO" />
+	<!-- 공통코드 -->
+	<typeAlias alias="codeVO" type="com.ji.vo.CodeVO" />
+	<!-- 파일 -->
+	<typeAlias alias="fileVO" type="com.ji.vo.FileVO" />
+	<!-- 파일 -->
+	<typeAlias alias="boardVO" type="com.ji.vo.BoardVO" />
+	
+	<typeHandler callback="org.springframework.orm.ibatis.support.ClobStringTypeHandler" jdbcType="CLOB" javaType="java.lang.String"/>
+    <sqlMap resource="egovframework/sqlmap/dummy-SQL.xml"/><!-- DTD문법상 하나이상 필수 - 비어있는 sqlmap을 적용 -->
+</sqlMapConfig>

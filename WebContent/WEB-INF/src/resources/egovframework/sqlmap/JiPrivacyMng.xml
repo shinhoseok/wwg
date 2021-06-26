@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiPrivacyMng">
+	
+	<!-- 지원사업, 연구개발 상세 -->
+	<select id="JiPrivacyMng.selectBoardDetail" parameterClass="privacyMngVO" resultClass="privacyMngVO">
+		SELECT data_title as dataTitle, data_seqno as dataSeq, reg_nm as regNm
+		  FROM JIT_BOARD_PROPOSAL_DAMO
+		 WHERE data_seqno = #dataSeq#
+	</select>	
+	
+	<!-- 중소기업제품관관리 상세 -->
+	<select id="JiPrivacyMng.selectProductBoardDetail" parameterClass="privacyMngVO" resultClass="privacyMngVO">
+		SELECT prod_seq as dataSeq, prod_nm as dataTitle, replace(corp_repe_nm,' ','') as regNm
+		  FROM JIT_MSC_PROD
+		 WHERE prod_seq = #dataSeq#
+	</select>
+	
+</sqlMap>

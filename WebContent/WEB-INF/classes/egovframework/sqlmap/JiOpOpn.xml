@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiOpOpn">
+ <!--  ########### 제안하기 게시판 시작 ########################### -->
+ 
+    <resultMap class="java.util.HashMap" id="selectJIT_BOARD_PROPOSALCLOB">
+    	<result column="RNUM" property="RNUM" />
+    	<result column="PAGE_NUM" property="PAGE_NUM" />
+    	<result column="DATA_SEQNO" property="DATA_SEQNO" />
+    	<result column="MENU_CD" property="MENU_CD" />
+    	<result column="MENU_NM" property="MENU_NM" />
+    	<result column="DATA_TITLE" property="DATA_TITLE" />
+    	<result javaType="java.lang.String" jdbcType="CLOB" column="DATA_DESC" property="DATA_DESC" />
+    	<result column="INQ_CNT" property="INQ_CNT" />
+    	<result column="DATA_ORIGIN_NO" property="DATA_ORIGIN_NO" />
+		<result column="DATA_DEPTH" property="DATA_DEPTH" />
+    	<result column="DATA_SORT_NO" property="DATA_SORT_NO" />
+    	<result column="OPEN_YN" property="OPEN_YN" />
+    	<result column="REG_NM" property="REG_NM" />
+    	<result column="REG_HP_NO" property="REG_HP_NO" />
+    	<result column="REG_EMAIL" property="REG_EMAIL" />
+    	<result column="REG_SOSOK" property="REG_SOSOK" />
+    	<result column="REG_TY" property="REG_TY" />
+    	<result column="DUPL_INFO" property="DUPL_INFO" />
+    	<result column="AUTH_TYPE" property="AUTH_TYPE" />
+    	<result column="REG_ID" property="REG_ID" />
+    	<result column="REG_DT" property="REG_DT" />
+    	<result column="DEL_ID" property="DEL_ID" />
+    	<result column="DEL_DT" property="DEL_DT" />
+    	<result column="DEL_YN" property="DEL_YN" />
+    	<result column="APR_ID" property="APR_ID" />
+    	<result column="APR_DT" property="APR_DT" />
+    	<result column="APR_TY" property="APR_TY" />
+    	<result column="APR_RSN" property="APR_RSN" />
+    	<result column="SECRET_NO" property="SECRET_NO" />
+    	<result column="USER_NM" property="USER_NM" />
+    	<result column="FILE1_NMS" property="FILE1_NMS" />
+    	<result column="FILE1_SEQ" property="FILE1_SEQ" />
+
+    </resultMap>
+     
+	<insert id="JiOpOpn.insertJIT_BOARD_PROPOSAL">
+		INSERT INTO JIT_BOARD_PROPOSAL (
+				DATA_SEQNO, MENU_CD, DATA_TITLE, DATA_DESC, INQ_CNT,
+                DATA_ORIGIN_NO, DATA_DEPTH, DATA_SORT_NO, OPEN_YN, REG_NM,
+                REG_HP_NO, REG_EMAIL, REG_SOSOK, REG_TY, 
+                DUPL_INFO, AUTH_TYPE, REG_ID, REG_DT, DEL_YN,
+                SECRET_NO
+		     )VALUES (
+		     	#ikey_datas#, #pcode#, #DATA_TITLE#, #DATA_DESC#, '0',
+		        #r_idx#,#r_depth#,#r_order#, 'N', #REG_NM#,
+		        #REG_HP_NO#, #REG_EMAIL#, #REG_SOSOK#, #REG_TY#, 
+		        #DUPL_INFO#, #AUTH_TYPE#, #REG_ID#, SYSDATE, 'N',
+		        damo.HASH_STR_DATA(#SECRET_NO#)
+		     )
+ 	
+	</insert>  
+	
+	<update id="JiOpOpn.updateJIT_BOARD_PROPOSAL">
+		UPDATE JIT_BOARD_PROPOSAL SET
+				DATA_TITLE=#DATA_TITLE#, DATA_DESC=#DATA_DESC#,
+				<isNotEmpty property="OPEN_YN">
+					OPEN_YN=#OPEN_YN#,
+				</isNotEmpty>
+                REG_HP_NO=#REG_HP_NO#, REG_EMAIL=#REG_EMAIL#, REG_SOSOK=#REG_SOSOK#
+                
+		WHERE DATA_SEQNO = #ikey_datas#
+		
+
+	</update>
+	
+		
+	
+	<!-- 제안하기 게시판 목록 -->
+	<select id="JiOpOpn.selectJIT_BOARD_PROPOSALList" parameterClass="java.util.HashMap" resultMap="selectJIT_BOARD_PROPOSALCLOB">
+		/* JiOpOpn.JiOpOpn.selectJIT_BOARD_PROPOSALList */
+		SELECT ROWNUM AS RNUM, OIRI.*
+						 	                
+                   FROM 
+                             (SELECT 
+                             	CEIL((ROW_NUMBER() OVER ( ORDER BY A.DATA_SEQNO DESC)) / 10 ) AS PAGE_NUM ,
+                             
+								A.DATA_SEQNO, A.MENU_CD,
+								NVL((SELECT MENU_NM FROM JIT9160 WHERE MENU_CD=A.MENU_CD),'') MENU_NM,
+								A.DATA_TITLE, A.DATA_DESC, A.INQ_CNT,
+                				A.DATA_ORIGIN_NO, A.DATA_DEPTH, A.DATA_SORT_NO, A.OPEN_YN, A.REG_NM,
+                				A.REG_HP_NO, A.REG_EMAIL, A.REG_SOSOK, A.REG_TY, 
+                				A.DUPL_INFO, A.AUTH_TYPE, A.REG_ID, TO_CHAR(A.REG_DT, 'YYYY-MM-DD') REG_DT,
+                				A.DEL_ID, TO_CHAR(A.DEL_DT, 'YYYY-MM-DD') DEL_DT, A.DEL_YN,
+                				A.APR_ID,  TO_CHAR(A.APR_DT,'YYYY-MM-DD HH24:MI:SS') APR_DT, A.APR_TY, A.APR_RSN,
+                				A.SECRET_NO 
+                				
+                				,DECODE(A.AUTH_TYPE,'LOGIN','로그인','CHECKPLUS','핸드폰','IPIN','아이핀') AUTH_TYPE_NM  
+                				,NVL((SELECT USER_NM FROM JIT9120 WHERE USER_ID=A.APR_ID),'') APR_ID_NM
+                				,NVL((SELECT EMAIL FROM JIT9120 WHERE USER_ID=A.APR_ID),'') APR_EMAIL                                   				            
+					           			
+								<![CDATA[
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_NM) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD=A.MENU_CD
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.DATA_SEQNO)
+											AND FILE_GROUP ='1'
+										),'') FILE1_NMS
+								, NVL((SELECT TO_CHAR(SUBSTR(REGEXP_REPLACE(REGEXP_REPLACE(XMLAGG(XMLELEMENT(a,'::' || FILE_SEQNO) ORDER BY FILE_ORDER_NO ASC ),'<A>',''),'</A>',''), 3))
+											FROM JIT9151
+											WHERE 1=1
+											AND MENU_CD=A.MENU_CD
+											AND MENU_DATA_KEY_DATAS = TO_CHAR(A.DATA_SEQNO)
+											AND FILE_GROUP ='1'
+										),'') FILE1_SEQ
+
+								]]>
+									           								
+								,B.USER_NM	
+								
+			                             
+							FROM JIT_BOARD_PROPOSAL A	/* 제안게시판 정보 */
+							        ,JIT9111 B		/* 사용자정보 */
+							WHERE A.REG_ID 		= B.USER_ID(+)
+							AND   A.DEL_YN = 'N'
+							<isEqual property="scode" compareValue="sysadm">
+								AND   A.MENU_CD = #adm_rpcode#
+							
+								<isNotEmpty property="data_seqno">
+									AND   A.DATA_SEQNO = #data_seqno#
+								</isNotEmpty>
+		        											
+									<isNotEmpty property="searchGubun">
+										<isEqual property="searchGubun" compareValue="REG_NM">
+											AND A.REG_NM LIKE '%' || #searchValue# || '%'
+										</isEqual>
+																			
+										<isEqual property="searchGubun" compareValue="DATA_TITLE">
+											AND A.DATA_TITLE LIKE '%' || #searchValue# || '%'
+										</isEqual>
+										
+										<isEqual property="searchGubun" compareValue="DATA_DESC">
+											AND DBMS_LOB.INSTR(A.DATA_DESC, #searchValue# ) <![CDATA[>]]> 0
+										</isEqual>
+																			
+										<isEqual property="searchGubun" compareValue="REG_HP_NO">
+											AND REPLACE(A.REG_HP_NO,'-','') LIKE '%' || REPLACE(#searchValue#,'-','') || '%'
+										</isEqual>	
+										
+										<isEqual property="searchGubun" compareValue="REG_EMAIL">
+											AND A.REG_EMAIL LIKE '%' || #searchValue# || '%'
+										</isEqual>
+										
+										<isEqual property="searchGubun" compareValue="REG_SOSOK">
+											AND A.REG_SOSOK LIKE '%' || #searchValue# || '%'
+										</isEqual>																																				
+																
+									</isNotEmpty>
+									
+									<isEmpty property="searchGubun">
+										AND (	A.REG_NM LIKE '%' || #searchValue# || '%'
+												OR A.DATA_TITLE LIKE '%' || #searchValue# || '%'
+												OR DBMS_LOB.INSTR(A.DATA_DESC, #searchValue# ) <![CDATA[>]]> 0
+												OR REPLACE(A.REG_HP_NO,'-','') LIKE '%' || REPLACE(#searchValue#,'-','') || '%'
+												OR A.REG_EMAIL LIKE '%' || #searchValue# || '%'
+												OR A.REG_SOSOK LIKE '%' || #searchValue# || '%'
+											)
+									</isEmpty>
+																	
+															
+								ORDER BY  A.DATA_SEQNO DESC	
+							</isEqual>
+							
+							<isNotEqual property="scode" compareValue="sysadm">
+								AND   A.MENU_CD = #pcode#
+								
+								<isNotEmpty property="USER_ID">
+									AND   A.REG_ID = #USER_ID#
+									<isNotEmpty property="SECRET_NO">
+										AND   A.SECRET_NO = damo.HASH_STR_DATA(#SECRET_NO#)
+									</isNotEmpty>
+								</isNotEmpty>							
+								
+								<isEmpty property="USER_ID">
+									
+										AND   A.REG_NM = #REG_NM#
+									
+										AND   A.REG_HP_NO = #REG_HP_NO#
+									
+										AND   A.REG_EMAIL = #REG_EMAIL#
+									
+										AND   A.SECRET_NO = damo.HASH_STR_DATA(#SECRET_NO#)
+															
+								</isEmpty>
+																					
+													
+															
+								<isNotEmpty property="data_seqno">
+									AND   A.DATA_SEQNO = #data_seqno#
+								</isNotEmpty>
+								<isEmpty property="data_seqno">
+								
+									<isNotEmpty property="searchGubun">
+										<isEqual property="searchGubun" compareValue="data_title">
+											AND A.DATA_TITLE LIKE '%' || #searchValue# || '%'
+										</isEqual>
+										<isEqual property="searchGubun" compareValue="data_desc">
+											AND DBMS_LOB.INSTR(A.DATA_DESC, #searchValue# ) <![CDATA[>]]> 0
+										</isEqual>									
+										<isEqual property="searchGubun" compareValue="data_info">
+											AND (A.DATA_TITLE LIKE '%' || #searchValue# || '%'
+												OR DBMS_LOB.INSTR(A.DATA_DESC, #searchValue# ) <![CDATA[>]]> 0
+											)
+										</isEqual>																		
+																
+									</isNotEmpty>
+									
+									<isEmpty property="searchGubun">
+										AND (A.DATA_TITLE LIKE '%' || #searchValue# || '%'
+												OR DBMS_LOB.INSTR(A.DATA_DESC, #searchValue# ) <![CDATA[>]]> 0
+											)
+									</isEmpty>																					
+									
+									ORDER BY  A.DATA_SEQNO DESC							
+								</isEmpty>
+							</isNotEqual>
+
+						)OIRI
+				
+	</select>	
+	
+
+	
+	<!-- 제안하기 첨부파일 목록 -->
+	<select id="JiOpOpn.selectFileList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiOpOpn.selectFileList */
+		SELECT FILE_SEQNO AS IDX
+			      ,MENU_CD AS M_CODE
+			      ,MENU_DATA_KEY_DATAS AS RIDX
+			      ,FILE_NM
+			      ,UPDATE_FILE_NM AS RFILE_NM  
+			      ,FILE_ORDER_NO AS ORDER_NO
+			      ,TO_CHAR(REG_DT,'YYYYMMDD') REG_DT
+			      ,FILE_GROUP
+			      ,FILE_SCRTY_AT
+			      ,TO_CHAR(FILE_SIZE, '999,999,999,999') AS FILE_SIZE
+			      ,COUNT(*)OVER(PARTITION BY FILE_GROUP) AS FILE_GROUP_CNT
+		FROM JIT9151
+		WHERE MENU_CD = #file_menu_cd#
+		AND MENU_DATA_KEY_DATAS = #data_seqno#
+		<isNotEmpty property="file_group_no" prepend="AND" >
+			FILE_GROUP = #file_group_no#
+		</isNotEmpty>
+		AND DEL_YN = 'N' 
+		AND DEL_DT IS NULL
+		ORDER BY FILE_GROUP ASC, FILE_ORDER_NO ASC
+		
+	</select>	
+	
+	<select id="JiOpOpn.getJIT_BOARD_PROPOSALChk" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* JiOpOpn.getJIT_BOARD_PROPOSALChk */
+		SELECT COUNT(*) AS CHK_CNT
+		FROM JIT_BOARD_PROPOSAL
+		WHERE MENU_CD = #pcode#
+		AND REG_NM = #REG_NM#
+		AND REG_HP_NO = #REG_HP_NO#
+		AND REG_EMAIL = #REG_EMAIL#
+		AND SECRET_NO = damo.HASH_STR_DATA(#SECRET_NO#)
+		AND DEL_YN = 'N' 
+
+		ORDER BY DATA_SEQNO DESC
+		
+	</select>
+		
+	<update id="JiOpOpn.updateJIT_BOARD_PROPOSALCnt">
+
+		<![CDATA[
+
+		 UPDATE JIT_BOARD_PROPOSAL SET
+
+		 INQ_CNT = INQ_CNT+1
+
+		 WHERE MENU_CD=#pcode# AND DATA_SEQNO =#data_seqno#
+
+		]]>
+
+	</update>
+	
+	<update id="JiOpOpn.updateJIT_BOARD_PROPOSALAprId">
+
+		<![CDATA[
+
+		 UPDATE JIT_BOARD_PROPOSAL SET
+
+		 APR_ID = #APR_ID#
+		 ,APR_DT = CURRENT_TIMESTAMP
+
+		 WHERE MENU_CD=#adm_rpcode# AND DATA_SEQNO =#data_seqno#
+
+		]]>
+
+	</update>	
+	
+	
+		
+	
+	<update id="JiOpOpn.deleteJIT_BOARD_PROPOSAL">
+		UPDATE JIT_BOARD_PROPOSAL SET
+				DEL_YN='Y',
+		        
+		        DEL_ID=#user_id#, DEL_DT=SYSDATE
+		WHERE DATA_SEQNO = #ikey_datas#
+		
+
+	</update>
+		
+			
+ 		
+ <!--  ########### 제안하기 게시판 끝 ########################### --> 	
+</sqlMap>

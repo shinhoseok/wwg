@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCode">
+	
+	<!-- 공통코드 리스트 -->
+	<select id="JiCode.selectCodeList" parameterClass="java.lang.String" resultClass="codeVO">
+	 SELECT ta.stdinfo_dtl_seq stdinfoDtlSeq,
+	        ta.stdinfo_dtl_cd stdinfoDtlCd,
+	        <![CDATA[
+	        REPLACE(REPLACE(ta.stdinfo_dtl_nm, '&amp;amp;', '&'), '&amp;', '&') stdinfoDtlNm,
+	        ]]>
+	        ta.stdinfo_dtl_uppo_cd stdinfoDtlUppoCd,
+	        ta.stdinfo_dtl_label stdinfoDtlLabel,
+	        tb.auth_grp_cd as authGrpCd
+	   FROM jit9101 ta, JIT9131 tb
+	  WHERE ta.stdinfo_dtl_cd = tb.m_code(+)
+	    AND ta.stdinfo_dtl_uppo_cd = #stdinfoDtlUppoCd#
+	  	AND ta.del_yn = 'N'
+	  ORDER BY ta.order_no
+	</select>
+	
+</sqlMap>

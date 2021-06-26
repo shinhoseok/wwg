@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmAct">
+ <!--  ########### jrcms 시작 ########################### -->
+ 	<select id="JiCmAct.getContents" parameterClass="java.util.HashMap" resultMap="COMMON.selectCONTENSTCLOB">
+
+		SELECT 
+		  	 TO_CHAR(A.IDX) IDX
+		  	, A.M_CODE	
+		  	, TO_CHAR(A.REG_DT,'YYYY-MM-DD HH24:MI:SS')	REG_DT
+		  	, A.REG_ID
+		  	, A.M_CONTENTS
+		  	, A.C_CSS
+		  	, A.C_JSCRIPT
+		  FROM JIT9505 A		
+		  WHERE M_CODE=#pcode#
+		  ORDER BY A.IDX DESC
+	</select>
+				
+	<select id="JiCmAct.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9505_IDX_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	
+	<insert id="JiCmAct.insertContents">
+
+		<![CDATA[
+		INSERT INTO JIT9505
+		 (IDX, M_CODE, REG_DT, REG_ID, M_CONTENTS, C_CSS, C_JSCRIPT 
+		 )VALUES( 
+		 #max_seq#, #pcode# , SYSDATE, #USER_ID#, #M_CONTENTS#, #C_CSS#, #C_JSCRIPT#
+		 )         
+		]]>
+
+	</insert>	
+	
+	<delete id="JiCmAct.deleteContents">
+
+		<![CDATA[
+
+		 DELETE FROM  JIT9505 
+
+		 WHERE IDX=#sidx# 
+
+		]]>
+
+	</delete>	
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

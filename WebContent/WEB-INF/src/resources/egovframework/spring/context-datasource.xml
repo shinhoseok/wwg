@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+						http://www.jasypt.org/schema/encryption http://www.jasypt.org/schema/encryption/jasypt-spring3-encryption-1.xsd">
+	
+    <bean id="environmentVariablesConfiguration" 
+
+      class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+        <property name="algorithm" value="PBEWithMD5AndDES" />
+        <property name="passwordEnvName" value="APP_ENCRYPTION_PASSWORD" />
+    </bean>
+  
+    <bean id="configurationEncryptor" 
+
+      class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+        <property name="config" ref="environmentVariablesConfiguration" />
+        <property name="password" value="jasyptPass" />
+    </bean>
+    
+    <bean id="propertyConfigurer"
+
+		class="org.jasypt.spring3.properties.EncryptablePropertyPlaceholderConfigurer">
+        <constructor-arg ref="configurationEncryptor" />
+        <property name="locations">
+            <list>
+                <value>classpath:egovframework/properties/jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+	
+	<bean id="dataSourcedsLog" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceds" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="dataSourceds2Log" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceds2" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean>	
+
+	<bean id="dataSourceds3Log" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceds3" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean>	
+
+	<!-- <bean id="dataSourceds4Log" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceds4" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean> -->	
+	
+
+<!-- 	<bean id="dataSourceds" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/edportal" />
+		<property name="resourceRef" value="true" />
+	</bean> -->
+	<!-- 참고 옵션 --> 
+		<!-- 커넥션체크쿼리 validationQuery -->
+		<!-- 커넥션체크쿼리 간격 30초 validationInterval tomcat에만 적용됨 -->
+		<!-- true일 경우 비활성화 커넥션을 추출할 때 커넥션이 유효한지의 여부를 검사해서 유효하지 않은 커넥션은 풀에서 제거한다. testWhileIdle -->
+		<!-- true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사한다. testOnBorrow-->
+		<!-- 커넥션이 쉬고 있을 때 커넥션 체크 쿼리를 실행하는 시간 간격 timeBetweenEvictionRunsMillis-->
+		<!-- 불필요한 커넥션 제거 removeAbandoned-->
+		<!-- 삭제할 최대 시간 결정 removeAbandonedTimeout-->		
+
+
+   	<!-- oracle  
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@아이피:1521:ORCL"/> 
+        -->
+        
+        <!-- tibero 
+        <property name="driverClassName" value="com.tmax.tibero.jdbc.TbDriver"/>
+        <property name="url" value="jdbc:tibero:thin:@아이피:8629:tibero"/>
+        -->
+        
+		
+		<!-- tomcat datasource 셋팅시
+		<Resource auth="Container" 
+		name="jdbc/gends"
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
+	    type="javax.sql.DataSource" 
+	    url="jdbc:sqlserver://10.10.0.6:1433;DatabaseName=ewp_gen" 
+	    username="ewp_gen" 
+	    password="ewp_gen3011" 
+		loginTimeout="10" 
+		maxWait="1000"
+		initialSize="10"
+		maxActive="20"	
+		maxIdle="5"		
+		validationQuery="SELECT 1" 	
+		validationInterval="30000"
+		testWhileIdle="true"
+		timeBetweenEvictionRunsMillis="300000"
+	    testOnBorrow="true" 
+		removeAbandoned="true"
+		removeAbandonedTimeout="60"
+	    />	
+	    <ResourceLink global="jdbc/gends" name="jdbc/gends" type="javax.sql.DataSource"/>
+	    -->
+	    
+	<!-- 동반성장 오픈플랫폼 --> 
+	<bean id="dataSourceds" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${POLLDB_JNDI}" />
+		<property name="resourceRef" value="true" />
+	</bean>	
+	<!-- 
+    <bean id="dataSourceds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+ 
+	    <property name="driverClassName" value="${POLLDB_DRIVER}"/>
+	    <property name="url" value="${POLLDB_URL}"/>
+	    <property name="username" value="${POLLDB_USER}"/>
+	    <property name="password" value="${POLLDB_PWD}"/>
+
+
+	    <property name="maxWait" value="${POLLDB_MAXWAIT}"/>
+	    <property name="initialSize" value="${POLLDB_INITIALSIZE}"/>
+	    <property name="maxActive" value="${POLLDB_MAXACTIVE}"/>
+	    <property name="maxIdle" value="${POLLDB_MAXIDLE}"/>
+	    <property name="validationQuery" value="${POLLDB_VALIDATIONQUERY}"/>
+	    
+	    <property name="testWhileIdle" value="true"/>
+	    <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+	    <property name="testOnBorrow" value="true"/>
+	    <property name="testOnReturn" value="false"/>
+	    <property name="removeAbandoned" value="true"/>
+	    <property name="removeAbandonedTimeout" value="60"/>
+
+    </bean>
+     -->
+    
+    
+	<!-- 메일서버 -->
+	<bean id="dataSourceds2" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${POLLDB2_JNDI}" />
+		<property name="resourceRef" value="true" />
+	</bean>	
+
+    
+	<!-- SMS서버 -->
+	<bean id="dataSourceds3" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="${POLLDB3_JNDI}" />
+		<property name="resourceRef" value="true" />
+	</bean>	
+
+	
+	<!-- PostgreSQL 
+	<bean id="dataSourceds4" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> 
+	
+	    <property name="driverClass" value="${POLLDB4_DRIVER}" />
+	    <property name="url" value="${POLLDB4_URL}"/>	
+	    <property name="username" value="${POLLDB4_USER}"/>
+	    <property name="password" value="${POLLDB4_PWD}"/>	 
+	    
+	</bean>
+	 --> 
+</beans>

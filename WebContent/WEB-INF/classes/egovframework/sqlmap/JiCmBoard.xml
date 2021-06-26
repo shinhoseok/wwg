@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmBoard">
+	
+	<!-- 공통게시판 공통 where -->
+	<sql id="boardListWhere">
+		AND DEL_YN = 'N'
+		AND DATA_DEPTH = 1
+		<isNotNull property="menuCd">
+			<isNotEmpty property="menuCd">
+				AND MENU_CD = #menuCd#
+			</isNotEmpty>
+		</isNotNull>
+		<isNotNull property="searchValue">
+			<isNotEmpty property="searchValue">
+				AND a.DATA_TITLE LIKE '%'|| #searchValue# ||'%'
+			</isNotEmpty>
+		</isNotNull>
+	</sql>
+	
+	
+	<!-- 게시물 리스트 -->
+	<select id="JiCmBoard.selectBoardList" parameterClass="boardVO" resultClass="boardVO">
+		SELECT C.*
+		  FROM (SELECT ROW_NUMBER () OVER (ORDER BY a.REG_DT DESC) AS rNum,
+		               a.DATA_SEQNO dataSeqno,
+		               a.DATA_TITLE dataTitle,
+		               a.REG_ID_NM regNm,
+		               a.MENU_CD menuCd,
+		               TO_CHAR(a.REG_DT, 'YYYY-MM-DD') regDt
+		          FROM JIT9150 a
+		         WHERE 1 = 1 
+		             <include refid="boardListWhere"/>
+		       ) C
+		 WHERE C.rNum BETWEEN #firstIndex# AND #lastIndex#
+ 	</select>
+ 	
+ 	<!-- 게시물 카운트 -->
+	<select id="JiCmBoard.selectBoardListCnt" parameterClass="boardVO" resultClass="java.lang.Integer">
+		SELECT COUNT (*) cnt
+		  FROM JIT9150 a
+		 WHERE 1 = 1
+			<include refid="boardListWhere"/>
+ 	</select>
+ 	
+</sqlMap>

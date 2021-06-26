@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmsBoard">
+	
+	<!-- 공통게시판 공통 where -->
+	<sql id="boardListWhere">
+		and a.menu_cd = #menuCd#
+		and a.del_yn = 'N'
+		and a.data_depth = 1
+		<isNotNull property="searchValue">
+			<isNotEmpty property="searchValue">
+				<isEqual property="searchGubun" compareValue="total">
+					and (a.data_title like '%'|| #searchValue# ||'%'
+					or  a.data_desc like '%'|| #searchValue# ||'%')
+				</isEqual>
+				<isEqual property="searchGubun" compareValue="dataTitle">
+					and a.data_title like '%'|| #searchValue# ||'%'
+				</isEqual>
+				<isEqual property="searchGubun" compareValue="dataDesc">
+					and a.data_desc like '%'|| #searchValue# ||'%'
+				</isEqual>
+			</isNotEmpty>
+		</isNotNull>
+		<isNotNull property="boardGubun">
+			<isNotEmpty property="boardGubun">
+				<isEqual property="boardGubun" compareValue="total">
+					and (a.board_cd = 'BRD_000039'
+					or  a.board_cd = 'BRD_000040')
+				</isEqual>
+				<isEqual property="boardGubun" compareValue="BRD_000039">
+					and a.board_cd = #boardGubun#
+				</isEqual>
+				<isEqual property="boardGubun" compareValue="BRD_000040">
+					and a.board_cd = #boardGubun#
+				</isEqual>
+			</isNotEmpty>
+		</isNotNull>
+	</sql>
+	
+	<!-- 공통게시판 리스트 -->
+	<select id="JiCmsBoard.selectBoardList" parameterClass="java.util.HashMap" resultClass="boardVO">
+		select C.*
+		from 
+		 (select row_number( ) over (order by a.reg_dt desc, a.data_seqno desc) as rNum,
+		        a.data_seqno as dataSeqno,
+                a.menu_cd as menuCd,
+                a.data_title as dataTitle,
+                a.reg_id_nm as regNm,
+                a.top_data_yn as topDataYn,
+                a.reg_id as regId,
+                to_char(a.reg_dt, 'yyyy-mm-dd') as regDt,
+                a.del_yn as delYn,
+                a.photo_image_alt as photoImageAlt,
+                a.data_spa_col0 as dataSpaCol0,
+                a.data_spa_col1 as dataSpaCol1,
+                a.data_spa_col2 as dataSpaCol2,
+                a.data_spa_col3 as dataSpaCol3,
+                a.data_spa_col4 as dataSpaCol4,
+                a.data_spa_col5 as dataSpaCol5,
+                a.data_spa_col6 as dataSpaCol6,
+                a.data_spa_col7 as dataSpaCol7,
+                a.data_spa_col8 as dataSpaCol8,
+                a.data_spa_col9 as dataSpaCol9,
+                a.inq_cnt as inqCnt
+		   from jit9150 a
+		  where 1=1
+			<include refid="boardListWhere"/>
+		 )C
+		where C.rNum between #firstIndex# and #lastIndex#
+	</select>
+	
+	<!-- 공통게시판 리스트 카운트 -->
+	<select id="JiCmsBoard.selectBoardListCnt" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(*) cnt
+		   from jit9150 a
+		  where 1=1
+			<include refid="boardListWhere"/>
+	</select>
+	
+	<!-- 공통게시판 등록 -->
+	<insert id="JiCmsBoard.insertBoardProc" parameterClass="boardVO">
+		<![CDATA[
+		INSERT INTO jit9150 (DATA_SEQNO,
+		                     MENU_CD,
+		                     DATA_TITLE,
+		                     DATA_DESC,
+		                     INQ_CNT,
+		                     DATA_ORIGIN_NO,
+		                     DATA_DEPTH,
+		                     DATA_SORT_NO,
+		                     OPEN_YN,
+		                     TOP_DATA_YN,
+		                     PHOTO_IMAGE_ALT,
+		                     DATA_SPA_COL0,
+		                     DATA_SPA_COL1,
+		                     DATA_SPA_COL2,
+		                     DATA_SPA_COL3,
+		                     DATA_SPA_COL4,
+		                     DATA_SPA_COL5,
+		                     DATA_SPA_COL6,
+		                     DATA_SPA_COL7,
+		                     DATA_SPA_COL8,
+		                     DATA_SPA_COL9,
+		                     REG_ID_NM,
+		                     REG_ID,
+		                     REG_DT
+		                     )
+		     VALUES (#dataSeqno#,
+		             #menuCd#,
+		             #dataTitle#,
+		             #dataDesc#,
+		             0,
+		             #dataOriginNo#,
+		             #dataDepth#,
+		             1,
+		             #openYn#,
+		             #topDataYn#,
+		             #photoImageAlt#,
+		             #dataSpaCol0#,
+		             #dataSpaCol1#,
+		             #dataSpaCol2#,
+		             #dataSpaCol3#,
+		             #dataSpaCol4#,
+		             #dataSpaCol5#,
+		             #dataSpaCol6#,
+		             #dataSpaCol7#,
+		             #dataSpaCol8#,
+		             #dataSpaCol9#,
+		             #regNm#,
+		             #regId#,
+		             TO_DATE(#regDt#, 'YYYY-MM-DD HH:MI:SS')
+		           )
+		]]>
+	</insert>
+	
+	<!-- 공통게시판 상세보기 -->
+	<select id="JiCmsBoard.selectBoardDetail" parameterClass="java.util.HashMap" resultClass="boardVO">
+		 SELECT A.DATA_SEQNO as dataSeqNo,
+                A.MENU_CD as menuCd,
+                A.DATA_TITLE as dataTitle,
+                A.DATA_DESC as dataDesc,
+                A.TOP_DATA_YN as topDataYn,
+                A.DATA_SPA_COL0 as dataSpaCol0,
+                A.DATA_SPA_COL1 as dataSpaCol1,
+                A.DATA_SPA_COL2 as dataSpaCol2,
+                A.DATA_SPA_COL3 as dataSpaCol3,
+                A.DATA_SPA_COL4 as dataSpaCol4,
+                A.DATA_SPA_COL5 as dataSpaCol5,
+                A.DATA_SPA_COL6 as dataSpaCol6,
+                A.DATA_SPA_COL7 as dataSpaCol7,
+                A.DATA_SPA_COL8 as dataSpaCol8,
+                A.DATA_SPA_COL9 as dataSpaCol9,
+                TO_CHAR(A.REG_DT, 'YYYY-MM-DD') as regDt,
+                A.REG_ID as regId,
+                A.REG_ID_NM as regNm,
+                A.DEL_YN as delYn,
+                A.OPEN_YN as openYn,
+                TO_CHAR(A.MOD_DT, 'YYYY-MM-DD') as modDt,
+                A.PHOTO_IMAGE_ALT as photoImageAlt,
+                A.DATA_ORIGIN_NO dataOriginNo
+		   FROM jit9150 A
+		  WHERE DATA_SEQNO = #dataSeqno#
+		  AND DEL_YN = 'N'
+	</select>
+	
+	<!-- 공통게시판 게시물 삭제 -->
+	<update id="JiCmsBoard.deleteBoardProc" parameterClass="java.util.HashMap">
+		 UPDATE jit9150 SET 
+		 	   DEL_YN = 'Y',
+		 	   DEL_ID = #delId#,
+		 	   DEL_DT = sysdate
+		 WHERE DATA_SEQNO = #dataSeqno#
+	</update>
+	
+	<!-- 공통게시판 수정 -->
+	<update id="JiCmsBoard.updateBoardProc" parameterClass="boardVO">
+		 UPDATE jit9150 SET 
+				DATA_TITLE		  = #dataTitle#,
+				DATA_DESC		  = #dataDesc#,
+				DATA_SPA_COL0	  = #dataSpaCol0#,
+				DATA_SPA_COL1	  = #dataSpaCol1#,
+				DATA_SPA_COL2	  = #dataSpaCol2#,
+				DATA_SPA_COL3	  = #dataSpaCol3#,
+				DATA_SPA_COL4	  = #dataSpaCol4#,
+				DATA_SPA_COL5	  = #dataSpaCol5#,
+				DATA_SPA_COL6	  = #dataSpaCol6#,
+				DATA_SPA_COL7	  = #dataSpaCol7#,
+				DATA_SPA_COL8	  = #dataSpaCol8#,
+				DATA_SPA_COL9	  = #dataSpaCol9#,
+				MOD_DT		  = sysdate,
+				<isNotNull property="topDataYn">
+					<isNotEmpty property="topDataYn">
+					TOP_DATA_YN	  = #topDataYn#,
+					</isNotEmpty>
+				</isNotNull>
+				MOD_ID		  = #modId#
+		 WHERE DATA_SEQNO = #dataSeqno#
+	</update>
+	
+	<!-- 공통게시판 댓글 리스트 -->
+	<select id="JiCmsBoard.selectBoardReviewList" parameterClass="boardVO" resultClass="boardVO">
+		SELECT A.DATA_SEQNO AS dataSeqno,
+		       A.DATA_TITLE AS dataTitle,
+		       A.MENU_CD AS menuCd,
+		       A.DATA_DESC AS dataDesc,
+		       A.DATA_ORIGIN_NO AS dataOriginNo,
+		       A.REG_ID_NM AS regNm,
+		       A.REG_ID AS regId,
+		       TO_CHAR (A.REG_DT, 'yyyy-mm-dd') AS regDt,
+		       A.DEL_YN AS delYn
+		  FROM jit9150 a
+		 WHERE MENU_CD = #menuCd#
+		    AND DATA_ORIGIN_NO = #dataOriginNo#
+		    AND DEL_YN = 'N'
+		    AND DATA_DEPTH = 2
+	</select>
+	
+	<!-- 공통게시판 댓글 수정 -->
+	<update id="JiCmsBoard.updateBoardReviewProc" parameterClass="boardVO">
+		 UPDATE jit9150 SET 
+				DATA_DESC		  = #dataDesc#,
+				MOD_DT		  = sysdate,
+				MOD_ID		  = #modId#
+		 WHERE DATA_SEQNO = #dataSeqno#
+	</update>
+</sqlMap>

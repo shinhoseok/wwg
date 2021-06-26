@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiCmAcs">
+ <!--  ########### jrcms 시작 ########################### -->
+ 
+ <!-- 게시판 공통 where -->
+	<sql id="ipListWhere">
+		and del_yn = 'N'
+		<isNotNull property="searchValue">
+			<isNotEmpty property="searchValue">
+				and (ac_ip like '%'|| #searchValue# ||'%'
+				or  ac_bigo like '%'|| #searchValue# ||'%'
+				or  use_id like '%'|| #searchValue# ||'%')
+			</isNotEmpty>
+		</isNotNull>
+	</sql>
+	
+	<select id="JiCmAcs.selectListCnt" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select count(*) cnt
+		   from JIT9501
+		  where 1=1
+			<include refid="ipListWhere"/>
+	</select>
+		
+	<select id="JiCmAcs.getTableMaxSeq" parameterClass="java.util.HashMap" resultClass="int">
+		SELECT
+
+		JIT9501_IDX_SQ.NEXTVAL MAX_SEQ
+
+		FROM DUAL
+	</select>
+	 
+    <select id="JiCmAcs.getAc_Ip" parameterClass="java.util.HashMap" resultClass="egovMap">
+	    	
+	select A.*
+			from 
+			 ( select row_number( ) over (order by idx desc) AS rNum,
+					  TO_CHAR(A.IDX) idx
+				  	 , A.AC_IP	ac_ip
+					  , TO_CHAR(A.MOD_DT,'YYYY-MM-DD')	mod_dt 	
+					  , TO_CHAR(A.REG_DT,'YYYY-MM-DD')	reg_dt
+					  , A.MOD_ID mod_id
+					  , A.REG_ID reg_id
+					  , A.USE_YN use_yn
+					  , A.AC_BIGO ac_bigo
+					  , A.USE_ID use_id
+					  , (SELECT USER_NM FROM JIT9120_DAMO WHERE USER_ID = A.AC_ID) user_name
+					  FROM JIT9501 A		
+			         where 1=1
+			         <include refid="ipListWhere"/>
+			 ) A
+			 where A.rNum between #firstIndex# and #lastIndex#
+	</select>
+	
+	<insert id="JiCmAcs.insertAc_Ip">
+		<![CDATA[
+		INSERT INTO JIT9501
+		  (								
+		  IDX,AC_ID,AC_IP,REG_DT,REG_ID,USE_YN,AC_BIGO,USE_ID	
+		  )VALUES(						
+		  #max_seq#,#AC_ID#,#AC_IP#,SYSDATE,#USER_ID#,#USE_YN#,#AC_BIGO#,#USE_ID#				
+
+		  )		
+		]]>
+
+	</insert>	
+
+	<delete id="JiCmAcs.deleteAc_Ip">
+		<![CDATA[
+		DELETE FROM JIT9501
+		  WHERE IDX=#sidx#				
+		]]>
+	</delete>
+
+	<update id="JiCmAcs.updateAc_Ip">
+		<![CDATA[
+		UPDATE JIT9501 SET	
+		  AC_IP = #AC_IP#  
+			,MOD_DT = SYSDATE 
+			,MOD_ID = #USER_ID#
+			,USE_YN = #USE_YN#	
+			,AC_BIGO = #AC_BIGO#
+			,USE_ID	= #USE_ID#	
+		  WHERE IDX=#sidx#
+		]]>
+
+	</update>	
+	
+	<select id="JiCmAcs.selectChargerList" parameterClass="java.util.HashMap" resultClass="egovMap">
+		SELECT USER_ID, (SELECT USER_NM FROM JIT9120 WHERE USER_ID=TA.USER_ID) USER_NM
+		 FROM JIT9132 TA
+		WHERE DEL_YN ='N'
+		GROUP BY USER_ID
+		ORDER BY USER_NM ASC	
+	</select>	
+ <!--  ########### jrcms 끝 ########################### -->	
+</sqlMap>

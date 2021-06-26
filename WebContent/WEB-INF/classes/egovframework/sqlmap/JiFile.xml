@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiFile">
+	
+	<resultMap id="fileMap" class="com.ji.vo.FileVO">
+		<result column="FILE_SEQNO" property="fileSeqNo" />
+		<result column="MENU_CD" property="menuCd" />
+		<result column="MENU_DATA_KEY_DATAS" property="menuDataKeyDatas" />
+		<result column="FILE_GROUP" property="fileGroup" />
+		<result column="MENU_DATA_TITLE" property="menuDataTitle" />
+		<result column="FILE_NM" property="fileNm" />
+		<result column="UPDATE_FILE_NM" property="updateFileNm" />
+		<result column="FILE_ORDER_NO" property="fileOrderNo" />
+		<result column="FILE_SIZE" property="fileSize" />
+		<result column="FILE_DESC" property="fileDesc" />
+		<result column="REG_DT" property="regDt" />
+		<result column="REG_ID" property="regId" />
+		<result column="MOD_DT" property="modDt" />
+		<result column="MOD_ID" property="modId" />
+		<result column="DEL_DT" property="delDt" />
+		<result column="DEL_ID" property="delId" />
+		<result column="DEL_YN" property="delYn" />
+		<result column="FILE_CNT" property="fileCnt" />
+		<result column="FILE_SCRTY_AT" property="fileScrtyAt" />
+	</resultMap>
+	
+	<!-- 파일다운로드 상세 -->
+	<select id="JiFile.selectFileDetail" parameterClass="fileVO" resultClass="fileVO">
+		SELECT FILE_SEQNO fileSeqno
+			 , MENU_CD menuCd
+			 , MENU_DATA_KEY_DATAS menuDataKeyDatas
+			 , FILE_GROUP fileGroup
+			 , MENU_DATA_TITLE menuDataTitle
+			 , FILE_NM fileNm
+			 , UPDATE_FILE_NM updateFileNm
+			 , FILE_ORDER_NO fileOrderNo
+			 , FILE_SIZE fileSize
+			 , FILE_DESC fileDesc
+			 , TO_CHAR(REG_DT, 'YYYY-MM-DD') regDt
+			 , REG_ID regId
+			 , TO_CHAR(MOD_DT, 'YYYY-MM-DD') modDt
+			 , MOD_ID modId
+			 , TO_CHAR(DEL_DT, 'YYYY-MM-DD') delDt
+			 , DEL_ID delId
+			 , DEL_YN delYn
+			 , FILE_CNT fileCnt
+			 , FILE_SCRTY_AT fileScrtyAt
+			 , SECRET_YN secretYn
+		FROM JIT9151
+		WHERE MENU_CD = #menuCd#
+		  AND MENU_DATA_KEY_DATAS = #menuDataKeyDatas#
+		  AND FILE_ORDER_NO = #fileOrderNo#
+	</select>
+	
+	<select id="JiFile.selectFileDetail2" parameterClass="fileVO" resultMap="fileMap">
+		SELECT FILE_SEQNO
+			 , MENU_CD
+			 , MENU_DATA_KEY_DATAS
+			 , FILE_GROUP
+			 , MENU_DATA_TITLE
+			 , FILE_NM
+			 , UPDATE_FILE_NM
+			 , FILE_ORDER_NO
+			 , FILE_SIZE
+			 , FILE_DESC
+			 , REG_DT
+			 , REG_ID
+			 , MOD_DT
+			 , MOD_ID
+			 , DEL_DT
+			 , DEL_ID
+			 , DEL_YN
+			 , FILE_CNT
+			 , FILE_SCRTY_AT
+		  FROM JIT9151
+		 WHERE FILE_SEQNO = #fileSeqNo#
+		   AND DEL_YN = 'N'
+	</select>
+	
+	<!-- file인서트 -->
+	<insert id="JiFile.insertFileProc" parameterClass="fileVO">
+		<![CDATA[
+		INSERT INTO JIT9151 (FILE_SEQNO,
+		                     MENU_CD,
+		                     MENU_DATA_KEY_DATAS,
+		                     FILE_GROUP,
+		                     MENU_DATA_TITLE,
+		                     FILE_NM,
+		                     UPDATE_FILE_NM,
+		                     FILE_ORDER_NO,
+		                     FILE_SIZE,
+		                     REG_DT,
+		                     REG_ID,
+		                     DEL_YN,
+		                     FILE_CNT)
+		     VALUES (#fileSeqNo#,
+		             #menuCd#,
+		             #menuDataKeyDatas#,
+		             #fileGroup#,
+		             #menuDataTitle#,
+		             #fileNm#,
+		             #updateFileNm#,
+		             #fileOrderNo#,
+		             #fileSize#,
+		             SYSDATE,
+		             #regId#,
+		             'N',
+		             0)
+		]]>
+	</insert>
+	
+	<!-- file List 조회 -->
+	<select id="JiFile.selectFileList" parameterClass="fileVO" resultMap="fileMap">
+		SELECT FILE_SEQNO
+			 , MENU_CD
+			 , MENU_DATA_KEY_DATAS
+			 , FILE_GROUP
+			 , MENU_DATA_TITLE
+			 , FILE_NM
+			 , UPDATE_FILE_NM
+			 , FILE_ORDER_NO
+			 , FILE_SIZE
+			 , FILE_DESC
+			 , REG_DT
+			 , REG_ID
+			 , MOD_DT
+			 , MOD_ID
+			 , DEL_DT
+			 , DEL_ID
+			 , DEL_YN
+			 , FILE_CNT
+			 , FILE_SCRTY_AT
+		  FROM JIT9151
+		 WHERE MENU_DATA_KEY_DATAS = #menuDataKeyDatas#
+		   AND MENU_CD = #menuCd#
+		   AND FILE_GROUP = #fileGroup#
+		   AND DEL_YN = 'N'
+	</select>
+	
+	<!-- 원본글 삭제시 파일 상세테이블 전체삭제 -->
+	<update id="JiFile.deleteAllFileProc" parameterClass="fileVO">
+		 UPDATE JIT9151 SET 
+		 	   DEL_YN = 'Y',
+		 	   DEL_DT = sysdate,
+		 	   DEL_ID = #delId#
+		 WHERE MENU_DATA_KEY_DATAS = #menuDataKeyDatas#
+		 	   AND MENU_CD = #menuCd#
+	</update>
+	
+	<!-- file max순번 -->
+	<select id="JiFile.selectFileMaxOrderNum" parameterClass="fileVO" resultClass="java.lang.Integer">
+		SELECT DECODE(MAX(FILE_ORDER_NO)+1, NULL, 0, MAX(FILE_ORDER_NO)+1) fileOrderMax
+		  FROM JIT9151
+		  WHERE MENU_CD = #menuCd# 
+		  	AND MENU_DATA_KEY_DATAS = #menuDataKeyDatas# 
+		  	AND FILE_GROUP = #fileGroup#
+		  	AND DEL_YN = 'N'
+	</select>
+	
+	<!-- 파일 상세테이블 삭제 -->
+	<update id="JiFile.deleteFileProc" parameterClass="fileVO">
+		 UPDATE JIT9151 SET 
+		 	   DEL_YN = 'Y',
+		 	   DEL_DT = sysdate,
+		 	   DEL_ID = #delId#
+		 WHERE FILE_SEQNO = #fileSeqNo#
+	</update>
+</sqlMap>

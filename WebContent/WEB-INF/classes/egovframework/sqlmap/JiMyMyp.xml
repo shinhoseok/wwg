@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="JiMyMyp">
+	
+	<!-- 사용자정보 -->
+	
+	<select id="JiMyMyp.selectUserInfo" parameterClass="java.util.HashMap" resultClass="egovMap">
+		
+		/* "JiMyMyp.selectUserInfo" */
+		SELECT USER_SEQNO
+				   ,TA.USER_ID
+				   ,TA.USER_NM
+				   ,TA.BRTHDY
+				   ,TA.LOGIN_IPNS
+				   ,TA.MOBLPHON
+				   ,TA.TELNO
+				   ,TA.ZIP
+				   ,TA.ADRES
+				   ,TA.BUNJI
+				   ,TA.EMAIL
+				   ,TA.EMAIL_RECPTN_AT
+				   ,TA.SMS_RECPTN_AT
+				   ,TA.NEW_RECPTN_AT
+				   ,TA.HAPPYCL_PROVD_AT
+				   ,TA.INDVDLINFO_PRCUSE_AT
+				   ,TA.INDVDL_GRP_SE
+				   ,TA.GRP_NM
+				   ,TA.RPRSNTV
+				   ,TA.USE_DEPT
+				   ,TA.CHARGER
+				   ,TA.CONTACT
+			  ,NVL((SELECT LISTAGG(FILE_NM, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC ) AS FILE_NMS
+	     		     FROM JIT9151
+	     		    WHERE MENU_CD = #file_menu_cd#
+	     		      AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO 
+	     		      AND DEL_YN = 'N'), '') AS FILE_NMS	/* 데이터 셋 파일 이름 */
+	     		      
+        	 ,NVL((SELECT LISTAGG(FILE_SEQNO, '::') WITHIN GROUP(ORDER BY FILE_SEQNO ASC) AS FILE_NMS
+        	 		 FROM JIT9151
+        	 		WHERE MENU_CD =  #file_menu_cd#
+        	 		  AND MENU_DATA_KEY_DATAS = TA.USER_SEQNO
+        	 		  AND DEL_YN = 'N'), '') AS FILE_SEQ 	/* 데이터 셋 파일 시퀀스 */
+				   ,REG_DT
+				   ,REG_ID
+				   ,DEL_YN
+		FROM JIT9111 TA
+		WHERE 1=1
+		<isNotEmpty property="user_id">
+			AND TA.USER_ID = #user_id#
+		</isNotEmpty>
+		<isNotEmpty property="user_nm">
+			AND TA.USER_NM = #user_nm#
+		</isNotEmpty>
+		<isNotEmpty property="brthdy">
+			AND TA.BRTHDY = #brthdy#
+		</isNotEmpty>
+		<isNotEmpty property="moblphon">
+			AND TA.MOBLPHON = #moblphon#
+		</isNotEmpty>
+		<isNotEmpty property="email">
+			AND TA.EMAIL = #email#
+		</isNotEmpty>
+		
+	</select>	
+	
+	<!-- 사용자 패스워드 체크 -->
+	<select id="JiMyMyp.getCheckPw_kepcoenc" parameterClass="java.util.HashMap" resultClass="egovMap">
+	
+		/* JiCmOam.getCheckPw */
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE USER_ID = #user_id#
+		AND     LOGIN_IPNS = dbsec.sdb_crypto.encrypt(#login_passwd#,'EDPORTAL','TB_KEY','SHA','')
+		
+	</select>
+	
+	<select id="JiMyMyp.getCheckPw" parameterClass="java.util.HashMap" resultClass="egovMap">
+	
+		/* JiCmOam.getCheckPw */
+		SELECT COUNT(1) AS CNT
+		FROM JIT9111 
+		WHERE USER_ID = #user_id#
+		AND     LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+		
+	</select>	
+	
+	<!-- 사용자정보 수정 -->	
+	<update id="JiMyMyp.updateUserInfo">
+		
+		/* "JiMyMyp.updateUserInfo" */
+		 UPDATE JIT9111
+				SET MOBLPHON = #moblphon#
+				   ,TELNO = #telno#
+				   ,ZIP = #zip#
+				   ,ADRES = #adres#
+				   ,BUNJI = #bunji#
+				   ,EMAIL = #email#
+				   ,EMAIL_RECPTN_AT = #email_recptn_at#
+				   ,SMS_RECPTN_AT = #sms_recptn_at#
+				   ,NEW_RECPTN_AT = #new_recptn_at#
+				   ,HAPPYCL_PROVD_AT = #happycl_provd_at#
+				   <isEqual property="indvdl_grp_se" compareValue="G"><!-- 기관회원정보 -->
+				   ,GRP_NM = #grp_nm#
+				   ,RPRSNTV = #rprsntv#
+				   ,USE_DEPT = #use_dept#
+				   ,CHARGER = #charger#
+				   ,CONTACT = #contact#
+				   </isEqual>
+				   <isNotEmpty property="login_passwd">
+				   ,LOGIN_IPNS = damo.HASH_STR_DATA(#login_passwd#)
+				   ,PW_UPDATE_TIME = SYSDATE
+				   ,IPNS_CHG_YMD = SYSDATE
+				   </isNotEmpty>
+						  <isNotEmpty property="addr_sido">
+						  ,ADDR_SIDO=#addr_sido#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_sigungu">
+						  ,ADDR_SIGUNGU=#addr_sigungu#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_dong">
+						  ,ADDR_DONG=#addr_dong#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_road">
+						  ,ADDR_ROAD=#addr_road#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_bunji">
+						  ,ADDR_BUNJI=#addr_bunji#
+						  </isNotEmpty>
+						  <isNotEmpty property="addr_raad_num">
+						  ,ADDR_RAAD_NUM=#addr_raad_num#
+						  </isNotEmpty>					   
+		           ,MOD_DT=SYSDATE
+		           ,MOD_ID=#user_id#
+			WHERE USER_ID = #user_id#
+		
+	</update>	
+	
+	
+	<select id="JiMyMyp.selectFileList" parameterClass="java.util.HashMap" resultClass="egovMap">
+	/* JiMyMyp.selectFileList : 기관회원 첨부파일 리스트 조회 */
+		
+	    SELECT
+	        FILE_SEQNO AS IDX,
+	        MENU_CD AS M_CODE,
+	        MENU_DATA_KEY_DATAS AS RIDX,
+	        FILE_NM,
+	        UPDATE_FILE_NM AS RFILE_NM,
+	        FILE_ORDER_NO AS ORDER_NO,
+	        TO_CHAR(REG_DT, 'YYYYMMDD') REG_DT,
+	        FILE_GROUP
+	    FROM
+	        JIT9151   
+	    WHERE 1=1
+		 AND MENU_CD = #file_menu_cd#
+		 AND MENU_DATA_KEY_DATAS = #user_seqno#
+	     AND DEL_YN = 'N'    
+	     AND DEL_DT IS NULL
+	     ORDER BY
+	        FILE_ORDER_NO ASC
+	</select>
+	
+	<!-- 회원탈퇴 수정 -->	
+	<delete id="JiMyMyp.deleteUserWithdraw">
+		DELETE FROM JIT9111
+		WHERE USER_ID = #user_id#
+	</delete>
+		
+	
+</sqlMap>

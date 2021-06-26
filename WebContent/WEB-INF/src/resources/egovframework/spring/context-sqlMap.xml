@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<!-- SqlMap setup for iBATIS Database Layer  -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSourceds"/>
+		<property name="lobHandler" ref="lobHandler"/>
+		<property name="configLocation" value="classpath:/egovframework/sqlmap/sql-map-config.xml"/>
+		<property name="mappingLocations" >
+			<list>
+				<value>classpath*:/egovframework/sqlmap/common/first.xml</value>
+				<value>classpath*:/egovframework/sqlmap/**/Ji*.xml</value>
+			</list>			
+		</property>
+	</bean>
+	
+	
+	<bean id="sqlMapClient2" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSourceds2"/>
+		<property name="lobHandler" ref="lobHandler"/>
+		<property name="configLocation" value="classpath:/egovframework/sqlmap/sql-map-config.xml"/>
+		<property name="mappingLocations" >
+			<list>
+				<value>classpath*:/egovframework/sqlmap/common/first.xml</value>
+				<value>classpath*:/egovframework/sqlmap/**/Ji*.xml</value>
+			</list>	
+		</property>
+	</bean>
+	
+	
+	<bean id="sqlMapClient3" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSourceds3"/>
+		<property name="lobHandler" ref="lobHandler"/>
+		<property name="configLocation" value="classpath:/egovframework/sqlmap/sql-map-config.xml"/>
+		<property name="mappingLocations" >
+			<list>
+				<value>classpath*:/egovframework/sqlmap/common/first.xml</value>
+				<value>classpath*:/egovframework/sqlmap/**/Ji*.xml</value>
+			</list>	
+		</property>
+	</bean>
+	
+	
+	<!-- PostgreSQL
+	<bean id="sqlMapClient4" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSourceds4"/>
+		<property name="lobHandler" ref="lobHandler"/>
+		<property name="configLocation" value="classpath:/egovframework/sqlmap/sql-map-config.xml"/>
+		<property name="mappingLocations" >
+			<list>
+				<value>classpath*:/egovframework/sqlmap/common/first.xml</value>
+				<value>classpath*:/egovframework/sqlmap/**/Ji*.xml</value>
+			</list>	
+		</property>
+	</bean>
+	 -->
+	
+	<!-- lob Handler -->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
+	
+</beans>
